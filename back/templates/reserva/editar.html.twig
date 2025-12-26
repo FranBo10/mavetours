@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Edit booking'|trans }}{% endblock %}
+
+{% block body %}
+<div id="main-container" class="container-fluid my-5">
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger text-center w-50 mx-auto my-2">
+            <p>{{ message }}</p>
+        </div>
+    {% endfor %}
+        <h2 class="titulo__reservas text-center w-100 mb-3">{{ 'Edit booking'|trans }}</h2>
+       {% if app.user %}
+        
+                <div class="reserva-container container-fluid">
+                    <div class="image-container">
+                        <img src="{{ asset('uploads/images/' ~ tour.imagen) }}" alt="{{ tour.titulo }}" width="350px" height="280px" />
+                    </div>
+                    <div class="detalles-reserva">
+                        <ul>
+                            <h3>{{ tour.titulo | title }} : {{ tour.horaInicio|date("H:i") }} h - {{ tour.horaFin|date("H:i") }} h</h3>
+                            <li>
+                                {% if tour.precio == 0 %}
+                                    <p><span>{{ 'Price'|trans }} : {{ 'Free Tour'|trans }}</span></p>
+                                {% else %}
+                                    <p>{{ tour.precio/100|number_format(2, '.') }} €</p>
+                                {% endif %}
+                            </li>
+                            {{ form_start(form, { attr: { novalidate: "novalidate" } }) }}
+                            <li>
+                                {{ form_label(form.cantidad_adultos, 'Select number of adults'|trans) }}
+                                {{ form_widget(form.cantidad_adultos, {'attr': {'class': 'task_field'}}) }}
+                            </li>
+                            <li>
+                                {{ form_label(form.cantidad_kids, 'Select number of kids'|trans) }}
+                                {{ form_widget(form.cantidad_kids, {'attr': {'class': 'task_field'}}) }}
+                            </li>
+                            <li>
+                                {{ form_label(form.fecha_evento, 'Select a date'|trans) }}
+                                {{ form_widget(form.fecha_evento, {
+                                    'attr': {
+                                        'class': 'task_field datepicker',
+                                        'placeholder': 'Select a date'|trans,
+                                    }
+                                }) }}
+                            </li>
+                            <li>
+                                <div class="buttons">
+                                    <div class="left-buttons">
+                                        <a href="{{ path('delete_reserva', { id: reserva.id }) }}" class="btn-danger">{{ 'Cancel / Delete booking'|trans }}</a>
+                                    <a href="{{ path('home') }}" class="btn-tertiary my-3">{{ 'More tours...'|trans }}</a>
+                                </div>
+                                <div class="right-button">
+                                    <button type="submit" class="btn-primary">{{ 'Modify reservation'|trans }}</button>
+                                </div>
+                                    
+                                    
+                                </div>
+                            </li>
+                            {{ form_end(form) }}
+                        </ul>
+                    </div>
+                </div>
+    {% else %}
+        <div class="text-center mt-5">
+            <h4>{{ 'No booking registered yet'|trans }}</h4>
+            <a href="{{ path('home') }}" class="btn-primary">{{ 'Back to homepage'|trans }}</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

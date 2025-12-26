@@ -1,0 +1,30 @@
+@use "../utils/mixins" as *;
+@use "../utils/variables" as variables;
+
+#main-container {
+  color: variables.$color-gray-darken;
+  width: 100%;
+  @include flexCenter(column);
+  padding-top: 40px;
+  transition: all 300ms ease;
+  @media (max-width: 769px) {
+    margin-bottom: 100px;
+  }
+}
+
+.titulo__contacto {
+  font-size: 24px;
+  color: variables.$color-primary !important;
+  text-shadow: 0 0 1px variables.$color-black;
+  padding: variables.$padding 0;
+}
+
+.form-control {
+  font-size: variables.$main-font-size !important;
+}
+
+@include media(phone) {
+  .form-control {
+    font-size: variables.$big-font-size !important;
+  }
+}

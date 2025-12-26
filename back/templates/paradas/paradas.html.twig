@@ -1,0 +1,366 @@
+{% extends 'base.html.twig' %} {% block title %}{{
+  "Stops of the Tour" | trans
+}}{% endblock %} {% block header %} {% include '_partials/_menu2_nav.html.twig'
+%} {% endblock %} {% block body %}
+<div id="main-container" class="reservas my-5">
+  {# Mensajes flash #} {% for message in app.flashes('info') %}
+  <div class="alert alert-info text-center w-50 mx-auto my-2">
+    <p>{{ message }}</p>
+  </div>
+  {% endfor %}
+
+  <h2 class="titulo__reservas text-center w-100 mb-3">
+    {{ tour.titulo | trans | raw }}
+  </h2>
+
+  <!-- Toast de error (mover fuera del loop) -->
+  <div
+    id="errorToast"
+    class="toast position-fixed top-0 end-0 m-3"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="toast-header bg-danger text-white">
+      <strong class="me-auto">Error</strong>
+      <button
+        type="button"
+        class="btn-close btn-close-white"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="toast-body" id="toastMessage"></div>
+  </div>
+
+  <div class="cards__reservas">
+    {% if paradas is not empty %} {% for parada in paradas %}
+    <article class="card__reservas mb-4">
+      {% if parada.imagen %}
+      <img
+        src="{{ asset('uploads/images/' ~ parada.imagen) }}"
+        alt="{{ parada.titulo }}"
+        class="card-img-top"
+      />
+      {% endif %}
+
+      <div class="reservas-detalles pt-3">
+        <ul class="list-unstyled">
+          <li>
+            <h2>{{ parada.titulo | trans | raw }}</h2>
+          </li>
+
+          <li>
+            <p class="description-resumen">
+              {{ app.request.get('_locale') == 'fr' ? parada.contenidoFr|striptags|slice(0, 250) ~ '...' : parada.contenido|striptags|slice(0, 250) ~ '...' }}
+            </p>
+            <div class="description-hidden">
+              <p>
+                {{ app.request.get('_locale') == 'fr' ? parada.contenidoFr | raw : parada.contenido | raw }}
+                <button
+                  class="btn-primary play-audio"
+                  data-id="{{ parada.id }}"
+                  data-text="{{ parada.contenido | raw|striptags|e('html_attr') }}"
+                >
+                  <i class="bi bi-play-circle"></i> {{ "Listen" | trans }}
+                </button>
+              </p>
+            </div>
+          </li>
+
+          <li>
+            <div class="description-container">
+              <a href="#" class="btn-description show-link">{{
+                "See full description" | trans
+              }}</a>
+              <a href="#" class="btn-description hide-link is-hidden">{{
+                "Hide description" | trans
+              }}</a>
+            </div>
+            <hr />
+          </li>
+
+          <li>
+            <iframe
+              src="{{ parada.mapa }}"
+              width="100%"
+              height="200"
+              style="border: 0"
+              allowfullscreen
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </li>
+        </ul>
+      </div>
+    </article>
+    {% endfor %} {% else %}
+    <p class="text-center mt-4">
+      {{ "No stops found for this tour." | trans }}
+    </p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}{% block javascripts %}
+{{ encore_entry_script_tags("paradas") }}
+{# {{ encore_entry_script_tags("audio") }} #}
+<script>
+  function showError(message) {
+    const toastEl = document.getElementById("errorToast");
+    const toastMessage = document.getElementById("toastMessage");
+
+    if (toastEl && toastMessage) {
+      toastMessage.textContent = message;
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Variables de estado global
+    let currentAudio = null;
+    let currentPlayingButton = null;
+    let currentAudioUrl = null;
+    let isPaused = false;
+    let pausePosition = 0;
+    const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+
+    // Función para mostrar errores
+    const showError = (message) => {
+        const toastMessage = document.getElementById('toastMessage');
+        if (toastMessage) {
+            toastMessage.textContent = message;
+            errorToast.show();
+        }
+    };
+
+    // Función para resetear el ícono de un botón
+    const resetButtonIcon = (button) => {
+        if (button) {
+            const icon = button.querySelector('i');
+            if (icon) {
+                icon.classList.remove('bi-pause-circle', 'bi-hourglass');
+                icon.classList.add('bi-play-circle');
+            }
+        }
+    };
+
+    // Función para detener completamente el audio
+    const stopCurrentAudio = () => {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+            if (currentAudioUrl) {
+                URL.revokeObjectURL(currentAudioUrl);
+                currentAudioUrl = null;
+            }
+            currentAudio = null;
+        }
+        if (currentPlayingButton) {
+            resetButtonIcon(currentPlayingButton);
+            currentPlayingButton = null;
+        }
+        isPaused = false;
+        pausePosition = 0;
+    };
+
+    // Función para pausar el audio actual
+    const pauseCurrentAudio = () => {
+        if (currentAudio && !currentAudio.paused) {
+            pausePosition = currentAudio.currentTime;
+            currentAudio.pause();
+            isPaused = true;
+            return true;
+        }
+        return false;
+    };
+
+    // Función para reanudar el audio desde la posición de pausa
+    const resumeCurrentAudio = () => {
+        if (currentAudio && isPaused) {
+            currentAudio.currentTime = pausePosition;
+            currentAudio.play()
+                .then(() => {
+                    isPaused = false;
+                    pausePosition = 0;
+                })
+                .catch(e => {
+                    showError("Error al reanudar: " + e.message);
+                });
+            return true;
+        }
+        return false;
+    };
+
+    // Manejador de eventos para los botones de descripción
+    const handleDescriptionClick = function(e) {
+        e.preventDefault();
+        stopCurrentAudio();
+        
+        // Alternar visibilidad de la descripción
+        const container = this.closest('.description-container');
+        const hiddenContent = container.parentElement.querySelector('.description-hidden');
+        const showLink = container.querySelector('.show-link');
+        const hideLink = container.querySelector('.hide-link');
+        
+        hiddenContent.classList.toggle('is-hidden');
+        showLink.classList.toggle('is-hidden');
+        hideLink.classList.toggle('is-hidden');
+    };
+
+    // Configurar event listeners para los botones de descripción
+    document.querySelectorAll('.btn-description').forEach(button => {
+        button.addEventListener('click', handleDescriptionClick);
+    });
+
+    // Manejador de eventos para los botones de audio
+    document.querySelectorAll('.play-audio').forEach((button) => {
+        button.addEventListener('click', async function (e) {
+            e.preventDefault();
+            
+            const icon = this.querySelector('i');
+            const text = this.dataset.text;
+            const id = this.dataset.id;
+
+            const currentUrl = window.location.href;
+            let locale = 'en';
+
+            const localeMatch = currentUrl.match(/\/(en|fr|es|de|it)(\/|$)/);
+            if (localeMatch && localeMatch[1]) {
+                locale = localeMatch[1];
+            }
+
+            // Si es el mismo botón que está reproduciendo
+            if (currentPlayingButton === this && currentAudio) {
+                // Si está reproduciendo, pausar
+                if (!currentAudio.paused) {
+                    if (pauseCurrentAudio()) {
+                        return;
+                    }
+                } 
+                // Si está pausado, reanudar
+                else if (isPaused) {
+                    if (resumeCurrentAudio()) {
+                        if (icon) {
+                            icon.classList.replace('bi-play-circle', 'bi-pause-circle');
+                        }
+                        return;
+                    }
+                }
+            }
+
+            // Si hay otro audio reproduciéndose, detenerlo primero
+            if (currentPlayingButton && currentPlayingButton !== this) {
+                stopCurrentAudio();
+            }
+
+            // Cambiar ícono a "cargando"
+            if (icon) {
+                icon.classList.replace('bi-play-circle', 'bi-hourglass');
+            }
+            currentPlayingButton = this;
+
+            try {
+                // Si ya tenemos audio cargado (pausado) y es el mismo texto
+                if (isPaused && currentAudio && currentAudio.dataset.id === id) {
+                    if (resumeCurrentAudio()) {
+                        if (icon) {
+                            icon.classList.replace('bi-hourglass', 'bi-pause-circle');
+                        }
+                        return;
+                    }
+                }
+
+                // Generar nuevo audio
+                const response = await fetch(`/text-to-speech/${locale}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'audio/wav',
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        text: text,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const error = await response.json().catch(() => null);
+                    throw new Error(error?.error || error?.details || 'Error en la solicitud');
+                }
+
+                const audioBlob = await response.blob();
+                currentAudioUrl = URL.createObjectURL(audioBlob);
+                currentAudio = new Audio(currentAudioUrl);
+                
+                // Almacenar metadata en el elemento audio
+                currentAudio.dataset.id = id;
+                currentAudio.dataset.text = text;
+
+                // Event listeners para el audio
+                currentAudio.addEventListener('play', () => {
+                    if (icon) {
+                        icon.classList.replace('bi-hourglass', 'bi-pause-circle');
+                    }
+                    isPaused = false;
+                });
+
+                currentAudio.addEventListener('pause', () => {
+                    if (!isPaused) { // Solo cambiar ícono si no es una pausa intencional
+                        resetButtonIcon(currentPlayingButton);
+                    }
+                });
+
+                currentAudio.addEventListener('ended', () => {
+                    resetButtonIcon(currentPlayingButton);
+                    URL.revokeObjectURL(currentAudioUrl);
+                    currentAudio = null;
+                    currentAudioUrl = null;
+                    currentPlayingButton = null;
+                    isPaused = false;
+                    pausePosition = 0;
+                });
+
+                currentAudio.addEventListener('error', () => {
+                    showError('Error al reproducir el audio');
+                    resetButtonIcon(currentPlayingButton);
+                    if (currentAudioUrl) {
+                        URL.revokeObjectURL(currentAudioUrl);
+                        currentAudioUrl = null;
+                    }
+                    currentAudio = null;
+                    currentPlayingButton = null;
+                    isPaused = false;
+                    pausePosition = 0;
+                });
+
+                await currentAudio.play().catch(e => {
+                    showError('No se pudo reproducir el audio: ' + e.message);
+                    resetButtonIcon(currentPlayingButton);
+                    if (currentAudioUrl) {
+                        URL.revokeObjectURL(currentAudioUrl);
+                        currentAudioUrl = null;
+                    }
+                    currentAudio = null;
+                    currentPlayingButton = null;
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                resetButtonIcon(currentPlayingButton);
+                currentPlayingButton = null;
+                showError(error.message || 'Error al generar el audio');
+            }
+        });
+    });
+
+    // Limpiar al salir de la página
+    window.addEventListener('beforeunload', () => {
+        if (currentAudioUrl) {
+            URL.revokeObjectURL(currentAudioUrl);
+        }
+    });
+});
+</script>
+
+{% endblock %}

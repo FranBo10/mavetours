@@ -1,0 +1,37 @@
+@use "../utils/mixins" as *;
+@use "../utils/variables" as variables;
+
+.modal-dialog {
+  min-width: 75%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.modal-header {
+  background-color: variables.$color-primary !important;
+}
+
+.modal-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  @include flexCenter(row);
+  border: none;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  z-index: 100;
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    min-width: 75%;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .modal-content {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}

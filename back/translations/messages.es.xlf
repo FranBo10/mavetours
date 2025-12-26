@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="es" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="7A8bC9d" resname="Name">
+        <source>Name</source>
+        <target>Nombre</target>
+      </trans-unit>
+      <trans-unit id="E1fG2h3" resname="Last name">
+        <source>Last name</source>
+        <target>Apellido</target>
+      </trans-unit>
+      <trans-unit id="I4jK5l6" resname="Phone N°.">
+        <source>Phone N°.</source>
+        <target>N°. Teléfono</target>
+      </trans-unit>
+      <trans-unit id="M7nO8p9" resname="Password">
+        <source>Password</source>
+        <target>Contraseña</target>
+      </trans-unit>
+      <trans-unit id="Q0rS1t2" resname="Confirm password">
+        <source>Confirm password</source>
+        <target>Confirmar contraseña</target>
+      </trans-unit>
+      <trans-unit id="U3vW4x5" resname="Country">
+        <source>Country</source>
+        <target>País</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

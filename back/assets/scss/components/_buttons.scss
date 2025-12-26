@@ -1,0 +1,224 @@
+@use "../utils/variables" as variables;
+@use "../utils/mixins" as *;
+
+.btn-primary {
+  padding: 0.25rem 0.75rem;
+  color: variables.$color-white;
+  background-color: variables.$color-primary;
+  border: 2px solid variables.$color-primary-dark;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: variables.$main-font-size;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  box-shadow: 0.25rem 0.25rem 0.5rem variables.$color-primary-dark;
+}
+
+.btn-primary:active {
+  box-shadow: inset 0.2rem 0.2rem 1rem variables.$color-gray-dark;
+}
+
+.btn-secondary {
+  padding: 0.25rem 0.75rem;
+  color: variables.$color-white;
+  background-color: variables.$color-secondary;
+  border: 2px solid variables.$color-secondary-dark;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: variables.$main-font-size;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0.2rem 0.2rem 0.5rem variables.$color-gray-light,
+    -0.3rem -0.3rem 0.5rem variables.$color-gray-light;
+}
+
+.btn-secondary:hover {
+  box-shadow: 0.25rem 0.25rem 0.5rem variables.$color-secondary-dark;
+}
+
+.btn-secondary:active {
+  box-shadow: inset 0.2rem 0.2rem 1rem variables.$color-gray-dark;
+}
+
+.btn-tertiary {
+  padding: 0.25rem 0.75rem;
+  color: variables.$color-white;
+  background-color: variables.$color-tertiary;
+  border: 2px solid variables.$color-tertiary-dark;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: variables.$main-font-size;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0.2rem 0.2rem 0.5rem variables.$color-gray-light,
+    -0.3rem -0.3rem 0.5rem variables.$color-gray-light;
+}
+
+.btn-tertiary:hover {
+  box-shadow: 0.25rem 0.25rem 0.5rem variables.$color-tertiary-dark;
+}
+
+.btn-tertiary:active {
+  box-shadow: inset 0.2rem 0.2rem 1rem variables.$color-gray-dark;
+}
+
+.btn-warning {
+  padding: 0.25rem 0.75rem;
+  color: variables.$color-white;
+  background-color: variables.$color-warning;
+  border: 2px solid variables.$color-warning-dark;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: variables.$main-font-size;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-warning:hover {
+  box-shadow: 0.25rem 0.25rem 0.5rem variables.$color-warning-dark;
+}
+
+.btn-warning:active {
+  box-shadow: inset 0.2rem 0.2rem 1rem variables.$color-gray-dark;
+}
+
+.btn-danger {
+  padding: 0.25rem 0.75rem;
+  color: variables.$color-white;
+  background-color: variables.$color-danger;
+  border: 2px solid variables.$color-danger-dark;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: variables.$main-font-size;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-danger:hover {
+  box-shadow: 0.25rem 0.25rem 0.5rem variables.$color-danger-dark;
+}
+
+.btn-danger:active {
+  box-shadow: inset 0.2rem 0.2rem 1rem variables.$color-gray-dark;
+}
+
+.btn-success {
+  padding: 0.25rem 0.75rem;
+  color: variables.$color-white;
+  background-color: variables.$color-success;
+  border: 2px solid variables.$color-success-dark;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: variables.$main-font-size;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-success:hover {
+  box-shadow: 0.25rem 0.25rem 0.5rem variables.$color-success-dark;
+}
+
+.btn-success:active {
+  box-shadow: inset 0.2rem 0.2rem 1rem variables.$color-gray-dark;
+}
+
+.btn-primary-card {
+  padding: 0.375rem 0.75rem;
+  color: variables.$color-white;
+  background-color: variables.$color-primary;
+  border-color: variables.$color-primary;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-size: variables.$main-font-size;
+}
+
+.btn-secondary-card {
+  color: variables.$color-white;
+  background-color: variables.$color-secondary;
+  border-color: variables.$color-secondary-dark;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-size: variables.$main-font-size;
+}
+
+.btn-tertiary-card {
+  color: variables.$color-white;
+  background-color: variables.$color-tertiary;
+  border-color: variables.$color-tertiary;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-size: variables.$main-font-size;
+}
+
+.btn-user_nav {
+  color: variables.$color-white;
+  background-color: #e74c3c;
+  border-color: #e74c3c;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: variables.$main-font-size;
+}
+
+.btn-description {
+  color: #333;
+  background-color: transparent;
+  border: 1px solid variables.$color-primary;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: variables.$main-font-size;
+}
+
+.btn-home {
+  @include flexCenter(row);
+  padding: 0.375rem 0.75rem;
+  background-color: variables.$color-primary;
+  border-color: variables.$color-primary;
+  border-radius: 0.25rem;
+  margin: auto;
+}
+
+.btn-home a {
+  text-decoration: none;
+  color: variables.$color-white;
+}
+
+.play-audio {
+  padding: 0.25rem 0.75rem;
+  color: variables.$color-white;
+  background-color: variables.$color-primary;
+  border: 2px solid variables.$color-primary-dark;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: variables.$main-font-size;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.play-audio:hover {
+  color: variables.$color-white;
+  .bi-play::before {
+    color: variables.$color-white !important;
+  }
+}
+
+.bi-play::before {
+  color: variables.$color-primary;
+}
+
+.bi-hourglass {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

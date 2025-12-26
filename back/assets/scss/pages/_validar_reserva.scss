@@ -1,0 +1,114 @@
+@use "../utils/mixins" as *;
+@use "../utils/variables" as variables;
+
+.reserva-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin: auto;
+  color: variables.$color-black;
+  max-width: 100%; /* Establecer el ancho máximo al 100% para dispositivos pequeños */
+  box-sizing: border-box; /* Incluir el padding y el borde en el ancho total */
+  overflow: hidden; /* Evitar desbordamientos horizontales */
+  @include media(tablet) {
+    @include flexCenter(column);
+    img {
+      width: 550px;
+      height: 350px;
+    }
+  }
+}
+
+.image-container {
+  margin-top: 30px;
+}
+
+.reserva-container img {
+  display: block;
+  @media (max-width: 600px) {
+    width: 500px;
+    height: 350px;
+  }
+  @include media(smartPhone) {
+    width: 450px;
+    height: 350px;
+  }
+  @include media(phone) {
+    width: 250px;
+    height: 350px;
+  }
+}
+
+.titulo-validar {
+  text-align: center !important;
+}
+
+.detalles-reserva {
+  @include flexStart();
+
+  ul {
+    list-style-type: none;
+  }
+
+  ul h3 {
+    margin-top: variables.$font-h3;
+  }
+
+  @include media(laptop) {
+    ul h3 {
+      font-size: 2rem;
+    }
+  }
+
+  ul li {
+    margin: 20px 0;
+  }
+
+  ul li p {
+    font-size: variables.$main-font-size;
+  }
+}
+
+.button {
+  text-align: center;
+}
+
+.options_datos_reserva {
+  width: 100%;
+  background-color: #fff;
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 300px;
+  overflow-y: auto;
+  gap: 10px;
+}
+
+.options_datos_reserva.active {
+  display: none;
+}
+
+.user_datos_reserva {
+  width: 100%;
+  height: 40vh;
+  margin: auto;
+  color: variables.$color-black;
+  border: 1px solid variables.$color-gray-dark;
+}
+
+@media (tablet) {
+  .detalles-reserva {
+    width: 100%;
+    ul {
+      width: 100%;
+    }
+    ul h3 {
+      text-align: center;
+    }
+  }
+}
+@media (max-width: 768px) {
+  .detalles-reserva ul {
+    padding-left: 0 !important;
+  }
+}

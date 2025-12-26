@@ -1,0 +1,65 @@
+@use "../utils/variables" as variables;
+
+html {
+  font-size: 62.5%; // 1rem = 10px; 10px/16px = 62.5%
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  font-family: "Nunito", sans-serif !important;
+  font-size: variables.$small-font-size;
+  box-sizing: border-box;
+  background-color: variables.$color-gray-light !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: variables.$color-black;
+  font-size: variables.$main-font-size;
+}
+
+p,
+th,
+td {
+  font-size: variables.$main-font-size;
+  line-height: 2rem;
+}
+
+h1 {
+  font-size: variables.$font-h1 !important;
+}
+
+h2 {
+  font-size: variables.$font-h2;
+}
+
+h3 {
+  font-size: variables.$font-h3;
+}
+
+label {
+  font-size: variables.$main-font-size;
+}
+
+
+::selection {
+  background-color: variables.$color-secondary;
+  color: variables.$color-black;
+}
+
+.form-control {
+  font-size: variables.$medium-font-size !important;
+}
