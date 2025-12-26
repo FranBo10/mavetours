@@ -1,0 +1,30 @@
+@use "../utils/mixins" as *;
+@use "../utils/variables" as variables;
+
+#calendario {
+  width: 100%;
+  margin: auto;
+  a {
+    color: variables.$color-gray-darken !important ;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .fc-toolbar {
+    text-transform: uppercase;
+
+    h2 {
+      color: variables.$color-gray-darken;
+      font-weight: 500;
+    }
+  }
+
+  @include media(smartPhone) {
+    .fc-toolbar {
+      justify-content: space-around;
+    }
+    .fc-toolbar-title {
+      font-size: 1.2rem;
+    }
+  }
+}

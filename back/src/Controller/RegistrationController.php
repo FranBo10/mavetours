@@ -1,0 +1,164 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\User;
+use App\Service\MailerService;
+use App\Form\RegistrationFormType;
+use App\Repository\TourRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\BlogCategoriaRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+
+class RegistrationController extends AbstractController
+{
+    #[Route('/registro/agregar/{_locale}', name: 'registro_agregar')]
+    public function agregarRegistro(Request $request): Response
+    {
+        $user = new User();
+        $locale = $request->getLocale();
+        $avatars = [];
+        for ($i = 1; $i <= 24; $i++) {
+            $nameAvatar = "avatar_" . $i;
+            $avatars[] = $nameAvatar;
+        }
+
+
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        return $this->render('registro/registro.html.twig', [
+            'registrationForm' => $form->createView(),
+            'avatars' => $avatars,
+            '_locale' => $locale
+        ]);
+    }
+
+    #[Route('/registro/tratar/{_locale}', name: 'registro_tratar')]
+    public function tratarRegistro(
+        Request $request,
+        TourRepository $repo,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager,
+        MailerService $mailerService,
+        TokenGeneratorInterface $tokenGeneratorInterface,
+        SessionInterface $session,
+        BlogCategoriaRepository $blogCategoriaRepository, TranslatorInterface $translator
+    ): Response {
+        $user = new User();
+        $locale = $request->getLocale();
+        $avatars = [];
+        for ($i = 1; $i <= 24; $i++) {
+            $nameAvatar = "avatar_" . $i;
+            $avatars[] = $nameAvatar;
+        }
+
+        $tours = $repo->findAll();
+
+        $categorias = $blogCategoriaRepository->findAll();
+
+        foreach ($categorias as $categoria) {
+            $categoriaId = $categoria->getId();
+        }
+
+        $categoria = $blogCategoriaRepository->findOneBy(['id' => $categoriaId]);
+
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $token = $tokenGeneratorInterface->generateToken();
+            $avatar = $form->get('avatar')->getData();
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+
+
+            $user->setToken($token)
+                ->setAvatar($avatar)
+                ->setRoles($user->getRoles("ROLE_USER"))
+                ->setFechaRegistro(new \Datetime)
+                ->setColor(null);
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // Enviar e-mail de confirmacion
+            $mailerService->send(
+                $user->getEmail(),
+                'Confirmacion de su cuenta',
+                'confirmation_email.html.twig',
+                [
+                    'user' => $user,
+                    'token' => $token,
+                    'token_life_time' => $user->getTokenLifeTime()->format('d/m/y a las H\hi')
+                ]
+            );
+
+            $mensaje = $translator->trans('We have sent you an e-mail to verify your account, please check your spam folder');
+
+            $this->addFlash('success', $mensaje);
+            return $this->redirectToRoute('app_login');
+        }
+
+        $selectedAvatar = $session->get('selected_avatar', $avatars[0]);
+
+        return $this->render('registro/registro_tratar.html.twig', [
+            'registrationForm' => $form->createView(),
+            'tours' => $tours,
+            'avatars' => $avatars,
+            'categoria' => $categoria,
+            '_locale' => $locale,
+            'selectedAvatar' => $selectedAvatar
+        ]);
+    }
+
+    #[Route('/actualizar-avatar-session', name: 'actualizar_avatar_session', methods: "POST")]
+    public function actualizarAvatarSession(Request $request, SessionInterface $session): Response
+    {
+        $avatar = $request->get('avatar');
+
+        $session->set('selected_avatar', $avatar);
+
+        return new JsonResponse(['success' => true]);
+    }
+
+
+    #[Route('/verify/{token}/{id\d+>}', name: 'account_verify', methods: ['GET'])]
+    public function verifyUserEmail($token, User $user, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
+    {
+        if ($user->getToken() !== $token) {
+            throw new AccessDeniedException();
+        }
+
+        if ($user->getToken() === null) {
+            throw new AccessDeniedException();
+        }
+
+        if (new \DateTime('now') > $user->getTokenLifeTime()) {
+            throw new AccessDeniedException();
+        }
+
+        $user->setIsVerified(true);
+        $user->setToken(null);
+        $entityManager->flush();
+
+        $mensaje = $translator->trans('Your account has been successfully verified, you can now log in');
+
+        $this->addFlash("success", $mensaje);
+
+        return $this->redirectToRoute('app_login');
+    }
+}

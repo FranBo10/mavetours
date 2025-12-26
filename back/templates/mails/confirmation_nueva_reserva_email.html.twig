@@ -1,0 +1,42 @@
+<h1>{{ 'Reservation confirmed' | trans }} {{ user.nombre }} !</h1>
+
+<div class="cards__reservas">
+
+  {% for tour in reserva.tours %}
+  <article class="card__reservas">
+    <img src="{{ asset('uploads/images/' ~ tour.imagen) }}" alt="" />
+    <div class="reservas-detalles">
+      <h4>{{ tour.titulo | trans }}</h4>
+      <ul>
+        <li>
+          {{ 'Price' | trans }} :
+          {% if reserva.detallesReserva.totalReserva == 0 %}
+            Free Tour
+          {% else %}
+            {{ reserva.detallesReserva.totalReserva/100|number_format(2, '.') }} €
+          {% endif %}
+        </li>
+
+        <li>{{ 'Date' | trans }} : {{ reserva.detallesReserva.fechaEvento|date("d/m/Y") }}</li>
+
+        <li>{{ 'Adults' | trans }} : {{ reserva.detallesReserva.cantidadAdultos }}</li>
+
+        <li>{{ 'Kids' | trans }} : {{ reserva.detallesReserva.cantidadKids }}</li>
+
+        <li>
+          <a
+            href="{{ path('editar', { id: reserva.id }) }}"
+            type="button"
+            class="btn-tertiary"
+          >
+            {{ 'Modify reservation' | trans }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </article>
+  {% endfor %}
+
+</div>
+
+<p>{{ 'See you soon' | trans }} !!</p>

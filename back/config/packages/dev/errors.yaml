@@ -1,0 +1,11 @@
+framework:
+    error_controller: null
+
+monolog:
+    channels: ["deprecation"]
+    handlers:
+        deprecation:
+            type: stream
+            path: "%kernel.logs_dir%/deprecations.log"
+            level: debug
+            channels: ["deprecation"]

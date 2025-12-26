@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %} {% block title %} Registration {% endblock %} {%
+block header %} {% include '_partials/_menu2_nav.html.twig' %} {% endblock %} {%
+block body %} {# {% include 'app/_side_menu.html.twig' %} #}
+
+<div id="main-container" class="container mt-3 d-flex justify-content-center">
+  <h1 class="text-center col-md-12 h3 my-3 pb-3 border-bottom border-dark">
+    
+    {{ 'Create an account' | trans }}
+  </h1>
+  <div class="container">
+    {{ form_start(registrationForm, { action: path("registro_tratar") }) }}
+    <div class="form-registration row mx-3">
+      <div class="col-md-6">
+        {{ form_row(registrationForm.nombre) }}
+      </div>
+      <div class="col-md-6">
+        {{ form_row(registrationForm.apellidos) }}
+      </div>
+      <div class="col-md-6">
+        {{ form_row(registrationForm.email) }}
+      </div>
+      <div class="col-md-6">
+        {{ form_row(registrationForm.telefono) }}
+      </div>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col">
+            {{ form_row(registrationForm.plainPassword.first) }}
+          </div>
+          <div class="col">
+            {{ form_row(registrationForm.plainPassword.second) }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        {{ form_row(registrationForm.pais) }}
+      </div>
+      <div class="col-md-6">
+        <div class="selectbox form-group col-md-12 mb-2">
+          <div class="select">
+            <div class="select-content">
+              <img class="selectedImage" src="{{ asset("uploads/images/avatars/" ~ selectedAvatar ~ '.jpg')
+
+              }}" alt="Avatar" width="70" height="70" />
+              <div class="description">
+                <p>{{ 'Choose your preferred avatar' | trans }}</p>
+                <i class="bi bi-chevron-down"></i>
+              </div>
+            </div>
+          </div>
+          <div class="options active" id="options">
+            {% for avatar in avatars %} {% set imagePath =
+            asset('uploads/images/avatars/' ~ avatar ~ '.jpg') %}
+            <a href="#" class="option selectAvatar">
+              <!-- Cambiado de id a class -->
+              <div class="option-content">
+                <div class="images">
+                  <img
+                    src="{{ imagePath }}"
+                    alt="{{ avatar }}"
+                    width="60"
+                    height="60"
+                  />
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+
+          <input type="hidden" name="avatar" class="avatarInput" />
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn-primary col-md-12 mb-3">{{ 'Register' | trans }}</button>
+    {{ form_end(registrationForm) }}
+    <div class="menu__buttons">
+      <p>
+        {{ 'Are you already registered ?' | trans}}
+        <a href="{{ path('app_login') }}">{{ 'Click here to log in' | trans }}</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block javascripts %}
+{{ encore_entry_script_tags("avatars") }}
+{% endblock %}

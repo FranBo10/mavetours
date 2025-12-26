@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %} {% block title %}{{ "Booking" | trans }}{%
+endblock %} {% block body %}
+<div id="main-container" class="container-fluid my-5">
+  {% for message in app.flashes('danger') %}
+  <div class="alert alert-danger text-center w-50 mx-auto my-2">
+    <p>{{ message }}</p>
+  </div>
+  {% endfor %}
+
+  <h2 class="titulo__reservas text-center w-100 mb-3">
+    {{ "Make your reservation" | trans }}
+  </h2>
+
+  {% for tour in reserva.tours %}
+  <div class="reserva-container container-fluid">
+    <img
+      src="{{ asset('uploads/images/' ~ tour.imagen) }}"
+      alt="{{ tour.titulo | trans }}"
+      width="350px"
+      height="280px"
+    />
+    <div class="detalles-reserva">
+      <ul>
+        <h3>
+          {{ tour.titulo | trans }} : {{ tour.horaInicio|date("H:i") }} h -
+          {{ tour.horaFin|date("H:i") }} h
+        </h3>
+        <li>
+          {% if tour.precio == 0 %}
+          <p>
+            <span>{{ "Price" | trans }} : Free Tour</span>
+          </p>
+          {% else %}
+          <p>{{ tour.precio/100|number_format(2, '.') }} €</p>
+          {% endif %}
+        </li>
+        {{
+          form_start(form, { attr: { novalidate: "novalidate" } })
+        }}
+        <li>
+          {{
+            form_label(form.cantidad_adultos, "Select number of adults" | trans)
+          }}
+          {{ form_widget(form.cantidad_adultos, {'attr': {'class': 'task_field'
+          }}) }}
+        </li>
+        <li>
+          {{ form_label(form.cantidad_kids, "Select number of kids" | trans) }}
+          {{ form_widget(form.cantidad_kids, {'attr': {'class': 'task_field'}})
+          }}
+        </li>
+        <li>
+          {{ form_label(form.fecha_evento, "Select a date" | trans) }}
+          {{ form_widget(form.fecha_evento, {
+                            'attr': {
+                                'class': 'task_field datepicker',
+                                'placeholder': 'Select a date'|trans,
+                            }
+                        }) }}
+        </li>
+        <li>
+          <div class="buttons">
+            <a href="{{ path('home') }}" class="btn-tertiary my-3">{{
+              "More tours..." | trans
+            }}</a>
+            {% if app.user %}
+            <div class="left-buttons">
+              <button type="submit" class="btn-primary">
+                {{ "Confirm booking" | trans }}
+              </button>
+            </div>
+            {% else %}
+            <div class="left-buttons">
+              <a href="{{ path('app_login') }}" class="btn-primary-card">
+                {{ "Book now" | trans }}
+              </a>
+            </div>
+            {% endif %}
+          </div>
+        </li>
+        {{
+          form_end(form)
+        }}
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
