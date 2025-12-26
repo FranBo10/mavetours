@@ -51,9 +51,39 @@ class AuthController extends AbstractController
                     'id' => $user->getId(),
                     'email' => $user->getEmail(),
                     'nombre' => $user->getNombre(),
+                    'apellidos' => $user->getApellidos(),
+                    'telefono' => $user->getTelefono(),
+                    'pais' => $user->getPais(),
                     'roles' => $user->getRoles(),
                     'avatar' => $user->getAvatar(),
                 ],
+            ],
+        ]);
+    }
+
+    #[Route('/api/auth/me', name: 'api_auth_me', methods: ['GET'])]
+    public function me(): JsonResponse
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->json([
+                'success' => false,
+                'error' => 'No autorizado',
+            ], 401);
+        }
+
+        return $this->json([
+            'success' => true,
+            'data' => [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'nombre' => $user->getNombre(),
+                'apellidos' => $user->getApellidos(),
+                'telefono' => $user->getTelefono(),
+                'pais' => $user->getPais(),
+                'avatar' => $user->getAvatar(),
+                'roles' => $user->getRoles(),
             ],
         ]);
     }
