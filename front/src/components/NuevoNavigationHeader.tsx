@@ -1,198 +1,226 @@
+// src/components/NavigationHeader.tsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Animated,
-  Pressable,
-  StyleSheet,
-  Text,
   View,
-  Image,
+  Text,
+  StyleSheet,
+  Pressable,
+  Animated,
   Easing,
-  useWindowDimensions,
+  Image,
+  ActivityIndicator,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { theme } from "../theme/theme";
-// Si ya tienes AuthContext, cámbialo por useAuth()
-/* import { useAuth } from "../context/AuthContext"; */
+import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/env";
 
-type Lang = "en" | "fr" | "es";
+type Locale = "es" | "en" | "fr";
+
+function avatarUrl(avatar?: string | null) {
+  if (!avatar) return null;
+  // Ajusta según cómo guardes avatar en DB
+  const hasExt = /\.[a-zA-Z0-9]+$/.test(avatar);
+  const file = hasExt ? avatar : `${avatar}.jpg`;
+  return `${API_BASE_URL}/uploads/images/avatars/${file}`;
+}
 
 export default function NavigationHeader() {
   const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
 
-  // 🔐 Sustituye esto por tu AuthContext real cuando lo tengas
-  const isLoggedIn = false;
-  const user = null as null | { nombre?: string; avatar?: string; roles?: string[] };
+  // ✅ AUTH REAL
+  const { isAuthenticated, user, isLoading, signOut } = useAuth();
 
   const isAdminOrGuia = useMemo(() => {
     const roles = user?.roles ?? [];
     return roles.includes("ROLE_ADMIN") || roles.includes("ROLE_GUIA");
   }, [user?.roles]);
 
-  // Drawer state
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
 
-  // Animación lateral
-  const drawerW = Math.min(340, Math.max(280, Math.floor(width * 0.82)));
-  const x = useRef(new Animated.Value(drawerW)).current; // 0 visible, drawerW oculto
-  const overlay = useRef(new Animated.Value(0)).current;
+  // Animación: menú entra desde la izquierda (tipo panel)
+  const anim = useRef(new Animated.Value(0)).current; // 0 cerrado, 1 abierto
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(x, {
-        toValue: open ? 0 : drawerW,
-        duration: 280,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(overlay, {
-        toValue: open ? 1 : 0,
-        duration: 220,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
+    Animated.timing(anim, {
+      toValue: open ? 1 : 0,
+      duration: 260,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start(() => {
       if (!open) setLangOpen(false);
     });
-  }, [open, drawerW, x, overlay]);
+  }, [open, anim]);
 
-  const close = () => setOpen(false);
+  const panelTranslateX = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-320, 0],
+  });
+
+  const overlayOpacity = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 1],
+  });
+
+  const closeMenu = () => setOpen(false);
 
   const go = (path: string) => {
-    close();
+    closeMenu();
     router.push(path as any);
   };
 
-  const setLang = (lang: Lang) => {
-    // Aquí puedes guardar idioma en Zustand/Context/AsyncStorage
-    // Por ahora solo cierro el submenú
+  const setLang = (_lang: Locale) => {
+    // TODO: guardar idioma en AsyncStorage/Context
     setLangOpen(false);
+    closeMenu();
   };
 
-  return (
-    <View style={[styles.headerWrap, { paddingTop: insets.top }]}>
-      {/* Header fijo */}
-      <View style={styles.header}>
-        <Text style={styles.brand}>Mave</Text>
+  const handleLogout = async () => {
+    closeMenu();
+    await signOut();
+    router.replace("/"); // o "/login"
+  };
 
-        <Pressable
-          onPress={() => setOpen((v) => !v)}
-          hitSlop={12}
-          style={({ pressed }) => [styles.iconBtn, pressed && { opacity: 0.85 }]}
-        >
-          <Text style={styles.iconBtnText}>{open ? "✕" : "☰"}</Text>
-        </Pressable>
+  const avatar = useMemo(() => avatarUrl(user?.avatar ?? null), [user?.avatar]);
+
+  return (
+    <View pointerEvents="box-none" style={[styles.navigation, { paddingTop: insets.top }]}>
+      {/* BAR */}
+      <View style={styles.navBar}>
+        <View style={styles.logo}>
+          <Text style={styles.logoText}>
+            Mave <Text style={styles.logoNombre}>Tours</Text>
+          </Text>
+        </View>
+
+        {!open ? (
+          <Pressable
+            style={({ pressed }) => [styles.menuBtn, pressed && { opacity: 0.85 }]}
+            onPress={() => setOpen(true)}
+            hitSlop={12}
+          >
+            <Text style={styles.menuIcon}>☰</Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            style={({ pressed }) => [styles.closeBtn, pressed && { opacity: 0.85 }]}
+            onPress={() => setOpen(false)}
+            hitSlop={12}
+          >
+            <Text style={styles.closeIcon}>✕</Text>
+          </Pressable>
+        )}
       </View>
 
-      {/* Overlay + Drawer */}
-      {/** OJO: lo renderizo siempre para que la animación sea fluida */}
+      {/* OVERLAY */}
+      <Animated.View
+        pointerEvents={open ? "auto" : "none"}
+        style={[styles.overlay, { opacity: overlayOpacity }]}
+      >
+        <Pressable style={StyleSheet.absoluteFill} onPress={closeMenu} />
+      </Animated.View>
+
+      {/* PANEL */}
       <Animated.View
         pointerEvents={open ? "auto" : "none"}
         style={[
-          styles.overlay,
+          styles.menuMobile,
           {
-            opacity: overlay,
+            top: styles.navBar.height!,
+            transform: [{ translateX: panelTranslateX }],
           },
         ]}
       >
-        {/* cerrar al tocar fuera */}
-        <Pressable style={StyleSheet.absoluteFill} onPress={close} />
-      </Animated.View>
-
-      <Animated.View
-        pointerEvents={open ? "auto" : "none"}
-        style={[
-          styles.drawer,
-          { width: drawerW, paddingTop: insets.top + 12, transform: [{ translateX: x }] },
-        ]}
-      >
-        {/* Perfil */}
-        {isLoggedIn ? (
-          <>
-            <View style={styles.profileRow}>
-              <View style={styles.avatarWrap}>
-                {/* Si tienes URL real: <Image source={{ uri: ... }} /> */}
-                {user?.avatar ? (
-                  <Image
-                    source={{ uri: user.avatar }}
-                    style={styles.avatar}
-                    resizeMode="cover"
-                  />
-                ) : (
-                  <View style={styles.avatarFallback}>
-                    <Text style={styles.avatarFallbackText}>
-                      {(user?.nombre?.[0] ?? "U").toUpperCase()}
-                    </Text>
+        <View style={styles.menuItems}>
+          {/* PERFIL */}
+          {isAuthenticated ? (
+            <>
+              <View style={styles.item}>
+                <View style={styles.profile}>
+                  <View style={styles.image}>
+                    {avatar ? (
+                      <Image source={{ uri: avatar }} style={styles.avatar} />
+                    ) : (
+                      <View style={styles.avatarFallback}>
+                        <Text style={styles.avatarFallbackText}>
+                          {(user?.nombre?.[0] ?? user?.email?.[0] ?? "U").toUpperCase()}
+                        </Text>
+                      </View>
+                    )}
                   </View>
-                )}
+                  <View style={styles.name}>
+                    <Text style={styles.nameText}>{user?.nombre ?? "Usuario"}</Text>
+                  </View>
+                </View>
               </View>
 
-              <View style={styles.profileName}>
-                <Text style={styles.profileNameText}>{user?.nombre ?? "Usuario"}</Text>
-              </View>
+              <View style={styles.itemSeparator} />
+            </>
+          ) : null}
+
+          <MenuRow title="Home" icon="🏠" onPress={() => go("/")} />
+
+          {isAuthenticated && isAdminOrGuia ? (
+            <>
+              <MenuRow title="Admin" icon="👤" onPress={() => go("/admin")} />
+              <MenuRow title="Calendar" icon="🚩" onPress={() => go("/calendar")} />
+            </>
+          ) : null}
+
+          <MenuRow title="Blog" icon="📚" onPress={() => go("/blog")} />
+          <MenuRow title="Contact" icon="💬" onPress={() => go("/contact")} />
+
+          {/* Language toggle */}
+          <Pressable
+            style={({ pressed }) => [styles.item, pressed && { opacity: 0.9 }]}
+            onPress={() => setLangOpen((v) => !v)}
+          >
+            <View style={styles.row}>
+              <Text style={styles.icon}>🌐</Text>
+              <Text style={styles.title}>Language</Text>
             </View>
+            <Text style={styles.chevron}>{langOpen ? "▲" : "▼"}</Text>
+          </Pressable>
 
-            <View style={styles.separator} />
-          </>
-        ) : null}
+          {langOpen ? (
+            <View style={styles.languageDropdown}>
+              <LangRow flag="🇬🇧" label="English" onPress={() => setLang("en")} />
+              <LangRow flag="🇫🇷" label="Français" onPress={() => setLang("fr")} />
+              <LangRow flag="🇪🇸" label="Español" onPress={() => setLang("es")} />
+            </View>
+          ) : null}
 
-        {/* Items */}
-        <MenuItem title="Home" icon="🏠" onPress={() => go("/")} />
-        {isLoggedIn && isAdminOrGuia ? (
-          <>
-            <MenuItem title="Admin" icon="👤" onPress={() => go("/admin")} />
-            <MenuItem title="Calendar" icon="🚩" onPress={() => go("/calendar")} />
-          </>
-        ) : null}
-
-        <MenuItem title="Blog" icon="📚" onPress={() => go("/blog")} />
-        <MenuItem title="Contact" icon="💬" onPress={() => go("/contact")} />
-
-        {/* Idioma con dropdown */}
-        <Pressable
-          onPress={() => setLangOpen((v) => !v)}
-          style={({ pressed }) => [styles.item, pressed && { opacity: 0.9 }]}
-        >
-          <View style={styles.itemLeft}>
-            <Text style={styles.itemIcon}>🌐</Text>
-            <Text style={styles.itemTitle}>Language</Text>
-          </View>
-          <Text style={styles.chevron}>{langOpen ? "▲" : "▼"}</Text>
-        </Pressable>
-
-        {langOpen ? (
-          <View style={styles.langBox}>
-            <LangItem label="English" flag="🇬🇧" onPress={() => setLang("en")} />
-            <LangItem label="Français" flag="🇫🇷" onPress={() => setLang("fr")} />
-            <LangItem label="Español" flag="🇪🇸" onPress={() => setLang("es")} />
-          </View>
-        ) : null}
-
-        <View style={styles.separator} />
-
-        {/* Auth items */}
-        {isLoggedIn ? (
-          <>
-            <MenuItem title="My Account" icon="🧾" onPress={() => go("/account")} />
-            <MenuItem title="My Bookings" icon="📋" onPress={() => go("/bookings")} />
-            <MenuItem title="Log out" icon="🚪" danger onPress={() => go("/logout")} />
-          </>
-        ) : (
-          <>
-            <MenuItem title="Log in" icon="👤" onPress={() => go("/login")} />
-            <MenuItem title="Registration" icon="📝" onPress={() => go("/register")} />
-          </>
-        )}
+          {/* AUTH LINKS */}
+          {isLoading ? (
+            <View style={[styles.item, { justifyContent: "flex-start", gap: 10 }]}>
+              <ActivityIndicator color="#fff" />
+              <Text style={[styles.title, { textTransform: "none", letterSpacing: 0 }]}>
+                Cargando sesión…
+              </Text>
+            </View>
+          ) : isAuthenticated ? (
+            <>
+              <MenuRow title="My Account" icon="🧾" onPress={() => go("/account")} />
+              <MenuRow title="My Bookings" icon="📋" onPress={() => go("/bookings")} />
+              <MenuRow title="Log Out" icon="🚪" danger onPress={handleLogout} />
+            </>
+          ) : (
+            <>
+              <MenuRow title="Log in" icon="👤" onPress={() => go("/login")} />
+              <MenuRow title="Registration" icon="📝" onPress={() => go("/register")} />
+            </>
+          )}
+        </View>
       </Animated.View>
     </View>
   );
 }
 
-/* ---------- small components ---------- */
+/* ---------- UI rows ---------- */
 
-function MenuItem({
+function MenuRow({
   title,
   icon,
   onPress,
@@ -200,36 +228,33 @@ function MenuItem({
 }: {
   title: string;
   icon: string;
-  onPress: () => void;
+  onPress: () => void | Promise<void>;
   danger?: boolean;
 }) {
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [styles.item, pressed && { opacity: 0.9 }]}
-    >
-      <View style={styles.itemLeft}>
-        <Text style={styles.itemIcon}>{icon}</Text>
-        <Text style={[styles.itemTitle, danger && { color: theme.colors.danger ?? "#e74c3c" }]}>
+    <Pressable style={({ pressed }) => [styles.item, pressed && { opacity: 0.9 }]} onPress={onPress}>
+      <View style={styles.row}>
+        <Text style={styles.icon}>{icon}</Text>
+        <Text style={[styles.title, danger && { color: theme.colors.danger ?? "#e74c3c" }]}>
           {title}
         </Text>
       </View>
-      <Text style={styles.itemArrow}>›</Text>
+      <Text style={styles.arrow}>›</Text>
     </Pressable>
   );
 }
 
-function LangItem({
-  label,
+function LangRow({
   flag,
+  label,
   onPress,
 }: {
-  label: string;
   flag: string;
+  label: string;
   onPress: () => void;
 }) {
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.langItem, pressed && { opacity: 0.9 }]}>
+    <Pressable style={({ pressed }) => [styles.langItem, pressed && { opacity: 0.9 }]} onPress={onPress}>
       <Text style={styles.langFlag}>{flag}</Text>
       <Text style={styles.langLabel}>{label}</Text>
     </Pressable>
@@ -239,104 +264,132 @@ function LangItem({
 /* ---------- styles ---------- */
 
 const styles = StyleSheet.create({
-  headerWrap: {
-    width: "100%",
-    backgroundColor: theme.colors.grayDarken,
-    zIndex: 50,
+  navigation: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10000,
   },
 
-  header: {
-    height: 52,
-    paddingHorizontal: 14,
+  navBar: {
+    height: 50,
+    backgroundColor: theme.colors.primary,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    paddingHorizontal: 16,
   },
 
-  brand: {
+  logo: { flex: 1 },
+  logoText: {
     color: theme.colors.white,
-    fontSize: theme.typography.fontSize.h3,
-    fontWeight: "800",
-    letterSpacing: 0.5,
+    fontSize: 18,
+    fontWeight: "900",
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    textShadowColor: "rgba(0,0,0,0.35)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
+  logoNombre: { color: theme.colors.white, fontWeight: "900" },
 
-  iconBtn: {
-    minHeight: 38,
+  menuBtn: {
+    height: 42,
     minWidth: 44,
-    borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 10,
+    backgroundColor: "rgba(255,255,255,0.12)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.25)",
-    backgroundColor: "rgba(255,255,255,0.08)",
+    borderColor: "rgba(255,255,255,0.22)",
   },
-  iconBtnText: { color: theme.colors.white, fontSize: 20, fontWeight: "900" },
+  closeBtn: {
+    height: 42,
+    minWidth: 44,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    backgroundColor: "rgba(255,255,255,0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.22)",
+  },
+  menuIcon: { color: theme.colors.white, fontSize: 22, fontWeight: "900" },
+  closeIcon: { color: theme.colors.white, fontSize: 20, fontWeight: "900" },
 
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.45)",
-    zIndex: 60,
   },
 
-  drawer: {
+  menuMobile: {
     position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: theme.colors.white,
-    zIndex: 70,
-    paddingHorizontal: 14,
-    paddingBottom: 18,
-    borderLeftWidth: 1,
-    borderLeftColor: "rgba(0,0,0,0.06)",
-  },
-
-  profileRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    paddingVertical: 10,
-  },
-  avatarWrap: { width: 44, height: 44, borderRadius: 22, overflow: "hidden" },
-  avatar: { width: 44, height: 44 },
-  avatarFallback: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    left: 0,
+    width: 320,
+    minHeight: 380,
     backgroundColor: theme.colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
+    borderBottomRightRadius: 20,
+    paddingVertical: 10,
+    zIndex: 9999,
   },
-  avatarFallbackText: { color: theme.colors.white, fontWeight: "900" },
-  profileName: { flex: 1 },
-  profileNameText: { fontSize: theme.typography.fontSize.main, fontWeight: "800" },
 
-  separator: {
-    height: 1,
-    backgroundColor: "rgba(0,0,0,0.08)",
-    marginVertical: 10,
-  },
+  menuItems: { paddingHorizontal: 10 },
 
   item: {
+    paddingHorizontal: 12,
     paddingVertical: 12,
-    paddingHorizontal: 10,
     borderRadius: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  itemLeft: { flexDirection: "row", alignItems: "center", gap: 10 },
-  itemIcon: { fontSize: 18 },
-  itemTitle: { fontSize: theme.typography.fontSize.main, fontWeight: "700" },
-  itemArrow: { fontSize: 18, color: "rgba(0,0,0,0.35)" },
 
-  chevron: { color: "rgba(0,0,0,0.55)", fontWeight: "900" },
+  row: { flexDirection: "row", alignItems: "center", gap: 10 },
+  icon: { fontSize: 18, color: theme.colors.white },
+  title: {
+    color: theme.colors.white,
+    fontSize: 14,
+    fontWeight: "800",
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+  },
+  arrow: { color: "rgba(255,255,255,0.75)", fontSize: 18, fontWeight: "900" },
 
-  langBox: {
+  itemSeparator: {
+    height: 1,
+    width: "92%",
+    alignSelf: "center",
+    backgroundColor: "rgba(255,255,255,0.35)",
+    marginVertical: 10,
+  },
+
+  profile: { flexDirection: "row", alignItems: "center", gap: 10 },
+  image: { width: 50, height: 50, borderRadius: 25, overflow: "hidden" },
+  avatar: { width: 50, height: 50, borderRadius: 25 },
+  avatarFallback: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarFallbackText: { color: theme.colors.white, fontWeight: "900" },
+  name: { justifyContent: "center" },
+  nameText: {
+    color: theme.colors.white,
+    fontSize: 16,
+    fontWeight: "900",
+    textTransform: "uppercase",
+  },
+
+  chevron: { color: "rgba(255,255,255,0.85)", fontWeight: "900" },
+
+  languageDropdown: {
     marginTop: 6,
-    marginBottom: 2,
-    backgroundColor: "rgba(0,0,0,0.03)",
-    borderRadius: 12,
+    marginBottom: 8,
+    marginHorizontal: 10,
+    backgroundColor: "rgba(0,0,0,0.15)",
+    borderRadius: 14,
     paddingVertical: 6,
     paddingHorizontal: 8,
   },
@@ -346,8 +399,8 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingVertical: 10,
     paddingHorizontal: 10,
-    borderRadius: 10,
+    borderRadius: 12,
   },
   langFlag: { fontSize: 18 },
-  langLabel: { fontSize: theme.typography.fontSize.main, fontWeight: "700" },
+  langLabel: { color: theme.colors.white, fontSize: 14, fontWeight: "800" },
 });

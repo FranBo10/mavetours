@@ -1,0 +1,11 @@
+# EAS Build
+node_modules/
+.expo/
+npm-debug.log
+yarn-error.log
+.git/
+android/
+ios/
+dist/
+build/
+web-build/

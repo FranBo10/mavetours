@@ -1,5 +1,6 @@
 // src/screens/HomeScreen.tsx
 import React, { useEffect, useRef, useState } from "react";
+import i18n from "../i18n";
 import {
   View,
   Text,
@@ -12,22 +13,24 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { router } from "expo-router";
-import NavigationHeader from "../components/NavigationHeader";
 import { theme } from "../theme/theme";
-import { fetchTours, type Tour } from "../api/tours";
+import { fetchTours, type Tour, getTourTitle } from "../api/tours";
+import { useLanguage } from "../context/LanguageContext";
+import { useAuth } from "../context/AuthContext";
 
 function formatPrice(precio: number) {
-  if (!precio) return "Free Tour";
+  if (!precio) return i18n.t("free");
   return `${(precio / 100).toFixed(2)} €`;
 }
 
 const COLLAPSED_H = 60;
-const EXPANDED_H = 160;
+const EXPANDED_H = 240; // Maximize to cover full card image (height: 240)
 
 function TourCard({ tour, isLoggedIn }: { tour: Tour; isLoggedIn: boolean }) {
+  const { locale } = useLanguage();
   const [expanded, setExpanded] = useState(false);
 
-  // 0 = cerrado, 1 = abierto
+  // 0 = closed, 1 = open
   const anim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -35,7 +38,7 @@ function TourCard({ tour, isLoggedIn }: { tour: Tour; isLoggedIn: boolean }) {
       toValue: expanded ? 1 : 0,
       duration: 320,
       easing: Easing.bezier(0.48, -0.02, 0.41, 1.15),
-      useNativeDriver: false, // height no soporta native driver
+      useNativeDriver: false,
     }).start();
   }, [expanded, anim]);
 
@@ -54,21 +57,20 @@ function TourCard({ tour, isLoggedIn }: { tour: Tour; isLoggedIn: boolean }) {
     outputRange: [12, 0],
   });
 
-  const goMoreInfo = (e: any) => {
-    e?.stopPropagation?.();
+  const goMoreInfo = () => {
     router.push({ pathname: "/tour/[id]", params: { id: String(tour.id) } });
   };
 
-  const goBook = (e: any) => {
-    e?.stopPropagation?.();
-    if (!isLoggedIn) {
-      router.push("/login");
-      return;
-    }
-    router.push({
-      pathname: "/tour/[id]/book",
-      params: { id: String(tour.id) },
-    });
+  const goFreeTour = () => {
+    router.push({ pathname: "/tour/[id]/book", params: { id: String(tour.id) } });
+  };
+
+  const goAudioguide = () => {
+    router.push({ pathname: "/audioguide/[id]", params: { id: String(tour.id) } });
+  };
+
+  const goLogin = () => {
+    router.push("/login");
   };
 
   return (
@@ -83,11 +85,11 @@ function TourCard({ tour, isLoggedIn }: { tour: Tour; isLoggedIn: boolean }) {
       >
         <View style={styles.cardOverlay} />
 
-        {/* Footer animado */}
+        {/* Animated Footer */}
         <Animated.View style={[styles.cardBottom, { height: footerHeight }]}>
-          <Text style={styles.cardTitle}>{tour.titulo}</Text>
+          <Text style={styles.cardTitle}>{getTourTitle(tour, locale)}</Text>
 
-          {/* Contenido oculto animado */}
+          {/* Hidden Content */}
           <Animated.View
             pointerEvents={expanded ? "auto" : "none"}
             style={{
@@ -96,41 +98,88 @@ function TourCard({ tour, isLoggedIn }: { tour: Tour; isLoggedIn: boolean }) {
             }}
           >
             <Text style={styles.cardPrice}>
-              Price:{" "}
+              {i18n.t("price")}{" "}
               <Text style={styles.cardPriceValue}>{formatPrice(tour.precio)}</Text>
             </Text>
 
             <View style={styles.cardButtonsRow}>
-              {/* More information (secondary) */}
+              {/* INFO (Always visible, full width) */}
               <Pressable
                 onPress={goMoreInfo}
                 style={({ pressed }) => [
                   styles.btnBase,
                   styles.btnSecondary,
                   pressed && styles.btnPressed,
+                  { width: "100%" }
                 ]}
               >
-                <Text style={styles.btnText}>More information</Text>
+                <Text style={styles.btnText}>{i18n.t("info")}</Text>
               </Pressable>
 
-              {/* Book now (primary) */}
-              <Pressable
-                onPress={goBook}
-                style={({ pressed }) => [
-                  styles.btnBase,
-                  styles.btnPrimary,
-                  pressed && styles.btnPressed,
-                ]}
-              >
-                <Text style={styles.btnText}>Book now</Text>
-              </Pressable>
+              {isLoggedIn ? (
+                <>
+                  {/* FREETOUR */}
+                  <Pressable
+                    onPress={goFreeTour}
+                    style={({ pressed }) => [
+                      styles.btnBase,
+                      styles.btnPrimary,
+                      pressed && styles.btnPressed,
+                      { flex: 1, minWidth: "45%" }
+                    ]}
+                  >
+                    <Text style={styles.btnText}>{i18n.t("freetour")}</Text>
+                  </Pressable>
+
+                  {/* AUDIOGUIDE */}
+                  <Pressable
+                    onPress={goAudioguide}
+                    style={({ pressed }) => [
+                      styles.btnBase,
+                      styles.btnWarning,
+                      pressed && styles.btnPressed,
+                      { flex: 1, minWidth: "45%" }
+                    ]}
+                  >
+                    <Text style={styles.btnText}>{i18n.t("audioguide")}</Text>
+                  </Pressable>
+                </>
+              ) : (
+                <>
+                  {/* Book now -> Login */}
+                  <Pressable
+                    onPress={goLogin}
+                    style={({ pressed }) => [
+                      styles.btnBase,
+                      styles.btnPrimary,
+                      pressed && styles.btnPressed,
+                      { flex: 1, minWidth: "45%" }
+                    ]}
+                  >
+                    <Text style={styles.btnText}>{i18n.t("freetour")}</Text>
+                  </Pressable>
+
+                  {/* Navigate -> Login */}
+                  <Pressable
+                    onPress={goLogin}
+                    style={({ pressed }) => [
+                      styles.btnBase,
+                      styles.btnWarning,
+                      pressed && styles.btnPressed,
+                      { flex: 1, minWidth: "45%" }
+                    ]}
+                  >
+                    <Text style={styles.btnText}>{i18n.t("audioguide")}</Text>
+                  </Pressable>
+                </>
+              )}
             </View>
 
-            <Text style={styles.tapHint}>Tap again to hide</Text>
+            <Text style={styles.tapHint}>{i18n.t("tap_to_hide")}</Text>
           </Animated.View>
 
           {!expanded && (
-            <Text style={styles.tapHint}>Tap to see price & actions</Text>
+            <Text style={styles.tapHint}>{i18n.t("tap_to_see")}</Text>
           )}
         </Animated.View>
       </ImageBackground>
@@ -141,6 +190,8 @@ function TourCard({ tour, isLoggedIn }: { tour: Tour; isLoggedIn: boolean }) {
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const numColumns = width >= 700 ? 2 : 1;
+  const { isAuthenticated } = useAuth();
+  const { locale } = useLanguage();
 
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
@@ -148,24 +199,18 @@ export default function HomeScreen() {
   useEffect(() => {
     fetchTours()
       .then((res: Tour[]) => {
-        console.log("TOURS OK:", res.length);
         setTours(res);
       })
       .catch((e: unknown) => {
-        if (e instanceof Error) console.log("TOURS ERROR:", e.message);
-        else console.log("TOURS ERROR:", String(e));
-        console.log("TOURS ERROR FULL:", e);
+        console.log("TOURS ERROR:", e);
       })
       .finally(() => setLoading(false));
   }, []);
 
   const visibleTours = tours.filter((t) => t.isEstado);
 
-  // 🔐 luego lo conectarás con tu AuthContext real
-  const isLoggedIn = false;
-
   return (
-    <View style={styles.container}>
+    <View style={styles.container} key={locale}>
 
       {/* HERO */}
       <ImageBackground
@@ -178,7 +223,7 @@ export default function HomeScreen() {
 
       {/* SERVICIOS */}
       <View style={styles.servicios}>
-        <Text style={styles.serviciosTitle}>Enjoy the experience</Text>
+        <Text style={styles.serviciosTitle}>{i18n.t("enjoy")}</Text>
 
         <FlatList
           data={visibleTours}
@@ -189,13 +234,13 @@ export default function HomeScreen() {
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
             <View style={[styles.cardWrapper, numColumns > 1 && { flex: 1 }]}>
-              <TourCard tour={item} isLoggedIn={isLoggedIn} />
+              <TourCard tour={item} isLoggedIn={isAuthenticated} />
             </View>
           )}
           ListEmptyComponent={
             !loading ? (
               <Text style={{ textAlign: "center", marginTop: 40 }}>
-                No tours available
+                {i18n.t("no_tours")}
               </Text>
             ) : null
           }
@@ -270,32 +315,35 @@ const styles = StyleSheet.create({
 
   cardButtonsRow: {
     flexDirection: "row",
-    gap: 10,
-    justifyContent: "center",
+    gap: 8, // reduced gap slightly to fit better if needed, flexWrap takes care
+    justifyContent: "space-between",
     flexWrap: "wrap",
-    marginTop: 6,
+    marginTop: 12,
   },
 
-  // Botones (equivalente a .btn-primary / .btn-secondary)
+  // Button Base
   btnBase: {
-    minHeight: 36,
-    paddingVertical: 6,
+    minHeight: 48, // Taller buttons
+    paddingVertical: 12,
     paddingHorizontal: 12,
-    borderRadius: 8,
-    borderWidth: 2,
-    overflow: "hidden",
+    borderRadius: 10,
+    borderWidth: 0,
     alignItems: "center",
     justifyContent: "center",
+    elevation: 2,
+    marginBottom: 8, // Added margin bottom for wrapped items
   },
 
   btnPrimary: {
     backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primaryDark ?? theme.colors.primary,
   },
 
   btnSecondary: {
     backgroundColor: theme.colors.secondary,
-    borderColor: theme.colors.secondaryDark ?? theme.colors.secondary,
+  },
+
+  btnWarning: {
+    backgroundColor: theme.colors.warning,
   },
 
   btnPressed: {
@@ -305,14 +353,16 @@ const styles = StyleSheet.create({
 
   btnText: {
     color: theme.colors.white,
-    fontSize: theme.typography.fontSize.main,
-    fontWeight: "700",
+    fontSize: 14,
+    fontWeight: "800",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
 
   tapHint: {
     color: theme.colors.grayDark,
     textAlign: "center",
-    marginTop: 8,
+    marginTop: 2,
     fontSize: 12,
   },
 });

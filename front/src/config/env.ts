@@ -4,7 +4,8 @@ import { Platform } from "react-native";
 const DEV_PORT = 8000;
 
 // ⚠️ Cambia esto por la IP LAN de tu PC si usas móvil real:
-const LAN_IP = "192.168.1.50";
+// const LAN_IP = "192.168.1.50";
+const LAN_IP = "172.30.0.178";
 
 function getDevBaseUrl() {
   // Android Emulator
@@ -15,4 +16,4 @@ function getDevBaseUrl() {
   return `http://${LAN_IP}:${DEV_PORT}`;
 }
 
-export const API_BASE_URL = __DEV__ ? getDevBaseUrl() : "https://TU_DOMINIO_PROD";
+export const API_BASE_URL = __DEV__ ? getDevBaseUrl() : "https://www.mavetours.com";

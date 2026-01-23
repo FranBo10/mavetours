@@ -5,21 +5,45 @@ import { API_BASE_URL } from "../config/env";
 export type Tour = {
   id: number;
   titulo: string;
+  tituloEs?: string | null;
+  tituloFr?: string | null;
   imagen: string; // URL absoluta lista para <Image />
   precio: number; // céntimos
   isEstado: boolean;
   descripcionCorta?: string | null;
   descripcionLarga?: string | null;
+  duracion?: string | null;
+  comienzo?: string | null;
+  final?: string | null;
+  mapaComienzo?: string | null;
+  mapaFinal?: string | null;
+  horaInicio?: string | null;
+  horaFin?: string | null;
+  rango?: string | null;
+  stock?: number | null;
 };
 
 export type TourApi = {
   id: number;
   titulo: string;
+  titulo_es?: string | null;
+  tituloEs?: string | null; // Handle camelCase mismatch
+  titulo_fr?: string | null;
+  tituloFr?: string | null; // Handle camelCase mismatch
   imagen: string;
   precio: number; // euros (double) en tu API
   estado: boolean | number;
   descripcion_corta?: string | null;
   descripcion_larga?: string | null;
+  duracion?: string | null;
+  comienzo?: string | null;
+  final?: string | null;
+  mapaComienzo?: string | null;
+  mapaFinal?: string | null;
+  hora_inicio?: string | null;
+  hora_fin?: string | null;
+  rango?: string | null;
+  stock?: number | null;
 };
 
 // Hydra (API Platform)
@@ -49,11 +73,23 @@ function mapTour(t: TourApi): Tour {
   return {
     id: t.id,
     titulo: t.titulo,
+    tituloEs: t.titulo_es ?? t.tituloEs ?? null,
+    tituloFr: t.titulo_fr ?? t.tituloFr ?? null,
     imagen: absolutizeImage(t.imagen),
     precio: eurosToCents(t.precio),
-    isEstado: Boolean(t.estado),
+    // Robust check for state: true if 1, "1", true, or "true"
+    isEstado: t.estado === true || t.estado === 1 || String(t.estado) === "1" || String(t.estado) === "true",
     descripcionCorta: t.descripcion_corta ?? null,
     descripcionLarga: t.descripcion_larga ?? null,
+    duracion: t.duracion ?? null,
+    comienzo: t.comienzo ?? null,
+    final: t.final ?? null,
+    mapaComienzo: t.mapaComienzo ?? null,
+    mapaFinal: t.mapaFinal ?? null,
+    horaInicio: t.hora_inicio ?? null,
+    horaFin: t.hora_fin ?? null,
+    rango: t.rango ?? null,
+    stock: typeof t.stock === "number" ? t.stock : null
   };
 }
 
@@ -73,6 +109,22 @@ function extractList(payload: unknown): TourApi[] {
 
   // 3) fallback seguro
   return [];
+}
+
+// Helper to get localized title with strict Spanish default
+export function getTourTitle(tour: Tour, locale: string): string {
+  // 1. Specific matches
+  if (locale.startsWith('es') && tour.tituloEs) return tour.tituloEs;
+  if (locale.startsWith('fr') && tour.tituloFr) return tour.tituloFr;
+
+  // 2. English (Base title usually)
+  if (locale.startsWith('en')) return tour.titulo;
+
+  // 3. Fallback to Spanish (Default as requested by user)
+  if (tour.tituloEs) return tour.tituloEs;
+
+  // 4. Last resort (Base)
+  return tour.titulo;
 }
 
 export async function fetchTours(): Promise<Tour[]> {

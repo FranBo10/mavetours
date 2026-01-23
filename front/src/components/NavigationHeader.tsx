@@ -1,4 +1,3 @@
-// src/components/NavigationHeader.tsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
@@ -9,18 +8,31 @@ import {
   Easing,
   Image,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { theme } from "../theme/theme";
+import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/env";
+import { useLanguage } from "../context/LanguageContext";
+import i18n from "../i18n";
 
 type Locale = "es" | "en" | "fr";
 
-export default function NavigationHeader() {
-  const insets = useSafeAreaInsets();
+function avatarUrl(avatar?: string | null) {
+  if (!avatar) return null;
+  if (avatar.startsWith("http")) return avatar; // Handle absolute URLs
 
-  // 🔐 Sustituye luego por tu Auth real
-  const isLoggedIn = false;
-  const user = null as null | { id: number; nombre?: string; avatar?: string; roles?: string[] };
+  // Ajusta según cómo guardes avatar en DB
+  const hasExt = /\.[a-zA-Z0-9]+$/.test(avatar);
+  const file = hasExt ? avatar : `${avatar}.jpg`;
+  return `${API_BASE_URL}/uploads/images/avatars/${file}`;
+}
+
+export default function NavigationHeader() {
+
+  // ✅ AUTH REAL
+  const { isAuthenticated, user, isLoading, signOut } = useAuth();
+
+  // const user = null as null | { id: number; nombre?: string; avatar?: string; roles?: string[] };
 
   const isAdminOrGuia = useMemo(() => {
     const roles = user?.roles ?? [];
@@ -49,11 +61,6 @@ export default function NavigationHeader() {
     outputRange: [-320, 0], // ancho aprox del panel
   });
 
-  const overlayOpacity = anim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 1],
-  });
-
   const closeMenu = () => setOpen(false);
 
   const go = (path: string) => {
@@ -61,11 +68,22 @@ export default function NavigationHeader() {
     router.push(path as any);
   };
 
-  const setLang = (_lang: Locale) => {
-    // TODO: guardar idioma en AsyncStorage/Context
+  const { setLocale, locale } = useLanguage();
+
+  const setLang = async (_lang: Locale) => {
+    await setLocale(_lang);
     setLangOpen(false);
     closeMenu();
+    router.replace("/");
   };
+
+  const handleLogout = async () => {
+    closeMenu();
+    await signOut();
+    router.replace("/"); // o "/login"
+  };
+
+  const avatar = useMemo(() => avatarUrl(user?.avatar ?? null), [user?.avatar]);
 
   return (
     <View pointerEvents="box-none">
@@ -117,13 +135,13 @@ export default function NavigationHeader() {
       >
         {/* Items */}
         <View style={styles.menuItems}>
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <>
               <View style={styles.item}>
                 <View style={styles.profile}>
                   <View style={styles.image}>
-                    {user?.avatar ? (
-                      <Image source={{ uri: user.avatar }} style={styles.avatar} />
+                    {avatar ? (
+                      <Image source={{ uri: avatar }} style={styles.avatar} />
                     ) : (
                       <View style={styles.avatarFallback}>
                         <Text style={styles.avatarFallbackText}>
@@ -142,17 +160,17 @@ export default function NavigationHeader() {
             </>
           ) : null}
 
-          <MenuRow title="Home" icon="🏠" onPress={() => go("/")} />
+          <MenuRow title={i18n.t("home")} icon="🏠" onPress={() => go("/")} />
 
-          {isLoggedIn && isAdminOrGuia ? (
+          {isAuthenticated && isAdminOrGuia ? (
             <>
-              <MenuRow title="Admin" icon="👤" onPress={() => go("/admin")} />
-              <MenuRow title="Calendar" icon="🚩" onPress={() => go("/calendar")} />
+              <MenuRow title={i18n.t("admin")} icon="👤" onPress={() => go("/admin")} />
+              <MenuRow title={i18n.t("calendar")} icon="🚩" onPress={() => go("/calendar")} />
             </>
           ) : null}
 
-          <MenuRow title="Blog" icon="📚" onPress={() => go("/blog")} />
-          <MenuRow title="Contact" icon="💬" onPress={() => go("/contact")} />
+          <MenuRow title={i18n.t("blog")} icon="📚" onPress={() => go("/blog")} />
+          <MenuRow title={i18n.t("contact")} icon="💬" onPress={() => go("/contact")} />
 
           {/* Language toggle */}
           <Pressable
@@ -161,7 +179,7 @@ export default function NavigationHeader() {
           >
             <View style={styles.row}>
               <Text style={styles.icon}>🌐</Text>
-              <Text style={styles.title}>Language</Text>
+              <Text style={styles.title}>{i18n.t("language")}</Text>
             </View>
             <Text style={styles.chevron}>{langOpen ? "▲" : "▼"}</Text>
           </Pressable>
@@ -174,16 +192,17 @@ export default function NavigationHeader() {
             </View>
           ) : null}
 
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <>
-              <MenuRow title="My Account" icon="🧾" onPress={() => go("/account")} />
-              <MenuRow title="My Bookings" icon="📋" onPress={() => go("/bookings")} />
-              <MenuRow title="Log Out" icon="🚪" danger onPress={() => go("/logout")} />
+              <MenuRow title={i18n.t("chat")} icon="💬" onPress={() => go("/chat")} />
+              <MenuRow title={i18n.t("my_account")} icon="🧾" onPress={() => go("/account")} />
+              <MenuRow title={i18n.t("my_bookings")} icon="📋" onPress={() => go("/bookings")} />
+              <MenuRow title={i18n.t("log_out")} icon="🚪" danger onPress={() => go("/logout")} />
             </>
           ) : (
             <>
-              <MenuRow title="Log in" icon="👤" onPress={() => go("/login")} />
-              <MenuRow title="Registration" icon="📝" onPress={() => go("/register")} />
+              <MenuRow title={i18n.t("log_in")} icon="👤" onPress={() => go("/login")} />
+              <MenuRow title={i18n.t("register")} icon="📝" onPress={() => go("/register")} />
             </>
           )}
         </View>

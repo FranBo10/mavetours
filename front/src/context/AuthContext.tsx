@@ -161,14 +161,14 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
         const data = unwrapData(raw);
 
         const access = pickAccessToken(data);
-        const refresh = pickRefreshToken(data); // opcional
+        // const refresh = pickRefreshToken(data); // opcional
 
         if (!access) {
           return { ok: false, error: "Token inválido en la respuesta de login" };
         }
 
         // si no hay refresh, guardamos access en ambos para no romper tu storage actual
-        await setTokens(access, refresh ?? access);
+        await setTokens(access);
 
         // si el login ya trae user
         const userFromLogin = isRecord(data) ? (data as any).user : null;

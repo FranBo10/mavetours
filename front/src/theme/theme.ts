@@ -10,11 +10,11 @@ export const theme = {
     primaryLight: "#00bec7",    // lighten(primary, 10%)
     primaryLighter: "#00eefa",  // lighten(primary, 20%)
 
-    secondary: "#43D7E8",
-    secondaryDark: "#1bc9dd",   // darken(secondary, 10%)
-    secondaryDarker: "#15a0b0", // darken(secondary, 20%)
-    secondaryLight: "#70e1ee",  // lighten(secondary, 10%)
-    secondaryLighter: "#9eeaf3",// lighten(secondary, 20%)
+    secondary: "#FF7F50",   // Coral (Complementary/Triadic to Teal & Purple)
+    secondaryDark: "#cc6540",   // darken(secondary, 10%)
+    secondaryDarker: "#994c30", // darken(secondary, 20%)
+    secondaryLight: "#ff9973",  // lighten(secondary, 10%)
+    secondaryLighter: "#ffb296",// lighten(secondary, 20%)
 
     tertiary: "#cc33ff",
     tertiaryDark: "#bf00ff",    // darken(tertiary, 10%)
