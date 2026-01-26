@@ -1,0 +1,94 @@
+@use "../utils/mixins" as *;
+@use "../utils/variables" as variables;
+
+.hero {
+position: relative;
+width: 100%;
+height: 650px;
+// quitamos la imagen de aquí
+// y la ponemos en un pseudo-elemento
+&::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-image: linear-gradient(rgba(0, 0, 0, 0.5), transparent), url("/public/uploads/images/mave.jpg");
+background-size: cover;
+background-position: center;
+z-index: -1;
+}
+  // @include media(tablet) {
+  //   background-image: linear-gradient(rgba(0, 0, 0, 0.5), transparent), url("/public/uploads/images/mave_mini.jpg");
+  //   background-size: cover;
+  //   background-position: center;
+  // }
+  
+  @include media(smartPhone) {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), transparent), url("/public/uploads/images/mave_mini.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+// @include media(laptop) {
+// &::before {
+// width: 90%;
+// left: 5%; // para centrar (100% - 80%) / 2 = 10%
+// }
+// }
+
+  // @include media(tablet) {
+  //   height: 70vh; // 70% del viewport
+  //   min-height: 400px;
+  //   max-height: 600px;
+  //   background-attachment: scroll; // Mejor rendimiento en móvil
+  // }
+
+
+.hero-background {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 120px;
+  height: 100%;
+  @include media(laptop) {
+    margin-top: 100px;
+  }
+  
+  @include media(tablet) {
+    margin-top: 80px; // Reduce margen en móvil
+    justify-content: center; // Centra mejor el contenido
+  }
+}
+
+.hero-content {
+  @include flexCenter(column);
+  width: 90%;
+  h3,
+  p {
+    color: variables.$color-white;
+    font-size: variables.$font-h2;
+    text-shadow: 0 0 4px variables.$color-black !important;
+  }
+  @include media(smartPhone) {
+    padding: 0 10px;
+  }
+}
+
+.animation {
+  opacity: 0;
+  animation: fade-in 1s forwards;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

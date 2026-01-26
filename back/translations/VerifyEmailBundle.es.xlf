@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="es" target-language="es" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="6N13O6N" resname="%count% year|%count% years">
+        <source>%count% year|%count% years</source>
+        <target>%count% año|%count% años</target>
+      </trans-unit>
+      <trans-unit id="JDuOYji" resname="%count% month|%count% months">
+        <source>%count% month|%count% months</source>
+        <target>%count% mes|%count% meses</target>
+      </trans-unit>
+      <trans-unit id="1XIoEkl" resname="%count% day|%count% days">
+        <source>%count% day|%count% days</source>
+        <target>%count% día|%count% días</target>
+      </trans-unit>
+      <trans-unit id="KhyXNHg" resname="%count% hour|%count% hours">
+        <source>%count% hour|%count% hours</source>
+        <target>%count% hora|%count% horas</target>
+      </trans-unit>
+      <trans-unit id="pfyolJX" resname="%count% minute|%count% minutes">
+        <source>%count% minute|%count% minutes</source>
+        <target>%count% minuto|%count% minutos</target>
+      </trans-unit>
+      <trans-unit id="bSCr1q0" resname="The link to verify your email has expired. Please request a new link.">
+        <source>The link to verify your email has expired. Please request a new link.</source>
+        <target>El enlace para verificar tu correo electrónico ha expirado. Por favor solicita un nuevo enlace.</target>
+      </trans-unit>
+      <trans-unit id="zJ5tS45" resname="The link to verify your email is invalid. Please request a new link.">
+        <source>The link to verify your email is invalid. Please request a new link.</source>
+        <target>El enlace para verificar tu correo electrónico no es válido. Por favor solicita un nuevo enlace.</target>
+      </trans-unit>
+      <trans-unit id="phw35fR" resname="The link to verify your email appears to be for a different account or email. Please request a new link.">
+        <source>The link to verify your email appears to be for a different account or email. Please request a new link.</source>
+        <target>El enlace para verificar tu correo electrónico parece ser para una cuenta o correo diferente. Por favor solicita un nuevo enlace.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

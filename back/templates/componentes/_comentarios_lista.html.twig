@@ -1,0 +1,8 @@
+{% for comentario in comentarios %}
+    {% if comentario.isAprobado %}
+        {% include 'componentes/_comentario.html.twig' %}
+    {% endif %}
+{% endfor %}
+<div class="d-flex justify-content-center">
+    {{ knp_pagination_render(comentarios, '_partials/pagination.html.twig') }}
+</div>

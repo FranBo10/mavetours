@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="es" target-language="ES" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="8Zutx.S" resname="Please fill in the Name field.">
+        <source>Please fill in the Name field.</source>
+        <target>__Please fill in the Name field.</target>
+      </trans-unit>
+      <trans-unit id="AsAMK0X" resname="Please fill in the Last Name field.">
+        <source>Please fill in the Last Name field.</source>
+        <target>__Please fill in the Last Name field.</target>
+      </trans-unit>
+      <trans-unit id="W9cOXzo" resname="Please fill in the Email field.">
+        <source>Please fill in the Email field.</source>
+        <target>__Please fill in the Email field.</target>
+      </trans-unit>
+      <trans-unit id="oCwbT9S" resname="Please fill in the Password field.">
+        <source>Please fill in the Password field.</source>
+        <target>__Please fill in the Password field.</target>
+      </trans-unit>
+      <trans-unit id="7GmEbmm" resname="Please fill in the Country field.">
+        <source>Please fill in the Country field.</source>
+        <target>__Please fill in the Country field.</target>
+      </trans-unit>
+      <trans-unit id="FPHhazk" resname="Please fill in the E-Mail field.">
+        <source>Please fill in the E-Mail field.</source>
+        <target>__Please fill in the E-Mail field.</target>
+      </trans-unit>
+      <trans-unit id="5rjBuJe" resname="Please fill in the Avatar field.">
+        <source>Please fill in the Avatar field.</source>
+        <target>__Please fill in the Avatar field.</target>
+      </trans-unit>
+      <trans-unit id="hhOCBwG" resname="La cuenta de email ya se encuentra registrada">
+        <source>La cuenta de email ya se encuentra registrada</source>
+        <target>__La cuenta de email ya se encuentra registrada</target>
+      </trans-unit>
+      <trans-unit id="YXZ26gK" resname="Please enter a password">
+        <source>Please enter a password</source>
+        <target>__Please enter a password</target>
+      </trans-unit>
+      <trans-unit id=".esazsm" resname="Your password should be at least {{ limit }} characters">
+        <source>Your password should be at least {{ limit }} characters</source>
+        <target>__Your password should be at least {{ limit }} characters</target>
+      </trans-unit>
+      <trans-unit id="x0me37K" resname="La nota debe ser mayor o igual que 1.">
+        <source>La nota debe ser mayor o igual que 1.</source>
+        <target>__La nota debe ser mayor o igual que 1.</target>
+      </trans-unit>
+      <trans-unit id="FUDZLeS" resname="Please enter your email address">
+        <source>Please enter your email address</source>
+        <target>__Please enter your email address</target>
+      </trans-unit>
+      <trans-unit id="kNzweGi" resname="The e-mail address introduced &quot;{{ value }}&quot; is not valid.">
+        <source>The e-mail address introduced "{{ value }}" is not valid.</source>
+        <target>__The e-mail address introduced "{{ value }}" is not valid.</target>
+      </trans-unit>
+      <trans-unit id="Ar8DQRG" resname="Your password must have at list {{ limit }} characteres">
+        <source>Your password must have at list {{ limit }} characteres</source>
+        <target>__Your password must have at list {{ limit }} characteres</target>
+      </trans-unit>
+      <trans-unit id="ooaqNFo" resname="Please enter your name">
+        <source>Please enter your name</source>
+        <target>__Please enter your name</target>
+      </trans-unit>
+      <trans-unit id="nmBmPCG" resname="Please enter your last name">
+        <source>Please enter your last name</source>
+        <target>__Please enter your last name</target>
+      </trans-unit>
+      <trans-unit id="NUjiWOd" resname="Please enter a phone number">
+        <source>Please enter a phone number</source>
+        <target>__Please enter a phone number</target>
+      </trans-unit>
+      <trans-unit id="vMeIDZW" resname="Please enter your date of birth">
+        <source>Please enter your date of birth</source>
+        <target>__Please enter your date of birth</target>
+      </trans-unit>
+      <trans-unit id="Fe2zEyl" resname="Please enter your email">
+        <source>Please enter your email</source>
+        <target>__Please enter your email</target>
+      </trans-unit>
+      <trans-unit id="VKDowX6" resname="Error">
+        <source>Error</source>
+        <target>__Error</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

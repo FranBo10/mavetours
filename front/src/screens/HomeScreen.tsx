@@ -26,9 +26,18 @@ function formatPrice(precio: number) {
 const COLLAPSED_H = 60;
 const EXPANDED_H = 240; // Maximize to cover full card image (height: 240)
 
-function TourCard({ tour, isLoggedIn }: { tour: Tour; isLoggedIn: boolean }) {
+function TourCard({
+  tour,
+  isLoggedIn,
+  expanded,
+  onToggle,
+}: {
+  tour: Tour;
+  isLoggedIn: boolean;
+  expanded: boolean;
+  onToggle: () => void;
+}) {
   const { locale } = useLanguage();
-  const [expanded, setExpanded] = useState(false);
 
   // 0 = closed, 1 = open
   const anim = useRef(new Animated.Value(0)).current;
@@ -36,7 +45,7 @@ function TourCard({ tour, isLoggedIn }: { tour: Tour; isLoggedIn: boolean }) {
   useEffect(() => {
     Animated.timing(anim, {
       toValue: expanded ? 1 : 0,
-      duration: 320,
+      duration: 500,
       easing: Easing.bezier(0.48, -0.02, 0.41, 1.15),
       useNativeDriver: false,
     }).start();
@@ -75,7 +84,7 @@ function TourCard({ tour, isLoggedIn }: { tour: Tour; isLoggedIn: boolean }) {
 
   return (
     <Pressable
-      onPress={() => setExpanded((v) => !v)}
+      onPress={onToggle}
       style={({ pressed }) => [styles.card, pressed && { opacity: 0.95 }]}
     >
       <ImageBackground
@@ -195,6 +204,7 @@ export default function HomeScreen() {
 
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedCardId, setExpandedCardId] = useState<string | number | null>(null);
 
   useEffect(() => {
     fetchTours()
@@ -208,6 +218,10 @@ export default function HomeScreen() {
   }, []);
 
   const visibleTours = tours.filter((t) => t.isEstado);
+
+  const handleToggleCard = (id: string | number) => {
+    setExpandedCardId((prev) => (prev === id ? null : id));
+  };
 
   return (
     <View style={styles.container} key={locale}>
@@ -234,7 +248,12 @@ export default function HomeScreen() {
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
             <View style={[styles.cardWrapper, numColumns > 1 && { flex: 1 }]}>
-              <TourCard tour={item} isLoggedIn={isAuthenticated} />
+              <TourCard
+                tour={item}
+                isLoggedIn={isAuthenticated}
+                expanded={expandedCardId === item.id}
+                onToggle={() => handleToggleCard(item.id)}
+              />
             </View>
           )}
           ListEmptyComponent={

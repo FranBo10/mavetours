@@ -29,8 +29,27 @@ export type LoginFail = {
 
 export type LoginResponse = LoginOk | LoginFail;
 
+// Payload para Registro
+export type RegisterPayload = {
+  email: string;
+  password: string;
+  nombre: string;
+  apellidos: string;
+  telefono: string;
+  pais: string;
+  avatar?: string;
+  fechaNacimiento?: string; // YYYY-MM-DD
+};
+
+export type RegisterResponse = {
+  success: boolean;
+  message?: string;
+  error?: string;
+};
+
 // ✅ Tu backend real
 const LOGIN_PATH = "/api/auth/login";
+const REGISTER_PATH = "/api/auth/register";
 
 export async function loginApi(email: string, password: string): Promise<LoginResponse> {
   const url = `${API_BASE_URL}${LOGIN_PATH}`;
@@ -82,6 +101,34 @@ export async function loginApi(email: string, password: string): Promise<LoginRe
     };
   } catch (e: any) {
     console.log("[LOGIN] axios error =", e?.message);
+    return { success: false, error: "Error de conexión con el servidor" };
+  }
+}
+
+export async function registerApi(data: RegisterPayload): Promise<RegisterResponse> {
+  const url = `${API_BASE_URL}${REGISTER_PATH}`;
+  console.log("[REGISTER] POST →", url);
+
+  try {
+    const res = await axios.post(url, data, {
+      headers: { "Content-Type": "application/json" },
+      timeout: 15000,
+      validateStatus: () => true
+    });
+
+    console.log("[REGISTER] status =", res.status);
+
+    if (res.status >= 200 && res.status < 300) {
+      // Backend returns { success: true, message: '...' }
+      return { success: true, message: res.data?.message };
+    } else {
+      return {
+        success: false,
+        error: res.data?.error ?? res.data?.message ?? `HTTP ${res.status}`
+      };
+    }
+  } catch (e: any) {
+    console.log("[REGISTER] error =", e.message);
     return { success: false, error: "Error de conexión con el servidor" };
   }
 }

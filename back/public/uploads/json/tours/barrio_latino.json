@@ -1,0 +1,36 @@
+{
+    "tour": {
+      "nombre": "Tour por el Barrio Latino",
+      "descripcion": "Un recorrido cultural por el corazón intelectual de París"
+    },
+    "paradas": [
+      {
+        "titulo": "Librería Shakespeare & Company",
+        "contenido": "La librería de habla inglesa más emblemática de París, situada junto a Notre-Dame.",
+        "latitud": 48.852969,
+        "longitud": 2.347708,
+        "imagen": "https://example.com/images/shakespeare.jpg",
+        "audio": "https://example.com/audio/shakespeare.mp3",
+        "video": "https://example.com/video/shakespeare.mp4"
+      },
+      {
+        "titulo": "Panthéon",
+        "contenido": "Monumento neoclásico donde descansan Voltaire, Rousseau y Marie Curie, entre otros.",
+        "latitud": 48.846222,
+        "longitud": 2.344986,
+        "imagen": "https://example.com/images/pantheon.jpg",
+        "audio": "https://example.com/audio/pantheon.mp3",
+        "video": "https://example.com/video/pantheon.mp4"
+      },
+      {
+        "titulo": "Jardines de Luxemburgo",
+        "contenido": "Uno de los parques más hermosos de París, ideal para pasear y descansar.",
+        "latitud": 48.846221,
+        "longitud": 2.337160,
+        "imagen": "https://example.com/images/luxembourg.jpg",
+        "audio": null,
+        "video": null
+      }
+    ]
+  }
+  

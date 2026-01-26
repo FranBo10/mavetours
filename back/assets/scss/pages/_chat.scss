@@ -1,0 +1,63 @@
+@use "../utils/variables" as variables;
+@use "../utils/mixins" as *;
+
+#main-container-chat {
+  color: variables.$color-gray-darken;
+  width: 100%;
+  padding-top: 60px; // Evitar que se oculte tras el navbar
+  transition: all 300ms ease;
+
+  // Por defecto (móvil) ancho completo
+  max-width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  @media (min-width: 769px) {
+    max-width: 95%; // Mas ancho en tablets/laptops
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1400px) {
+    max-width: 98%; // Casi total en pantallas grandes
+  }
+
+  @include flexCenter(column);
+  
+  // Forzar que la fila ocupe el 100% del ancho disponible
+  // Esto corrige el problema de "center" del flexCenter
+  .row {
+    width: 100%;
+    height: 100%;
+    margin-right: 0; // Ajuste opcional para evitar scroll horizontal si hay overflow
+    margin-left: 0;
+  }
+
+  @media (max-width: 769px) {
+    margin-bottom: 100px;
+    padding-top: 60px;
+  }
+
+  // Ajustar altura de las tarjetas
+  .card {
+    // Calculamos 100vh menos el header (~80px) y padding/margen superior (~60px)
+    height: calc(100vh - 140px);
+    
+    @media (max-width: 769px) {
+      height: calc(100vh - 160px); // Ajuste para móvil
+      min-height: 500px;
+    }
+  }
+
+  // Asegurar que el cuerpo de la tarjeta ocupe el espacio para empujar el input abajo
+  .card-body {
+    height: 100%;
+    overflow: hidden; // Evitar desbordamiento
+  }
+}
+
+.titulo__chat {
+  font-size: 24px;
+  color: variables.$color-primary !important;
+  text-shadow: 0 0 1px variables.$color-black;
+  padding: variables.$padding 0;
+}

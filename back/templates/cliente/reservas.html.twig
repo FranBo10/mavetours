@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %} {% block title %} {{ "My Bookings" | trans }} {%
+endblock %} {% block header %} {% include '_partials/_menu2_nav.html.twig' %} {%
+endblock %} {% block body %}
+<div id="main-container" class="reservas my-5">
+  {% for message in app.flashes('info') %}
+  <div class="alert alert-info text-center w-50 mx-auto my-2">
+    <p>{{ message }}</p>
+  </div>
+  {% endfor %}
+
+  <h2 class="titulo__reservas text-center w-100 mb-3">
+    {{ "My Bookings" | trans }}
+  </h2>
+
+  {% if eventos is not empty %}
+  <div class="cards__reservas">
+    {% for evento in eventos %} {% for reserva in evento.reservas %} {% if
+    reserva.user == app.user %}
+    <article class="card__reservas">
+      <img
+        src="{{ asset('uploads/images/' ~ reserva.tours[0].imagen) }}"
+        alt=""
+      />
+      <div class="reservas-detalles">
+        <ul>
+          <li>
+            <h2>{{ reserva.tours[0].titulo }}</h2>
+          </li>
+          <li>
+            {{ "Price" | trans }}: {% if reserva.detallesReserva.totalReserva ==
+            0 %}
+            {{ "Free Tour" | trans }}
+            {% else %}
+            {{ reserva.detallesReserva.totalReserva/100|number_format(2, '.') }}
+            € {% endif %}
+          </li>
+          <li>
+            {{ "Date" | trans }}:
+            {{ reserva.detallesReserva.fechaEvento|date("d/m/Y") }}
+          </li>
+          <li>
+            {{ "Adults" | trans }}:
+            {{ reserva.detallesReserva.cantidadAdultos }}
+          </li>
+          <li>
+            {{ "Kids" | trans }}: {{ reserva.detallesReserva.cantidadKids }}
+          </li>
+          {# --- A PARTIR DE AQUÍ VIENE LA LÓGICA NUEVA --- #}
+
+      {% set now = "now"|date('U') %}
+      {% set start = evento.inicio|date('U') %}
+      {% set diff = start - now %}
+
+      {% if diff > 0 %}
+    {# diff está en segundos #}
+
+    {# 1 día = 86400 segundos #}
+    {% set days = (diff / 86400)|round(0, 'floor') %}
+
+    {# resto de segundos tras quitar días #}
+    {% set remaining_after_days = diff % 86400 %}
+
+    {# 1 hora = 3600 segundos #}
+    {% set hours = (remaining_after_days / 3600)|round(0, 'floor') %}
+
+    {# resto de segundos tras quitar horas #}
+    {% set remaining_after_hours = remaining_after_days % 3600 %}
+
+    {% set minutes = (remaining_after_hours / 60)|round(0, 'floor') %}
+
+    <li>
+      ⏳ {{ "Your tour will be unlocked in" | trans }}
+      {% if days > 0 %}
+        {{ days }}d {{ hours }}h {{ minutes }}min
+      {% elseif hours > 0 %}
+        {{ hours }}h {{ minutes }}min
+      {% else %}
+        {{ minutes }}min
+      {% endif %}
+    </li>
+{% else %}
+    {# El tour ya ha comenzado => mostramos el botón Navigate #}
+    <li>
+      <a
+        href="{{ path('parada', { id: reserva.tours[0].id, _locale: app.request.locale }) }}"
+        class="btn-primary-card"
+      >
+        {{ "Navigate" | trans }}
+      </a>
+    </li>
+{% endif %}
+          <li>
+            <a
+              href="{{ path('editar', { id: reserva.id }) }}"
+              type="button"
+              class="btn-tertiary"
+            >
+              {{ "Modify your booking date" | trans }}
+            </a>
+          </li>
+          <li>
+            <a
+              href="{{ path('delete_reserva', { id: reserva.id }) }}"
+              type="button"
+              class="btn-danger"
+            >
+              {{ "Cancel / Delete booking" | trans }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </article>
+    {% endif %} {% endfor %} {% endfor %}
+  </div>
+  {% else %}
+  <div class="reserva__vacia text-center">
+    <h4>
+      {{ "Come on, book your first tour with us and let's walk!!!" | trans }}
+    </h4>
+    <a href="{{ path('home') }}" class="btn-primary mt-3">{{
+      "Back to homepage" | trans
+    }}</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

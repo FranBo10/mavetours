@@ -1,0 +1,274 @@
+{% extends 'base.html.twig' %} {% block title %}{{
+  "Stops of the Tour" | trans
+}}{% endblock %} {% block header %} {% include '_partials/_menu2_nav.html.twig'
+%} {% endblock %} {% block body %}
+<div id="main-container" class="reservas my-5">
+  {# Mensajes flash #} {% for message in app.flashes('info') %}
+  <div class="alert alert-info text-center w-50 mx-auto my-2">
+    <p>{{ message }}</p>
+  </div>
+  {% endfor %}
+
+  <h2 class="titulo__reservas text-center w-100 mb-3">
+    {{ tour.titulo | trans | raw }}
+  </h2>
+
+  <!-- Toast de error (mover fuera del loop) -->
+  <div
+    id="errorToast"
+    class="toast position-fixed top-0 end-0 m-3"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="toast-header bg-danger text-white">
+      <strong class="me-auto">Error</strong>
+      <button
+        type="button"
+        class="btn-close btn-close-white"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="toast-body" id="toastMessage"></div>
+  </div>
+
+  <div class="cards__reservas">
+    {% if paradas is not empty %} {% for parada in paradas %}
+    <article class="card__reservas mb-4">
+      {% if parada.imagen %}
+      <img
+        src="{{ asset('uploads/images/' ~ parada.imagen) }}"
+        alt="{{ parada.titulo }}"
+        class="card-img-top"
+      />
+      {% endif %}
+
+      <div class="reservas-detalles pt-3">
+        <ul class="list-unstyled">
+          <li>
+            <h2>{{ parada.titulo | trans | raw }}</h2>
+          </li>
+
+          <li>
+            <p class="description-resumen">
+              {% if app.request.get('_locale') == 'fr' and parada.contenidoFr %}
+                  {{ parada.contenidoFr|striptags|slice(0, 250) ~ '...' }}
+              {% elseif app.request.get('_locale') == 'es' and parada.contenidoEs %}
+                  {{ parada.contenidoEs|striptags|slice(0, 250) ~ '...' }}
+              {% else %}
+                  {{ parada.contenido|striptags|slice(0, 250) ~ '...' }}
+              {% endif %}
+            </p>
+            <div class="description-hidden">
+              <p>
+                {% if app.request.get('_locale') == 'fr' and parada.contenidoFr %}
+                    {{ parada.contenidoFr | raw }}
+                {% elseif app.request.get('_locale') == 'es' and parada.contenidoEs %}
+                    {{ parada.contenidoEs | raw }}
+                {% else %}
+                    {{ parada.contenido | raw }}
+                {% endif %}
+                {% set currentLocale = app.request.get('_locale') %}
+                {% set audioSrc = parada.audioUrl %}
+                {% if currentLocale == 'es' and parada.audioUrlEs %}
+                    {% set audioSrc = parada.audioUrlEs %}
+                {% elseif currentLocale == 'fr' and parada.audioUrlFr %}
+                    {% set audioSrc = parada.audioUrlFr %}
+                {% endif %}
+
+                {% if audioSrc %}
+                    <div class="audio-player-container d-inline-flex align-items-center gap-2" data-audio-src="{{ asset('uploads/audios/' ~ audioSrc) }}">
+                        <button class="btn btn-primary play-audio">
+                            <i class="bi bi-play-circle"></i> {{ "Listen" | trans }}
+                        </button>
+                        <button class="btn btn-secondary restart-audio d-none" title="{{ 'Restart' | trans }}">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </button>
+                    </div>
+                {% elseif parada.contenido %}
+                     {# Fallback to TTS if no audio file is present (optional, keeping old button style if needed but hiding it for now as requested to use DB files) #}
+                     <!-- No audio file available -->
+                {% endif %}
+              </p>
+            </div>
+          </li>
+
+          <li>
+            <div class="description-container">
+              <a href="#" class="btn-description show-link">{{
+                "See full description" | trans
+              }}</a>
+              <a href="#" class="btn-description hide-link is-hidden">{{
+                "Hide description" | trans
+              }}</a>
+            </div>
+            <hr />
+          </li>
+
+          <li>
+            <iframe
+              src="{{ parada.mapa }}"
+              width="100%"
+              height="200"
+              style="border: 0"
+              allowfullscreen
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </li>
+        </ul>
+      </div>
+    </article>
+    {% endfor %} {% else %}
+    <p class="text-center mt-4">
+      {{ "No stops found for this tour." | trans }}
+    </p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}{% block javascripts %}
+{{ encore_entry_script_tags("paradas") }}
+{# {{ encore_entry_script_tags("audio") }} #}
+<script>
+  function showError(message) {
+    const toastEl = document.getElementById("errorToast");
+    const toastMessage = document.getElementById("toastMessage");
+
+    if (toastEl && toastMessage) {
+      toastMessage.textContent = message;
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    let currentAudio = null;
+    let currentButton = null;
+    let currentContainer = null;
+
+    const stopCurrentAudio = () => {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio = null;
+      }
+      if (currentButton) {
+        const icon = currentButton.querySelector("i");
+        if (icon) {
+            icon.classList.remove("bi-pause-circle");
+            icon.classList.add("bi-play-circle");
+        }
+        // Ocultar botón de reinicio
+        if (currentContainer) {
+            const restartBtn = currentContainer.querySelector('.restart-audio');
+            if (restartBtn) restartBtn.classList.add('d-none');
+        }
+      }
+      currentButton = null;
+      currentContainer = null;
+    };
+
+    // Manejar click en Play/Pause
+    document.querySelectorAll(".play-audio").forEach((button) => {
+      button.addEventListener("click", function (e) {
+        e.preventDefault();
+        const container = this.closest(".audio-player-container");
+        const audioSrc = container.dataset.audioSrc;
+        const restartBtn = container.querySelector('.restart-audio');
+        const icon = this.querySelector("i");
+
+        // Caso 1: Es el mismo audio que ya está cargado
+        if (currentAudio && currentButton === this) {
+          if (currentAudio.paused) {
+            currentAudio.play();
+            icon.classList.remove("bi-play-circle");
+            icon.classList.add("bi-pause-circle");
+          } else {
+            currentAudio.pause();
+            icon.classList.remove("bi-pause-circle");
+            icon.classList.add("bi-play-circle");
+          }
+          return;
+        }
+
+        // Caso 2: Es un audio nuevo, detener el anterior si existe
+        if (currentAudio) {
+          stopCurrentAudio();
+        }
+
+        // Iniciar nuevo audio
+        currentButton = this;
+        currentContainer = container;
+        currentAudio = new Audio(audioSrc);
+
+        // Eventos del audio
+        currentAudio.addEventListener("ended", () => {
+          stopCurrentAudio();
+        });
+
+        currentAudio.addEventListener("error", (e) => {
+            console.error("Error loading audio", e);
+            showError("Error loading audio file.");
+            stopCurrentAudio();
+        });
+
+        // Reproducir
+        currentAudio.play().then(() => {
+            icon.classList.remove("bi-play-circle");
+            icon.classList.add("bi-pause-circle");
+            if (restartBtn) restartBtn.classList.remove('d-none');
+        }).catch(err => {
+            console.error("Playback error:", err);
+            showError("Could not play audio.");
+            stopCurrentAudio();
+        });
+      });
+    });
+
+    // Manejar click en Restart
+    document.querySelectorAll(".restart-audio").forEach((button) => {
+        button.addEventListener("click", function(e) {
+            e.preventDefault();
+            if (currentAudio && currentContainer && currentContainer.contains(this)) {
+                currentAudio.currentTime = 0;
+                currentAudio.play();
+                // Asegurar que el icono esté en pause (reproduciendo)
+                if (currentButton) {
+                    const icon = currentButton.querySelector("i");
+                    if (icon) {
+                        icon.classList.remove("bi-play-circle");
+                        icon.classList.add("bi-pause-circle");
+                    }
+                }
+            }
+        });
+    });
+
+    // Detener audio al salir de la página
+    window.addEventListener("beforeunload", () => {
+        stopCurrentAudio();
+    });
+    
+    // Description toggle (mantener lógica existente)
+    const handleDescriptionClick = function(e) {
+        e.preventDefault();
+        // stopCurrentAudio(); // Opcional: detener audio al expandir/colapsar? El usuario no lo pidió explicitamente.
+        
+        const container = this.closest('.description-container');
+        const hiddenContent = container.parentElement.querySelector('.description-hidden');
+        const showLink = container.querySelector('.show-link');
+        const hideLink = container.querySelector('.hide-link');
+        
+        hiddenContent.classList.toggle('is-hidden');
+        showLink.classList.toggle('is-hidden');
+        hideLink.classList.toggle('is-hidden');
+    };
+
+    document.querySelectorAll('.btn-description').forEach(button => {
+        button.addEventListener('click', handleDescriptionClick);
+    });
+  });
+</script>
+
+{% endblock %}

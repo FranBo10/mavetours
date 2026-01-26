@@ -79,12 +79,12 @@ export default function LoginScreen() {
             <Text style={styles.link}>I forgot my password</Text>
           </Pressable> */}
 
-          {/* <Text style={styles.smallText}>
+          <Text style={styles.smallText}>
             Don&apos;t have an account?{" "}
             <Text style={styles.link} onPress={() => router.push("/register")}>
               Register here
             </Text>
-          </Text> */}
+          </Text>
 
           <Pressable onPress={() => router.replace("/(tabs)")}>
             <Text style={styles.link}>Back to Home</Text>

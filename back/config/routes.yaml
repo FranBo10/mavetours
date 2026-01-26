@@ -1,0 +1,28 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+home:
+    path: /{_locale}
+    controller: App\Controller\AppController::index
+    requirements:
+        _locale: en|es|fr
+
+app_login:
+    path: /login/{_locale}
+    controller: App\Controller\SecurityController::login
+    requirements:
+        _locale: en|es|fr
+
+app_login_redirect:
+    path: /login
+    controller: App\Controller\SecurityController::redirectToLocaleLogin
+
+change_locale:
+    path: /change-locale/{_locale}
+    controller: App\Controller\LocaleController::changeLocale
+    requirements:
+        _locale: en|es|fr
+

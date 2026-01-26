@@ -1,0 +1,71 @@
+@use "sass:color";
+
+//COLORES
+
+$color-primary: #008d94;
+$color-primary-dark: color.adjust($color-primary, $lightness: -10%);
+$color-primary-darker: color.adjust($color-primary, $lightness: -20%);
+$color-primary-light: color.adjust($color-primary, $lightness: 10%);
+$color-primary-lighter: color.adjust($color-primary, $lightness: 20%);
+
+$color-secondary: #43D7E8;
+$color-secondary-dark: color.adjust($color-secondary, $lightness: -10%);
+$color-secondary-darker: color.adjust($color-secondary, $lightness: -20%);
+$color-secondary-light: color.adjust($color-secondary, $lightness: 10%);
+$color-secondary-lighter: color.adjust($color-secondary, $lightness: 20%);
+
+$color-tertiary: #cc33ff;
+$color-tertiary-dark: color.adjust($color-tertiary, $lightness: -10%);
+$color-tertiary-darker: color.adjust($color-tertiary, $lightness: -20%);
+$color-tertiary-light: color.adjust($color-tertiary, $lightness: 10%);
+$color-tertiary-lighter: color.adjust($color-tertiary, $lightness: 20%);
+
+$color-danger: #db3f34;
+$color-danger-dark: color.adjust($color-danger, $lightness: -10%);
+$color-danger-darker: color.adjust($color-danger, $lightness: -20%);
+$color-danger-light: color.adjust($color-danger, $lightness: 10%);
+$color-danger-lighter: color.adjust($color-danger, $lightness: 20%);
+
+$color-warning: #deaf16;
+$color-warning-dark: color.adjust($color-warning, $lightness: -10%);
+$color-warning-darker: color.adjust($color-warning, $lightness: -20%);
+$color-warning-light: color.adjust($color-warning, $lightness: 10%);
+$color-warning-lighter: color.adjust($color-warning, $lightness: 20%);
+
+$color-success: #510094;
+$color-success-dark: color.adjust($color-success, $lightness: -10%);
+$color-success-darker: color.adjust($color-success, $lightness: -20%);
+$color-success-light: color.adjust($color-success, $lightness: 10%);
+$color-success-lighter: color.adjust($color-success, $lightness: 20%);
+
+$color-black: #000;
+$color-white: #fff;
+
+$color-gray-light: #f4f4f4;
+$color-gray-dark: #798889;
+$color-gray-darker: #4f4f4f;
+$color-gray-darken: #202020;
+
+//TIPOGRAFIA
+
+$minimal-font-size: 1rem;
+$small-font-size: 1.2em;
+$main-font-size: 1.6rem;
+$medium-font-size: 1.8rem;
+$big-font-size: 2rem;
+$huge-font-size: 4rem;
+$font-h1: 3rem;
+$font-h2: 2.4rem;
+$font-h3: 2rem;
+
+//GRID
+
+$grid-width: 114rem;
+$gutter-vertical: 8rem;
+$gutter-vertical-small: 6rem;
+$gutter-horizontal: 6rem;
+
+//POSICIONAMIENTO ELEMENTOS
+
+$padding: 1rem;
+$border-radius: 0.5rem;

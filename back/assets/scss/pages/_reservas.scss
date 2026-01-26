@@ -1,0 +1,164 @@
+@use "../utils/mixins" as *;
+@use "../utils/variables" as variables;
+
+.reservas {
+  background-color: variables.$color-gray-light;
+  height: 100%;
+  width: 100%;
+}
+
+.titulo__reservas {
+  font-size: 24px;
+  color: variables.$color-primary !important;
+  text-shadow: 0 0 1px variables.$color-black;
+  padding: variables.$padding 0;
+}
+
+.reserva__vacia {
+  @include flexCenter(column);
+  text-align: center;
+  width: 90%;
+  h4 {
+    font-size: variables.$medium-font-size;
+  }
+}
+
+// .titulo__reservas h2 {
+//   margin-bottom: 1rem;
+//   margin-bottom: 1px solid variables.$color-black;
+// }
+
+.cards__reservas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px; /* Añadir espaciado entre las tarjetas */
+  width: 100%;
+  padding: 0 1rem; /* Ajustar el espaciado horizontal */
+  margin: 0 auto; /* Centrar los contenedores en el medio */
+  font-size: variables.$main-font-size; /* Tamaño de fuente relativo */
+  height: auto; /* Altura automática para adaptarse al contenido */
+  transition: grid-template-columns 0.3s ease; // Transición suave
+    
+    &.single-column {
+        grid-template-columns: 1fr;
+        
+        .card__reservas {
+            max-width: 90%; // Ancho máximo para mejor legibilidad
+            margin: 0 auto;
+            
+            img {
+                width: 50%; // Imagen más grande en vista expandida
+                min-height: 400px;
+            }
+        }
+    }
+}
+
+.card__reservas {
+  @include flexCenter(column);
+  border: 1px solid variables.$color-primary;
+  padding: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  color: variables.$color-gray-darker;
+  overflow: hidden;
+  @include media(miniTablet) {
+    @include flexCenter(column);
+  }
+}
+
+// .card__reservas:hover {
+//   transform: scale(1.02);
+// }
+
+.card__reservas img {
+  width: 70%;
+  height: 200px;
+  object-fit: fill;
+  transition: all 0.3s ease; /* Transición suave al cambiar tamaño */
+  @include media(smartPhone) {
+    max-width: 100%;
+  }
+}
+
+.reservas-detalles {
+  padding: 10px 10px;
+
+  h4 {
+    font-weight: bold;
+    text-align: center;
+  }
+}
+
+.reservas-detalles ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  list-style: none;
+  gap: 10px;
+}
+
+.reservas-detalles ul li {
+  margin: 0;
+  font-size: variables.$medium-font-size;
+  a {
+    text-align: center;
+  }
+  h2 {    
+  font-weight: bold;
+  }
+}
+
+.reservas-detalles p {
+  margin: 5px 0;
+  font-size: variables.$medium-font-size;
+}
+
+@include media(desktop) {
+  .card__reservas img {
+    max-width: 30%;
+  }
+}
+
+@include media(laptop) {
+  .card__reservas img {
+    min-width: 50%;
+  }
+}
+
+@include media(tablet) {
+  .cards__reservas {
+    grid-template-columns: 1fr; /* Cambia a una tarjeta por fila en pantallas pequeñas */
+  }
+
+  .card__reservas {
+    margin: auto;
+    width: 100%;
+  }
+
+  .card__reservas img {
+    min-width: 70%;
+  }
+
+  .cards__reservas.single-column {
+        grid-template-columns: 1fr;
+        
+        .card__reservas img {
+            width: 100%; // Imagen a ancho completo en móvil
+        }
+    }
+}
+
+
+@include media(phone) {
+  .cards__reservas {
+    grid-template-columns: 1fr; /* Cambia a una tarjeta por fila en pantallas pequeñas */
+  }
+
+  .card__reservas {
+    margin: auto;
+    width: 100%;
+  }
+}
