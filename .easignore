@@ -1,0 +1,21 @@
+# ===========================================
+# Root .easignore - Exclude from EAS builds
+# ===========================================
+
+# CRITICAL: Exclude backend (Symfony/PHP) completely
+back/
+back/**
+
+# Exclude large text files
+estructura.txt
+estructura_limpia.txt
+*.txt
+
+# Standard excludes
+.git/
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini
+**/desktop.ini

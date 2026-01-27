@@ -1,16 +1,44 @@
-../back
-../back/**
-back/
-**/*.ini
-**/desktop.ini
+# ===========================================
+# EAS Ignore File - Exclude from EAS builds
+# ===========================================
 
+# CRITICAL: Exclude backend (Symfony/PHP) - NOT part of React Native app
+../back/
+../back
+back/
+back
+
+# Exclude documentation and misc files
+../estructura.txt
+../estructura_limpia.txt
+*.txt
+
+# Exclude local dependencies (EAS installs fresh)
 node_modules/
+
+# Exclude Expo cache and build artifacts
 .expo/
-npm-debug.log
-yarn-error.log
+dist/
+web-build/
+
+# Exclude Git
 .git/
+../.git/
+
+# Exclude Native folders (EAS builds these fresh)
 android/
 ios/
-dist/
-build/
-web-build/
+
+# Exclude System files and logs
+*.log
+npm-debug.log
+yarn-error.log
+*.ini
+desktop.ini
+**/desktop.ini
+.DS_Store
+Thumbs.db
+
+# Exclude IDE/Editor folders
+.vscode/
+.idea/
