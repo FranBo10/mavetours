@@ -135,6 +135,11 @@
   font-size: variables.$main-font-size;
 }
 
+.btn-primary-card:hover {
+  background-color: variables.$color-primary-dark;
+  border-color: variables.$color-primary-dark;
+}
+
 .btn-secondary-card {
   color: variables.$color-white;
   background-color: variables.$color-secondary;
@@ -145,7 +150,33 @@
   font-size: variables.$main-font-size;
 }
 
+.btn-secondary-card:hover {
+  background-color: variables.$color-secondary;
+  border-color: variables.$color-secondary;
+}
+
+.btn-warning-card {
+  @include flexCenter(row);
+  padding: 0.375rem 0.75rem;
+  background-color: #f39c12; // Warning color (Yellow/Orange)
+  border: 1px solid #f39c12;
+  border-radius: 0.25rem;
+  color: variables.$color-white;
+  text-decoration: none;
+  font-size: variables.$main-font-size;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-warning-card:hover {
+  background-color: darken(#f39c12, 10%);
+  border-color: darken(#f39c12, 10%);
+  color: variables.$color-white;
+}
+
 .btn-tertiary-card {
+  @include flexCenter(row);
   color: variables.$color-white;
   background-color: variables.$color-tertiary;
   border-color: variables.$color-tertiary;
@@ -155,15 +186,7 @@
   font-size: variables.$main-font-size;
 }
 
-.btn-warning-card {
-  color: variables.$color-white;
-  background-color: variables.$color-warning;
-  border-color: variables.$color-warning;
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.25rem;
-  text-decoration: none;
-  font-size: variables.$main-font-size;
-}
+
 
 .btn-user_nav {
   color: variables.$color-white;
