@@ -151,14 +151,15 @@ nav > ul > li > a:first-child {
   transition: 0.6s;
 }
 
-.container__user {
+.container__user, .container__idiomas {
+  width: 100%;
   ul {
-    @include flexCenter(column);
+    @include flexCenter(column); // Elementos en fila (horizontal)
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
     background-color: variables.$color-primary;
     position: absolute;
     list-style: none;
-    top: 70px;
+    top: 45px;
     right: 5px;
     padding: 10px 0px;
     visibility: hidden;
@@ -168,6 +169,14 @@ nav > ul > li > a:first-child {
       color: variables.$color-white;
       display: block;
     }
+  }
+  a {
+    font-size: 1.8rem;
+    color: #202020;
+  }
+  a:last-child {
+    color: #fff;
+    font-size: 1.6rem;
   }
 }
 
@@ -586,7 +595,9 @@ nav ul li ul li a:hover {
     border-bottom-right-radius: 20px;
     opacity: 0;
     pointer-events: none;
-    transition: transform 0.6s ease, opacity 0.6s ease;
+    transition:
+      transform 0.6s ease,
+      opacity 0.6s ease;
     overflow-x: hidden;
     transform: translateY(-100%);
   }

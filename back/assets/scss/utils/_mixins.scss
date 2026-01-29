@@ -26,41 +26,42 @@
 }
 
 //MEDIA QUERY BREAKPOINTS
+// Fórmula: em × 16 = px (asumiendo font-size base de 16px)
 
 @mixin media($breakpoint) {
   @if $breakpoint == phone {
-    @media only screen and (max-width: 21.8em) {
+    @media only screen and (max-width: 21.875em) {
       @content;
-    } //* 350px
+    } // 350px (21.875 × 16 = 350)
   }
   @if $breakpoint == smartPhone {
     @media only screen and (max-width: 33.125em) {
       @content;
-    } //* 530px
+    } // 530px (33.125 × 16 = 530)
   }
   @if $breakpoint == miniTablet {
     @media only screen and (max-width: 48em) {
       @content;
-    } //* 768px
+    } // 768px (48 × 16 = 768)
   }
   @if $breakpoint == tablet {
     @media only screen and (max-width: 65em) {
       @content;
-    } //* 944px
+    } // 1040px (65 × 16 = 1040)
   }
   @if $breakpoint == laptop {
     @media only screen and (max-width: 75em) {
       @content;
-    } //* 1200px
+    } // 1200px (75 × 16 = 1200)
   }
   @if $breakpoint == laptopMin {
     @media only screen and (min-width: 85em) {
       @content;
-    } //* 1200px
+    } // 1360px (85 × 16 = 1360)
   }
 @if $breakpoint == desktop {
     @media only screen and (min-width: 95em) {
       @content;
-    } //* 1800px
+    } // 1520px (95 × 16 = 1520)
   }
 }

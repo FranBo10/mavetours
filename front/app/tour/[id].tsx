@@ -1,5 +1,5 @@
 // app/tour/[id].tsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -9,13 +9,23 @@ import {
   Pressable,
   ScrollView,
   Linking,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useAuth } from "../../src/context/AuthContext";
 import { theme } from "../../src/theme/theme";
-import { fetchTourById, type Tour, getTourTitle } from "../../src/api/tours";
+import { fetchTourById, type Tour, getTourTitle, getTourDescription, getTourShortDescription } from "../../src/api/tours";
 import i18n from "../../src/i18n";
 import { useLanguage } from "../../src/context/LanguageContext";
+
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 function formatPrice(precio: number) {
   if (!precio) return i18n.t('free');
@@ -54,13 +64,45 @@ export default function TourScreen() {
   const { locale } = useLanguage();
   const params = useLocalSearchParams<{ id?: string }>();
   const id = useMemo(() => Number(params.id), [params.id]);
+  const router = useRouter();
+
+  // Helper for user snippet compatibility
+  const isLoggedIn = isAuthenticated;
+
+  const goLogin = () => router.push("/login");
+
+  const goFreeTour = () => {
+    if (tour?.id) {
+      router.push({ pathname: "/tour/[id]/book", params: { id: String(tour.id) } });
+    }
+  };
+
+  const goAudioguide = () => {
+    if (tour?.id) {
+      router.push({ pathname: "/audioguide/[id]", params: { id: String(tour.id) } });
+    }
+  };
 
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
 
-  const stripHtml = (s?: string | null) => (s ?? "").replace(/<[^>]*>/g, "").trim();
+  const stripHtml = (s?: string | null) =>
+    (s ?? "")
+      .replace(/&nbsp;/g, " ")
+      .replace(/<[^>]*>/g, "")
+      .trim();
 
+  const scrollRef = useRef<ScrollView>(null);
+
+  const handleToggleDescription = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    if (expanded) {
+      scrollRef.current?.scrollTo({ y: 0, animated: true });
+    }
+    setExpanded(!expanded);
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -122,41 +164,92 @@ export default function TourScreen() {
 
         <View style={styles.heroContent}>
           <Text style={styles.heroTitle}>{getTourTitle(tour, locale)}</Text>
-          <Text style={styles.heroPrice}>{formatPrice(tour.precio)}</Text>
 
-          <Link
-            href={isAuthenticated ? { pathname: "/tour/[id]/book", params: { id: String(tour.id) } } : "/login"}
-            asChild
-          >
-            <Pressable
-              style={({ pressed }) => [
-                styles.btnBase,
-                styles.btnPrimary,
-                pressed && styles.btnPressed,
-              ]}>
-              <Text style={styles.btnText}>{i18n.t('book_now')}</Text>
-            </Pressable>
-          </Link>
+          <View style={{ flexDirection: "row", gap: 10, marginTop: 4 }}>
+            {isLoggedIn ? (
+              <>
+                {/* FREETOUR */}
+                <Pressable
+                  onPress={goFreeTour}
+                  style={({ pressed }) => [
+                    styles.btnBase,
+                    styles.btnPrimary,
+                    pressed && styles.btnPressed,
+                    { flex: 1 }
+                  ]}
+                >
+                  <Text style={styles.btnText}>{i18n.t("freetour")}</Text>
+                </Pressable>
+
+                {/* AUDIOGUIDE */}
+                <Pressable
+                  onPress={goAudioguide}
+                  style={({ pressed }) => [
+                    styles.btnBase,
+                    styles.btnWarning,
+                    pressed && styles.btnPressed,
+                    { flex: 1 }
+                  ]}
+                >
+                  <Text style={styles.btnText}>{i18n.t("audioguide")}</Text>
+                </Pressable>
+              </>
+            ) : (
+              <>
+                {/* Book now -> Login */}
+                <Pressable
+                  onPress={goLogin}
+                  style={({ pressed }) => [
+                    styles.btnBase,
+                    styles.btnPrimary,
+                    pressed && styles.btnPressed,
+                    { flex: 1 }
+                  ]}
+                >
+                  <Text style={styles.btnText}>{i18n.t("freetour")}</Text>
+                </Pressable>
+
+                {/* Navigate -> Login */}
+                <Pressable
+                  onPress={goLogin}
+                  style={({ pressed }) => [
+                    styles.btnBase,
+                    styles.btnWarning,
+                    pressed && styles.btnPressed,
+                    { flex: 1 }
+                  ]}
+                >
+                  <Text style={styles.btnText}>{i18n.t("audioguide")}</Text>
+                </Pressable>
+              </>
+            )}
+          </View>
         </View>
       </ImageBackground>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView ref={scrollRef} contentContainerStyle={styles.content}>
         {/* DESCRIPTION */}
         <Section title={i18n.t('description')}>
           <Text style={styles.paragraph}>
-            {tour.descripcionCorta ?? "We’ll add the short description here when the API provides it."}
+            {stripHtml(getTourShortDescription(tour, locale)) || "We’ll add the short description here when the API provides it."}
           </Text>
 
-          {tour.descripcionLarga ? (
+          {expanded && getTourDescription(tour, locale) ? (
             <>
               <View style={styles.divider} />
-              <Text style={styles.paragraph}>{stripHtml(tour.descripcionLarga)}</Text>
+              <Text style={styles.paragraph}>{stripHtml(getTourDescription(tour, locale))}</Text>
             </>
           ) : null}
+
+          <Pressable onPress={handleToggleDescription} style={{ alignSelf: 'flex-start', marginTop: 8 }}>
+            <Text style={{ color: theme.colors.primary, fontWeight: '700', textDecorationLine: 'underline' }}>
+              {expanded ? i18n.t('hide_description') : i18n.t('see_full_description')}
+            </Text>
+          </Pressable>
         </Section>
 
         {/* PRICES */}
-        <Section title={i18n.t('prices')}>
+        <Section title={i18n.t('prices_freetour')}>
           <Text style={styles.paragraph}>
             {i18n.t('free_tours_desc')}
           </Text>

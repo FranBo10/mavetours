@@ -21,6 +21,10 @@ export type Tour = {
   horaFin?: string | null;
   rango?: string | null;
   stock?: number | null;
+  descripcionLargaEs?: string | null;
+  descripcionLargaFr?: string | null;
+  descripcionCortaEs?: string | null;
+  descripcionCortaFr?: string | null;
 };
 
 export type TourApi = {
@@ -44,6 +48,10 @@ export type TourApi = {
   hora_fin?: string | null;
   rango?: string | null;
   stock?: number | null;
+  descripcion_larga_es?: string | null;
+  descripcion_larga_fr?: string | null;
+  descripcion_corta_es?: string | null;
+  descripcion_corta_fr?: string | null;
 };
 
 // Hydra (API Platform)
@@ -89,7 +97,11 @@ function mapTour(t: TourApi): Tour {
     horaInicio: t.hora_inicio ?? null,
     horaFin: t.hora_fin ?? null,
     rango: t.rango ?? null,
-    stock: typeof t.stock === "number" ? t.stock : null
+    stock: typeof t.stock === "number" ? t.stock : null,
+    descripcionLargaEs: t.descripcion_larga_es ?? null,
+    descripcionLargaFr: t.descripcion_larga_fr ?? null,
+    descripcionCortaEs: t.descripcion_corta_es ?? null,
+    descripcionCortaFr: t.descripcion_corta_fr ?? null
   };
 }
 
@@ -123,8 +135,39 @@ export function getTourTitle(tour: Tour, locale: string): string {
   // 3. Fallback to Spanish (Default as requested by user)
   if (tour.tituloEs) return tour.tituloEs;
 
-  // 4. Last resort (Base)
   return tour.titulo;
+}
+
+// Helper to get localized description
+export function getTourDescription(tour: Tour, locale: string): string | null {
+  // 1. Specific matches
+  if (locale.startsWith('es') && tour.descripcionLargaEs) return tour.descripcionLargaEs;
+  if (locale.startsWith('fr') && tour.descripcionLargaFr) return tour.descripcionLargaFr;
+
+  // 2. English (Base)
+  if (locale.startsWith('en') && tour.descripcionLarga) return tour.descripcionLarga;
+
+  // 3. Fallback to Spanish (Default preferred)
+  if (tour.descripcionLargaEs) return tour.descripcionLargaEs;
+
+  // 4. Last resort (Base)
+  return tour.descripcionLarga || null;
+}
+
+// Helper to get localized short description
+export function getTourShortDescription(tour: Tour, locale: string): string | null {
+  // 1. Specific matches
+  if (locale.startsWith('es') && tour.descripcionCortaEs) return tour.descripcionCortaEs;
+  if (locale.startsWith('fr') && tour.descripcionCortaFr) return tour.descripcionCortaFr;
+
+  // 2. English (Base)
+  if (locale.startsWith('en') && tour.descripcionCorta) return tour.descripcionCorta;
+
+  // 3. Fallback to Spanish (Default preferred)
+  if (tour.descripcionCortaEs) return tour.descripcionCortaEs;
+
+  // 4. Last resort (Base)
+  return tour.descripcionCorta || null;
 }
 
 export async function fetchTours(): Promise<Tour[]> {

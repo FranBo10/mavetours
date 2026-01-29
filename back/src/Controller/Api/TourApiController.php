@@ -218,6 +218,8 @@ class TourApiController extends AbstractController
             'titulo_fr' => $tour->getTituloFr(),
             'imagen' => $tour->getImagen(),
             'descripcion_corta' => $tour->getDescripcionCorta(),
+            'descripcion_corta_es' => $tour->getDescripcionCortaEs(),
+            'descripcion_corta_fr' => $tour->getDescripcionCortaFr(),
             'descripcion_larga' => $tour->getDescripcionLarga(),
             'descripcion_larga_fr' => $tour->getDescripcionLargaFr(),
             'descripcion_larga_es' => $tour->getDescripcionLargaEs(),

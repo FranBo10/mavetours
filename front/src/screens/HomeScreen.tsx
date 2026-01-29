@@ -199,7 +199,7 @@ function TourCard({
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const numColumns = width >= 700 ? 2 : 1;
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { locale } = useLanguage();
 
   const [tours, setTours] = useState<Tour[]>([]);

@@ -52,10 +52,12 @@ class TourCrudController extends AbstractCrudController
             TextField::new('rango', 'Rango')->hideOnForm()->formatValue(function ($value, $entity) {
                 return $entity->getHoraInicio()->format('H:i') . ' - ' . $entity->getHoraFin()->format('H:i');
             }),
-            TextField::new('titulo', 'Titulo (Inglés/Default)'),
+            TextField::new('titulo', 'Titulo EN'),
             TextField::new('titulo_es', 'Titulo ES'),
             TextField::new('titulo_fr', 'Titulo FR'),
-            TextField::new('descripcion_corta', 'Descripcion corta')->onlyOnForms(),
+            TextEditorField::new('descripcion_corta', 'Descripcion corta EN')->onlyOnForms(),
+            TextEditorField::new('descripcion_corta_fr', 'Descripcion corta FR')->onlyOnForms(),            
+            TextEditorField::new('descripcion_corta_es', 'Descripcion corta ES')->onlyOnForms(),
             TextEditorField::new('descripcion_larga', 'Descripcion larga')->onlyOnForms(),
             TextEditorField::new('descripcion_larga_fr', 'Descripcion larga FR')->onlyOnForms(),            
             TextEditorField::new('descripcion_larga_es', 'Descripcion larga ES')->onlyOnForms(),

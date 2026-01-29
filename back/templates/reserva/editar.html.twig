@@ -1,71 +1,173 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}{{ 'Edit booking'|trans }}{% endblock %}
-
+{% extends 'base.html.twig' %} {% block title %}Modificar reserva{% endblock %}
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
+{% endblock %}
 {% block body %}
 <div id="main-container" class="container-fluid my-5">
-    {% for message in app.flashes('danger') %}
-        <div class="alert alert-danger text-center w-50 mx-auto my-2">
-            <p>{{ message }}</p>
+  {% for message in app.flashes('danger') %}
+  <div class="alert alert-danger text-center w-50 mx-auto my-2">
+    <p>{{ message }}</p>
+  </div>
+  {% endfor %}
+  <h2 class="titulo__reservas text-center w-100 mb-3">Modifica tu reserva</h2>
+  {% if app.user %}
+
+  <div class="reserva-container container-fluid">
+    <div class="image-container">
+      <img
+        src="{{ asset('uploads/images/' ~ tour.imagen) }}"
+        alt="{{ tour.titulo }}"
+        width="350px"
+        height="280px"
+      />
+    </div>
+    <div class="detalles-reserva">
+      <ul>
+        <h3>
+          {{ tour.titulo | title }} : {{ tour.horaInicio|date("H:i") }} h -
+          {{ tour.horaFin|date("H:i") }} h
+        </h3>
+        <li>
+          {% if tour.precio == 0 %}
+          <p><span>Precio: Free Tour</span></p>
+          {% else %}
+          <p>{{ tour.precio/100|number_format(2, '.') }} €</p>
+          {% endif %}
+        </li>
+        {{
+          form_start(form, {
+            attr: { novalidate: "novalidate", method: "POST" }
+          })
+        }}
+        <li>
+          {{
+            form_label(form.cantidad_adultos, "Selecciona el número de adultos")
+          }}
+          {{ form_widget(form.cantidad_adultos, {'attr': {'class': 'task_field'
+          }}) }}
+        </li>
+        <li>
+          {{ form_label(form.cantidad_kids, "Selecciona el número de niños") }}
+          {{ form_widget(form.cantidad_kids, {'attr': {'class': 'task_field'}})
+          }}
+        </li>
+        <li>
+          <label for="detalles_reserva_form_fecha_evento"
+            >Selecciona la fecha</label
+          >
+          {# {{ form_label(form.fecha_evento, "Selecciona una fecha") }} #}
+          <input
+            type="text"
+            id="fecha_evento"
+            name="fecha_evento"
+            class="datepicker form-control"
+            autocomplete="off"
+            value="{{ detallesReserva.fechaEvento|date('Y-m-d') }}"
+            required
+          />
+        </li>
+        <li>
+          <div class="buttons">
+            <div class="left-buttons">
+              <a
+                href="{{ path('delete_reserva', { id: reserva.id }) }}"
+                class="btn-danger"
+                >Cancelar / Suprimir reserva</a
+              >
+              <a href="{{ path('home') }}" class="btn-tertiary my-3 text-center"
+                >Ver más tours...</a
+              >
+            </div>
+            <div class="right-button">
+              <button type="submit" class="btn-primary">
+                Modificar reserva
+              </button>
+            </div>
+          </div>
+        </li>
+        {# Ocultar el campo fecha_evento del formulario Symfony (usamos nuestro datepicker personalizado) #}
+        <div style="display: none;">
+          {{ form_row(form.fecha_evento) }}
         </div>
-    {% endfor %}
-        <h2 class="titulo__reservas text-center w-100 mb-3">{{ 'Edit booking'|trans }}</h2>
-       {% if app.user %}
-        
-                <div class="reserva-container container-fluid">
-                    <div class="image-container">
-                        <img src="{{ asset('uploads/images/' ~ tour.imagen) }}" alt="{{ tour.titulo }}" width="350px" height="280px" />
-                    </div>
-                    <div class="detalles-reserva">
-                        <ul>
-                            <h3>{{ tour.titulo | title }} : {{ tour.horaInicio|date("H:i") }} h - {{ tour.horaFin|date("H:i") }} h</h3>
-                            <li>
-                                {% if tour.precio == 0 %}
-                                    <p><span>{{ 'Price'|trans }} : {{ 'Free Tour'|trans }}</span></p>
-                                {% else %}
-                                    <p>{{ tour.precio/100|number_format(2, '.') }} €</p>
-                                {% endif %}
-                            </li>
-                            {{ form_start(form, { attr: { novalidate: "novalidate" } }) }}
-                            <li>
-                                {{ form_label(form.cantidad_adultos, 'Select number of adults'|trans) }}
-                                {{ form_widget(form.cantidad_adultos, {'attr': {'class': 'task_field'}}) }}
-                            </li>
-                            <li>
-                                {{ form_label(form.cantidad_kids, 'Select number of kids'|trans) }}
-                                {{ form_widget(form.cantidad_kids, {'attr': {'class': 'task_field'}}) }}
-                            </li>
-                            <li>
-                                {{ form_label(form.fecha_evento, 'Select a date'|trans) }}
-                                {{ form_widget(form.fecha_evento, {
-                                    'attr': {
-                                        'class': 'task_field datepicker',
-                                        'placeholder': 'Select a date'|trans,
-                                    }
-                                }) }}
-                            </li>
-                            <li>
-                                <div class="buttons">
-                                    <div class="left-buttons">
-                                        <a href="{{ path('delete_reserva', { id: reserva.id }) }}" class="btn-danger">{{ 'Cancel / Delete booking'|trans }}</a>
-                                    <a href="{{ path('home') }}" class="btn-tertiary my-3">{{ 'More tours...'|trans }}</a>
-                                </div>
-                                <div class="right-button">
-                                    <button type="submit" class="btn-primary">{{ 'Modify reservation'|trans }}</button>
-                                </div>
-                                    
-                                    
-                                </div>
-                            </li>
-                            {{ form_end(form) }}
-                        </ul>
-                    </div>
-                </div>
-    {% else %}
-        <div class="text-center mt-5">
-            <h4>{{ 'No booking registered yet'|trans }}</h4>
-            <a href="{{ path('home') }}" class="btn-primary">{{ 'Back to homepage'|trans }}</a>
-        </div>
-    {% endif %}
+        {{
+          form_end(form)
+        }}
+      </ul>
+    </div>
+  </div>
+  {% else %}
+  <div class="text-center mt-5">
+    <h4>No existen reservas por el momento</h4>
+    <a href="{{ path('home') }}" class="btn-primary">Volver a inicio</a>
+  </div>
+  {% endif %}
 </div>
+{% endblock %}{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+<script>
+    // Fechas no disponibles y activas desde el servidor
+    var fechasNoDisponibles = {{ fechasNoDisponibles|json_encode()|raw }};
+    var fechasActivas = {{ fechasActivas|json_encode()|raw }};
+    var plazasDisponibles = {{ plazasDisponibles|json_encode()|raw }};
+
+    console.log(fechasActivas);
+    console.log(fechasNoDisponibles);
+
+    // Inicializar datepicker
+    $(document).ready(function() {
+      $.datepicker.regional['es'] = {
+        closeText: 'Cerrar',
+        prevText: '< Ant',
+        nextText: 'Sig >',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd/mm/yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: ''
+        };
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+      // Inicializar el datepicker
+      $('#fecha_evento').datepicker({
+          dateFormat: 'yy-mm-dd',
+          //beforeShow: function(input, inst) {
+              // Obtener el ancho del input y ajustar el datepicker
+              //var inputWidth = $(input).outerWidth();
+             // console.log(inputWidth);
+              //inst.dpDiv.css('width', inputWidth + 'px');
+          //},
+          beforeShowDay: function(date) {
+              var fecha = $.datepicker.formatDate('yy-mm-dd', date);
+              var hoy = new Date();
+              hoy.setHours(0, 0, 0, 0); // Asegúrate de comparar solo la fecha
+
+              // Si la fecha es anterior al día actual, marcar como no disponible
+              if (date < hoy) {
+                  return [false, 'past-date', 'Fecha pasada - No disponible']; // Clase 'past-date' para fechas pasadas
+              }
+
+              // Verificar si la fecha está en las no disponibles
+              if (fechasNoDisponibles.includes(fecha)) {
+                  return [false, 'disabled-date', 'No disponible']; // Deshabilitado
+              }
+
+              // Verificar si la fecha está en las activas
+            if (fecha || fechasActivas.includes(fecha)) {
+              var plazasLibres = plazasDisponibles[fecha] || "Disponibles"; // Obtener plazas disponibles o 0
+              return [true, 'active-date', 'Plazas libres: ' + plazasLibres]; // Mostrar plazas libres
+          }
+
+              return [true, '', 'Fecha No Disponible']; // Disponible sin estilo especial
+          }
+      });
+  });
+</script>
 {% endblock %}

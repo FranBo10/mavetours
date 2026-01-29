@@ -27,3 +27,9 @@ yarn-error.log
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+###> debug files ###
+db_probe.php
+db_probe_content.php
+fetch_api.js
+###< debug files ###

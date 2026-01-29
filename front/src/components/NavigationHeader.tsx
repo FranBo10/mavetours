@@ -165,7 +165,7 @@ export default function NavigationHeader() {
           {isAuthenticated && isAdminOrGuia ? (
             <>
               <MenuRow title={i18n.t("admin")} icon="👤" onPress={() => go("/admin")} />
-              <MenuRow title={i18n.t("calendar")} icon="🚩" onPress={() => go("/calendar")} />
+              <MenuRow title={i18n.t("calendar")} icon="🚩" onPress={() => go("/guia/calendar")} />
             </>
           ) : null}
 

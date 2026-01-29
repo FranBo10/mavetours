@@ -33,11 +33,7 @@ class Tour
     #[ORM\Column(length: 255)]
     #[Groups(['parada:list','parada:item'])]
     private ?string $titulo = null;
-
-    #[ORM\Column(length: 255)]
-    #[Groups(['parada:list','parada:item'])]
-    private ?string $imagen = null;
-
+    
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['parada:list','parada:item', 'tour:mini'])]
     private ?string $titulo_es = null;
@@ -45,6 +41,10 @@ class Tour
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['parada:list','parada:item', 'tour:mini'])]
     private ?string $titulo_fr = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['parada:list','parada:item'])]
+    private ?string $imagen = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['parada:item'])]
@@ -61,6 +61,14 @@ class Tour
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['parada:item'])]
     private ?string $descripcion_corta = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['parada:item'])]
+    private ?string $descripcion_corta_es = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['parada:item'])]
+    private ?string $descripcion_corta_fr = null;
 
     #[ORM\Column]
     private ?float $precio = null;
@@ -209,6 +217,30 @@ class Tour
     public function setDescripcionCorta(string $descripcion_corta): static
     {
         $this->descripcion_corta = $descripcion_corta;
+
+        return $this;
+    }
+
+    public function getDescripcionCortaEs(): ?string
+    {
+        return $this->descripcion_corta_es;
+    }
+
+    public function setDescripcionCortaEs(?string $descripcion_corta_es): static
+    {
+        $this->descripcion_corta_es = $descripcion_corta_es;
+
+        return $this;
+    }
+
+    public function getDescripcionCortaFr(): ?string
+    {
+        return $this->descripcion_corta_fr;
+    }
+
+    public function setDescripcionCortaFr(?string $descripcion_corta_fr): static
+    {
+        $this->descripcion_corta_fr = $descripcion_corta_fr;
 
         return $this;
     }

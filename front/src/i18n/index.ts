@@ -26,6 +26,19 @@ const translations = {
         no_tours: "No tours available",
         loading: "Loading...",
         error_loading: "Error loading stops",
+        // Booking
+        booking_form_title: "Book your spot",
+        date_label: "Date (YYYY-MM-DD)",
+        adults_label: "Adults",
+        children_label: "Children",
+        confirm_booking: "Confirm Booking",
+        booking_success_title: "Booking Confirmed",
+        reservation_date_error: "Invalid date format",
+        reservation_participants_error: "Must have at least 1 attendee",
+        total_price: "Total Price",
+        // Blog
+        tour_short_desc_1: "Explore the ancient streets and hidden gems of our beautiful village.",
+        tour_short_desc_2: "Discover the breathtaking landscapes and natural wonders surrounding the area.",
         // Blog
         choose_category: "Choose a category",
         latest_posts: "Latest posts",
@@ -56,6 +69,7 @@ const translations = {
         // Tour Details
         description: "Description",
         prices: "Prices",
+        prices_freetour: "Prices Freetour",
         free_tours_desc: "Free tours do not have a fixed price. Each person values the work of the guide and at the end gives the amount they consider appropriate.",
         details: "Details",
         cancelations: "Cancelations",
@@ -141,6 +155,16 @@ const translations = {
         no_tours: "No hay tours disponibles",
         loading: "Cargando...",
         error_loading: "Error cargando paradas",
+        // Booking
+        booking_form_title: "Reserva tu plaza",
+        date_label: "Fecha (AAAA-MM-DD)",
+        adults_label: "Adultos",
+        children_label: "Niños",
+        confirm_booking: "Confirmar Reserva",
+        booking_success_title: "Reserva Confirmada",
+        reservation_date_error: "Formato de fecha inválido",
+        reservation_participants_error: "Debe haber al menos 1 asistente",
+        total_price: "Precio Total",
         // Blog
         choose_category: "Elige una categoría",
         latest_posts: "Últimas publicaciones",
@@ -172,6 +196,7 @@ const translations = {
         // Tour Details
         description: "Descripción",
         prices: "Precios",
+        prices_freetour: "Precios Freetour",
         free_tours_desc: "Los free tours no tienen un precio fijo. Cada persona valora el trabajo del guía y al finalizar entrega la cantidad que considere oportuna.",
         details: "Detalles",
         cancelations: "Cancelaciones",
@@ -257,6 +282,16 @@ const translations = {
         no_tours: "Pas de circuits disponibles",
         loading: "Chargement...",
         error_loading: "Erreur lors du chargement des arrêts",
+        // Booking
+        booking_form_title: "Réservez votre place",
+        date_label: "Date (AAAA-MM-JJ)",
+        adults_label: "Adultes",
+        children_label: "Enfants",
+        confirm_booking: "Confirmer la réservation",
+        booking_success_title: "Réservation Confirmée",
+        reservation_date_error: "Format de date invalide",
+        reservation_participants_error: "Doit avoir au moins 1 participant",
+        total_price: "Prix Total",
         // Blog
         choose_category: "Choisissez une catégorie",
         latest_posts: "Derniers articles",
@@ -288,6 +323,7 @@ const translations = {
         // Tour Details
         description: "Description",
         prices: "Prix",
+        prices_freetour: "Prix Freetour",
         free_tours_desc: "Les free tours n'ont pas de prix fixe. Chaque personne évalue le travail du guide et donne à la fin le montant qu'elle juge approprié.",
         details: "Détails",
         cancelations: "Annulations",

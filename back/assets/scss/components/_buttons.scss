@@ -170,9 +170,8 @@
 }
 
 .btn-warning-card:hover {
-  background-color: darken(#f39c12, 10%);
-  border-color: darken(#f39c12, 10%);
-  color: variables.$color-white;
+  background-color: variables.$color-warning;
+  border-color: variables.$color-warning;
 }
 
 .btn-tertiary-card {
