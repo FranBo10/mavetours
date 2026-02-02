@@ -20,7 +20,7 @@
   <div class="container-fluid margin_120_100 my-5">
     <div class="titulo__blog">
       <h2>{{ titulo }} :</h2>
-      {# <div class="detalle-qr">
+      <div class="detalle-qr">
         <div class="qr-hidden">          
           <img src="{{ base64 }}">
         </div>
@@ -32,7 +32,7 @@
         <a href="#" id="ocultarQr" class="qr-hidden"
           >Ocultar codigo QR</a
         >
-      </div> #}
+      </div>
     </div>
     <div class="row">
       <div class="col-sm-9">
@@ -91,4 +91,5 @@
     <!-- /row -->
   </div>
 </main>
-{% endblock %}
+{% endblock %}{% block javascripts %}
+{{ encore_entry_script_tags("qrCode") }} {% endblock %}

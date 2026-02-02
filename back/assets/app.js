@@ -3,6 +3,7 @@ import './js/audio';
 import './js/menu';
 import './js/menu2';
 import './js/tour';
+import './js/qrCode';
 import './js/avatars';
 import './js/cookies';
 import './js/paradas';

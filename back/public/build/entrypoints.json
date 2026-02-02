@@ -64,6 +64,12 @@
         "/build/cookies.js"
       ]
     },
+    "qrCode": {
+      "js": [
+        "/build/runtime.js",
+        "/build/qrCode.js"
+      ]
+    },
     "paradas": {
       "js": [
         "/build/runtime.js",

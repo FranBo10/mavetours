@@ -789,3 +789,37 @@ article.blog .post_info ul li:last-child i {
 .comment_info span {
   padding: 0 10px;
 }
+
+.qr-hidden {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.qr-visible {
+  max-height: 1000px;
+  opacity: 1;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+  font-size: variables.$main-font-size;
+  line-height: 2.5rem;
+}
+
+.qr-container {
+  position: relative;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.qr-container a {
+  text-decoration: none;
+  color: variables.$color-primary;
+  font-size: variables.$main-font-size;
+}
+
+#ocultar-qr {
+  position: absolute;
+  top: 10;
+  left: 0;
+  display: none;
+}
