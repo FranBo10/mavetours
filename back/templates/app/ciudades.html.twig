@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ destino.titulo }} - {{ "Cities" | trans }}{% endblock %}
+
+{% block nav %}
+    {% include '_partials/_menu_nav.html.twig' %}
+{% endblock %}
+
+{% block body %}
+<section class="hero" style="background-image: url('{{ asset('uploads/images/destinos/' ~ destino.imagen) }}');">
+    
+</section>
+
+    {% if destino.descripcionLarga %}
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="description">
+                    {{ destino.descripcionLarga|raw }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if ciudades|length > 0 %}
+        <div class="servicios">
+            <div class="titulo__servicios">
+                <h2>{{ "Choose a city in" | trans }} {{ destino.titulo }}</h2>
+            </div>
+            <div class="cards">
+                {% for item in ciudades %}
+                    <article class="card">
+                        {% if item.imagen %}
+                            <img src="{{ asset('uploads/images/ciudades/' ~ item.imagen) }}" alt="{{ item.nombre }}">
+                        {% elseif destino.imagen %}
+                            <img src="{{ asset('uploads/images/destinos/' ~ destino.imagen) }}" alt="{{ item.nombre }}">
+                        {% endif %}
+                        <div class="content card-text">
+                            <h4>{{ item.nombre }}</h4>
+                             <div class="hidden-elements">
+                                <div class="card-btn">
+                                    <a href="{{ path('tours_ciudad', {slug: item.slug}) }}" class="btn-tertiary-card">{{ "TOURS" | trans }}</a>
+                                </div>
+                             </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="servicios">
+            <div class="titulo__servicios">
+                <h2>{{ "No cities available yet for" | trans }} {{ destino.titulo }}</h2>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('menu') }}
+    {{ encore_entry_script_tags('cookies') }}
+{% endblock %}

@@ -26,7 +26,10 @@ class Reserva
     private ?\DateTimeInterface $fecha_registro = null;
 
     #[ORM\ManyToMany(targetEntity: Tour::class, inversedBy: 'reservas')]
-    private Collection $tours;
+    private Collection $tours;    
+
+    #[ORM\ManyToMany(targetEntity: Circuito::class, inversedBy: 'reservas')]
+    private Collection $circuitos;
 
     #[ORM\ManyToOne(inversedBy: 'reservas')]
     private ?User $user = null;
@@ -41,6 +44,7 @@ class Reserva
     {
         $this->fecha_registro = new \DateTimeImmutable();
         $this->tours = new ArrayCollection();
+        $this->circuitos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -110,6 +114,32 @@ class Reserva
     public function removeTour(Tour $tour): static
     {
         $this->tours->removeElement($tour);
+
+        return $this;
+    }
+
+    
+
+    /**
+     * @return Collection<int, Circuito>
+     */
+    public function getCircuitos(): Collection
+    {
+        return $this->circuitos;
+    }
+
+    public function addCircuito(Circuito $circuito): static
+    {
+        if (!$this->circuitos->contains($circuito)) {
+            $this->circuitos->add($circuito);
+        }
+
+        return $this;
+    }
+
+    public function removeCircuito(Circuito $circuito): static
+    {
+        $this->circuitos->removeElement($circuito);
 
         return $this;
     }

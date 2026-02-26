@@ -100,6 +100,8 @@
             {{ tour.descripcionLargaEs | raw }}
         {% elseif app.request.get('_locale') == 'fr' %}
             {{ tour.descripcionLargaFr | raw }}
+        {% elseif app.request.get('_locale') == 'pt' %}
+            {{ tour.descripcionLargaPt | raw }}
         {% else %}
             {{ tour.descripcionLarga | raw }}
         {% endif %}

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ destino.titulo }}{% endblock %}
+
+{% block nav %}
+    {% include '_partials/_menu_nav.html.twig' %}
+{% endblock %}
+
+{% block body %}
+<section class="hero" style="background-image: url('{{ asset('uploads/images/destinos/' ~ destino.imagen) }}');">
+    
+</section>
+
+    {% if destino.descripcionLarga %}
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="description">
+                    {{ destino.descripcionLarga|raw }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if circuitos|length > 0 %}
+        <div class="servicios">
+            <div class="titulo__servicios">
+                <h2>{{ "Circuits in" | trans }} {{ destino.titulo }}</h2>
+            </div>
+            <div class="cards">
+                {% for item in circuitos %}
+                {% if item.isActive %}
+                    <article class="card">
+                        {% if item.imagen %}
+                            <img src="{{ asset('uploads/images/destinos/' ~ item.imagen) }}" alt="{{ item.titulo }}">
+                        {% endif %}
+                        <div class="content card-text">
+                            <h4>{{ item.titulo }}</h4>
+                             <div class="hidden-elements">
+                                <div class="card-btn">
+                                    <a href="{{ path('detalleCircuito', {slug: item.slug}) }}" class="btn-tertiary-card">{{ "INFO" | trans }}</a>
+                                </div>
+                             </div>
+                        </div>
+                    </article>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}   
+{% endblock %}

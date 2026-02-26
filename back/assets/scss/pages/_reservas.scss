@@ -484,7 +484,7 @@
 
 .card__reservas {
   @include flexCenter(column);
-  border: 1px solid variables.$color-primary;
+  // border: 1px solid variables.$color-primary;
   padding: 0.5rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -501,13 +501,11 @@
 // }
 
 .card__reservas img {
-  width: 70%;
-  height: 200px;
-  object-fit: fill;
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
   transition: all 0.3s ease; /* Transición suave al cambiar tamaño */
-  @include media(smartPhone) {
-    max-width: 100%;
-  }
+  border-radius: 8px; /* Opcional: para suavizar bordes */
 }
 
 .reservas-detalles {
@@ -562,7 +560,7 @@
 
   .card__reservas {
     margin: auto;
-    width: 90%;
+    width: 100%;
   }
 }
 

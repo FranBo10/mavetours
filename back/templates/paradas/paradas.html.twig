@@ -9,7 +9,7 @@
   </div>
   {% endfor %}
 
-  <h2 class="titulo__reservas text-center w-100 mb-3">
+  <h2 class="titulo__reservas text-center w-100">
     {{ tour.titulo | trans | raw }}
   </h2>
 
@@ -56,6 +56,8 @@
                   {{ parada.contenidoFr|striptags|slice(0, 250) ~ '...' }}
               {% elseif app.request.get('_locale') == 'es' and parada.contenidoEs %}
                   {{ parada.contenidoEs|striptags|slice(0, 250) ~ '...' }}
+              {% elseif app.request.get('_locale') == 'pt' and parada.contenidoPt %}
+                  {{ parada.contenidoPt|striptags|slice(0, 250) ~ '...' }}
               {% else %}
                   {{ parada.contenido|striptags|slice(0, 250) ~ '...' }}
               {% endif %}
@@ -66,6 +68,8 @@
                     {{ parada.contenidoFr | raw }}
                 {% elseif app.request.get('_locale') == 'es' and parada.contenidoEs %}
                     {{ parada.contenidoEs | raw }}
+                {% elseif app.request.get('_locale') == 'pt' and parada.contenidoPt %}
+                    {{ parada.contenidoPt | raw }}
                 {% else %}
                     {{ parada.contenido | raw }}
                 {% endif %}
@@ -75,6 +79,8 @@
                     {% set audioSrc = parada.audioUrlEs %}
                 {% elseif currentLocale == 'fr' and parada.audioUrlFr %}
                     {% set audioSrc = parada.audioUrlFr %}
+                {% elseif currentLocale == 'pt' and parada.audioUrlPt %}
+                    {% set audioSrc = parada.audioUrlPt %}
                 {% endif %}
 
                 {% if audioSrc %}

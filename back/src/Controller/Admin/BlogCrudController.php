@@ -54,6 +54,9 @@ class BlogCrudController extends AbstractCrudController
                     }
                     return implode(', ', $blogEtiquetas);
                 }),
+            AssociationField::new('ciudad', 'Ciudad')
+                ->setRequired(false)
+                ->setColumns(6),
             TextField::new('descripcion_corta', 'Descripcion corta'),
             TextEditorField::new('descripcion_larga', 'Descripcion larga')->onlyOnForms(),
             TextEditorField::new('descripcion_larga_fr', 'Descripcion larga FR')->onlyOnForms(),
@@ -64,7 +67,7 @@ class BlogCrudController extends AbstractCrudController
                 ]),
             ImageField::new('imagen', 'Imagen')
                 ->setBasePath('uploads/images/blog')->setUploadDir('public/uploads/images/blog')->setUploadedFileNamePattern('[timestamp]-[slug]-[contenthash].[extension]')->onlyWhenCreating(),
-            ImageField::new('imagen', 'Imagen')->setBasePath('uploads/images/blog/')->hideOnForm(),
+            ImageField::new('imagen', 'Imagen')->setBasePath('uploads/images/blog')->hideOnForm(),
             BooleanField::new('estado', 'Activo'),
             DateTimeField::new('fecha_registro')->setFormat('d/M/Y')->hideOnForm(),
         ];

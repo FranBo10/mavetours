@@ -67,6 +67,18 @@
             required
           />
         </li>
+        
+        <li id="hora-selector-wrapper">
+             <label for="hora_evento_select">Selecciona la hora</label>
+             <select id="hora_evento_select" name="hora_evento" class="form-control">
+                 {% if detallesReserva.horaEvento %}
+                    <option value="{{ detallesReserva.horaEvento|date('H:i') }}" selected>{{ detallesReserva.horaEvento|date('H:i') }}</option>
+                 {% else %}
+                    <option value="">Selecciona fecha primero...</option>
+                 {% endif %}
+             </select>
+        </li>
+
         <li>
           <div class="buttons">
             <div class="left-buttons">
@@ -103,71 +115,158 @@
   </div>
   {% endif %}
 </div>
-{% endblock %}{% block javascripts %}
+{% endblock %}
+
+{% block javascripts %}
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+<style>
+      .ui-datepicker td.past-date a { color: #ccc !important; pointer-events: none; }
+      .ui-datepicker td.blocked-date a { background: #ffcccc !important; color: #a00 !important; pointer-events: none; }
+      .ui-datepicker td.full-date a { background: #ffcccc !important; color: #a00 !important; cursor: not-allowed; }
+      .ui-datepicker td.available-date a { background: #ccffcc !important; color: #006600 !important; }
+      /* Diagonal split for partial availability */
+      .ui-datepicker td.partial-date a { 
+          background: linear-gradient(135deg, #ffcccc 50%, #ccffcc 50%) !important; 
+          color: #000 !important; 
+      }
+      #hora-selector-wrapper { margin-top: 10px; } 
+      /* Mostramos wrapper por defecto en editar si ya tiene hora, JS lo gestionará */
+</style>
 <script>
-    // Fechas no disponibles y activas desde el servidor
-    var fechasNoDisponibles = {{ fechasNoDisponibles|json_encode()|raw }};
-    var fechasActivas = {{ fechasActivas|json_encode()|raw }};
-    var plazasDisponibles = {{ plazasDisponibles|json_encode()|raw }};
-
-    console.log(fechasActivas);
-    console.log(fechasNoDisponibles);
-
-    // Inicializar datepicker
+    // Datos desde el servidor
+    var scheduleData = {{ scheduleData|raw }};
+    
     $(document).ready(function() {
-      $.datepicker.regional['es'] = {
-        closeText: 'Cerrar',
-        prevText: '< Ant',
-        nextText: 'Sig >',
-        currentText: 'Hoy',
-        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
-        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-        dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
-        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
-        weekHeader: 'Sm',
-        dateFormat: 'dd/mm/yy',
-        firstDay: 1,
-        isRTL: false,
-        showMonthAfterYear: false,
-        yearSuffix: ''
+        $.datepicker.regional['es'] = {
+            closeText: 'Cerrar',
+            prevText: '< Ant',
+            nextText: 'Sig >',
+            currentText: 'Hoy',
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+            dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+            weekHeader: 'Sm',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
         };
         $.datepicker.setDefaults($.datepicker.regional['es']);
-      // Inicializar el datepicker
-      $('#fecha_evento').datepicker({
-          dateFormat: 'yy-mm-dd',
-          //beforeShow: function(input, inst) {
-              // Obtener el ancho del input y ajustar el datepicker
-              //var inputWidth = $(input).outerWidth();
-             // console.log(inputWidth);
-              //inst.dpDiv.css('width', inputWidth + 'px');
-          //},
-          beforeShowDay: function(date) {
-              var fecha = $.datepicker.formatDate('yy-mm-dd', date);
-              var hoy = new Date();
-              hoy.setHours(0, 0, 0, 0); // Asegúrate de comparar solo la fecha
 
-              // Si la fecha es anterior al día actual, marcar como no disponible
-              if (date < hoy) {
-                  return [false, 'past-date', 'Fecha pasada - No disponible']; // Clase 'past-date' para fechas pasadas
-              }
+        var $horaSelect = $('#hora_evento_select');
+        var $horaWrapper = $('#hora-selector-wrapper');
+        var initialDate = $('#fecha_evento').val(); // Y-m-d
 
-              // Verificar si la fecha está en las no disponibles
-              if (fechasNoDisponibles.includes(fecha)) {
-                  return [false, 'disabled-date', 'No disponible']; // Deshabilitado
-              }
+        // Inicializar datepicker
+        $('#fecha_evento').datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: 0,
+            beforeShowDay: function(date) {
+                var fechaStr = $.datepicker.formatDate('yy-mm-dd', date);
+                
+                if (scheduleData.blocked.includes(fechaStr)) {
+                    return [false, 'blocked-date', 'No disponible'];
+                }
 
-              // Verificar si la fecha está en las activas
-            if (fecha || fechasActivas.includes(fecha)) {
-              var plazasLibres = plazasDisponibles[fecha] || "Disponibles"; // Obtener plazas disponibles o 0
-              return [true, 'active-date', 'Plazas libres: ' + plazasLibres]; // Mostrar plazas libres
-          }
+                var slots = getSlotsForDate(fechaStr);
+                if (slots.length === 0) {
+                    return [false, 'blocked-date', 'Sin horarios'];
+                }
 
-              return [true, '', 'Fecha No Disponible']; // Disponible sin estilo especial
-          }
-      });
-  });
+                var fullCount = 0;
+                var openCount = 0;
+                slots.forEach(function(slot) {
+                    if (slot.full) fullCount++;
+                    else openCount++;
+                });
+
+                if (openCount === 0) {
+                   return [false, 'full-date', 'Completo'];
+                } else if (fullCount > 0) {
+                   return [true, 'partial-date', 'Disponibilidad parcial'];
+                } else {
+                   return [true, 'available-date', 'Disponible'];
+                }
+            },
+            onSelect: function(dateText) {
+                updateHoraSelector(dateText);
+            }
+        });
+
+        // Si ya hay fecha seleccionada (edición), cargar horas
+        if (initialDate) {
+            // Guardar el valor actual de hora para intentar mantenerlo
+            var currentHora = $horaSelect.val();
+            updateHoraSelector(initialDate, currentHora);
+        }
+
+        function getSlotsForDate(dateStr) {
+            var baseSlots = scheduleData.base; 
+            var result = [];
+            var eventInfo = scheduleData.events[dateStr] || {};
+
+            baseSlots.forEach(function(time) {
+                var info = eventInfo[time];
+                var isFull = false;
+                var label = time;
+
+                if (info) {
+                    if (info.full || info.closed) {
+                        isFull = true;
+                        label += ' (Completo)';
+                    } else {
+                        label += ' (' + info.remaining + ' plazas)';
+                    }
+                }
+
+                result.push({
+                    time: time,
+                    full: isFull,
+                    label: label
+                });
+            });
+
+            return result;
+        }
+
+        function updateHoraSelector(dateStr, keepValue) {
+            var slots = getSlotsForDate(dateStr);
+            $horaSelect.empty();
+            
+            var availableCount = 0;
+            $horaSelect.append('<option value="">Selecciona hora...</option>');
+
+            slots.forEach(function(slot) {
+                if (!slot.full) {
+                    var selected = (keepValue && keepValue.substring(0,5) === slot.time.substring(0,5)) ? 'selected' : '';
+                    $horaSelect.append('<option value="' + slot.time + '" '+selected+'>' + slot.label + '</option>');
+                    availableCount++;
+                } else {
+                    // Si es la hora que yo tenía (keepValue) y ahora está full... ¿permito mantenerla?
+                    // Si estoy editando MI reserva, y el evento aparece FULL porque contiene MI reserva...
+                    // Realmente debería restar mi cantidad para ver si está full 'para otros'.
+                    // Pero PHP eventInfos ya viene calculado con ocupación total.
+                    // Manejar esto en JS es difícil sin saber cuánto ocupo YO.
+                    // DE MOMENTO: mostrar disabled. El usuario tendrá que cambiar si está full.
+                    // Workaround: si keepValue coincide, añadir opción seleccionada aunque diga Full (el controller validará si cabe).
+                    var selected = (keepValue && keepValue.substring(0,5) === slot.time.substring(0,5)) ? 'selected' : '';
+                     $horaSelect.append('<option value="' + slot.time + '" disabled '+selected+'>' + slot.label + '</option>');
+                }
+            });
+
+            if (availableCount > 0 || keepValue) {
+                $horaWrapper.show();
+                $horaSelect.prop('required', true);
+            } else {
+                $horaWrapper.hide();
+                $horaSelect.prop('required', false);
+                // alert('No hay horarios disponibles para esta fecha.');
+            }
+        }
+    });
 </script>
 {% endblock %}

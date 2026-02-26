@@ -39,6 +39,8 @@ export default function NavigationHeader() {
 
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [destinos, setDestinos] = useState<import("../api/tipos").Destino[]>([]);
+  const [destinosOpen, setDestinosOpen] = useState(false);
 
   // Animación: menú entra desde la izquierda (tipo panel)
   const anim = useRef(new Animated.Value(0)).current; // 0 cerrado, 1 abierto
@@ -50,9 +52,18 @@ export default function NavigationHeader() {
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start(() => {
-      if (!open) setLangOpen(false);
+      if (!open) {
+        setLangOpen(false);
+        setDestinosOpen(false); // Close submenus
+      }
     });
   }, [open, anim]);
+
+  useEffect(() => {
+    import("../api/tipos").then(({ fetchDestinos }) => {
+      fetchDestinos().then(setDestinos).catch(console.error);
+    });
+  }, []);
 
   const panelTranslateX = anim.interpolate({
     inputRange: [0, 1],
@@ -82,6 +93,8 @@ export default function NavigationHeader() {
     await signOut();
     router.replace("/"); // o "/login"
   };
+
+  const toggleDestinos = () => setDestinosOpen(!destinosOpen);
 
   const avatar = useMemo(() => avatarUrl(user?.avatar ?? null), [user?.avatar]);
 
@@ -161,6 +174,35 @@ export default function NavigationHeader() {
           ) : null}
 
           <MenuRow title="Home" icon="🏠" onPress={() => go("/")} />
+
+          {/* DESTINOS DROPDOWN */}
+          <Pressable
+            style={({ pressed }) => [styles.item, pressed && { opacity: 0.9 }]}
+            onPress={toggleDestinos}
+          >
+            <View style={styles.row}>
+              <Text style={styles.icon}>🌍</Text>
+              <Text style={styles.title}>Destinos</Text>
+            </View>
+            <Text style={styles.chevron}>{destinosOpen ? "▲" : "▼"}</Text>
+          </Pressable>
+
+          {destinosOpen && (
+            <View style={styles.languageDropdown}>
+              {destinos.map((c) => (
+                <MenuRow
+                  key={c.id}
+                  title={c.nombre}
+                  icon="📍"
+                  onPress={() => go(`/destinos/${c.slug}`)}
+                />
+              ))}
+              {destinos.length === 0 && (
+                <Text style={{ color: "white", padding: 10 }}>Cargando...</Text>
+              )}
+            </View>
+          )}
+
 
           {isAuthenticated && isAdminOrGuia ? (
             <>

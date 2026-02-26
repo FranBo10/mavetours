@@ -693,6 +693,66 @@
         <source>Your tour will be unlocked in</source>
         <target>Votre tour sera debloqué dans</target>
       </trans-unit>
+      <trans-unit id="sC6kCRE" resname="The date of the event cannot be earlier than the current date">
+        <source>The date of the event cannot be earlier than the current date</source>
+        <target>La date de l'événement ne peut pas être antérieure à la date actuelle</target>
+      </trans-unit>
+      <trans-unit id="9AWiqXA" resname="Ups! We do not have a visit this day for this tour">
+        <source>Ups! We do not have a visit this day for this tour</source>
+        <target>Oups ! Nous n'avons pas de visite ce jour-là para ce circuit</target>
+      </trans-unit>
+      <trans-unit id="B7JPJqo" resname="The event is closed">
+        <source>The event is closed</source>
+        <target>L'événement est terminé</target>
+      </trans-unit>
+      <trans-unit id="Lg0Zugn" resname="Circuits in">
+        <source>Circuits in</source>
+        <target>Circuits en</target>
+      </trans-unit>
+      <trans-unit id="zaFNCy2" resname="INFO">
+        <source>INFO</source>
+        <target>INFO</target>
+      </trans-unit>
+      <trans-unit id="1l.iedy" resname="Itinerary">
+        <source>Itinerary</source>
+        <target>Itinéraire</target>
+      </trans-unit>
+      <trans-unit id="8aVRYHW" resname="per person">
+        <source>per person</source>
+        <target>par personne</target>
+      </trans-unit>
+      <trans-unit id=".9bySxi" resname="Día">
+        <source>Día</source>
+        <target>Jour</target>
+      </trans-unit>
+      <trans-unit id="s9XTyUz" resname="End point">
+        <source>End point</source>
+        <target>Point d'arrivée</target>
+      </trans-unit>
+      <trans-unit id="viXmmL8" resname="Choose your favourite destination">
+        <source>Choose your favourite destination</source>
+        <target>Choisissez votre destination préférée</target>
+      </trans-unit>
+      <trans-unit id="Ti2IVK." resname="CIRCUITS">
+        <source>CIRCUITS</source>
+        <target>CIRCUITS</target>
+      </trans-unit>
+      <trans-unit id="SxJz1Ss" resname="FREETOUR">
+        <source>FREETOUR</source>
+        <target>FREE TOUR</target>
+      </trans-unit>
+      <trans-unit id="h6n74y." resname="AUDIOGUIDE">
+        <source>AUDIOGUIDE</source>
+        <target>AUDIOGUIDE</target>
+      </trans-unit>
+      <trans-unit id="M7k0ds9" resname="Time">
+        <source>Time</source>
+        <target>Heure</target>
+      </trans-unit>
+      <trans-unit id="a5g6geX" resname="Restart">
+        <source>Restart</source>
+        <target>Réinitialiser</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

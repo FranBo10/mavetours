@@ -161,6 +161,10 @@
         <source>action.save_and_continue</source>
         <target>Sauvegarder et modifier</target>
       </trans-unit>
+      <trans-unit id="axRh725" resname="action.toggle_dropdown">
+        <source>action.toggle_dropdown</source>
+        <target>Basculer le menu déroulant</target>
+      </trans-unit>
       <trans-unit id="oQ9WL.E" resname="batch_action_modal.title">
         <source>batch_action_modal.title</source>
         <target>Vous allez appliquer l'action "%action_name%" à %num_items% élément(s).</target>
@@ -180,6 +184,14 @@
       <trans-unit id="nGU95PH" resname="delete_modal.content">
         <source>delete_modal.content</source>
         <target>Cette action est irréversible.</target>
+      </trans-unit>
+      <trans-unit id="OrE2IEJ" resname="action_confirmation_modal.title">
+        <source>action_confirmation_modal.title</source>
+        <target>Êtes-vous sûr de vouloir %action_name% ?</target>
+      </trans-unit>
+      <trans-unit id="8jUlGKA" resname="action_confirmation_modal.action">
+        <source>action_confirmation_modal.action</source>
+        <target>Confirmer</target>
       </trans-unit>
       <trans-unit id="5YZoOIF" resname="filter.button.clear">
         <source>filter.button.clear</source>
@@ -220,6 +232,10 @@
       <trans-unit id="ahS9RqM" resname="filter.label.contains">
         <source>filter.label.contains</source>
         <target>contient</target>
+      </trans-unit>
+      <trans-unit id="fsafOQc" resname="filter.label.contains_all">
+        <source>filter.label.contains_all</source>
+        <target>contient tous</target>
       </trans-unit>
       <trans-unit id="xHOGg7H" resname="filter.label.not_contains">
         <source>filter.label.not_contains</source>

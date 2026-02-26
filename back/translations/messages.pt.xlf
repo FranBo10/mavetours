@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="es" target-language="pt" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="3NHVIj9" resname="Name">
+        <source>Name</source>
+        <target>Nome</target>
+      </trans-unit>
+      <trans-unit id="e0iIBJR" resname="Last name">
+        <source>Last name</source>
+        <target>Sobrenome</target>
+      </trans-unit>
+      <trans-unit id="2WQzBFa" resname="Phone N°.">
+        <source>Phone N°.</source>
+        <target>N°. Telefone</target>
+      </trans-unit>
+      <trans-unit id="588_9PF" resname="Password">
+        <source>Password</source>
+        <target>Senha</target>
+      </trans-unit>
+      <trans-unit id="WsJl85a" resname="Confirm password">
+        <source>Confirm password</source>
+        <target>Confirmar senha</target>
+      </trans-unit>
+      <trans-unit id="cB0CHQj" resname="Country">
+        <source>Country</source>
+        <target>País</target>
+      </trans-unit>
+      <trans-unit id="DiImtSN" resname="Welcome">
+        <source>Welcome</source>
+        <target>Bem-vindo</target>
+      </trans-unit>
+      <trans-unit id="OnhpU4i" resname="Home">
+        <source>Home</source>
+        <target>Início</target>
+      </trans-unit>
+      <trans-unit id="jGvAmVN" resname="Blog">
+        <source>Blog</source>
+        <target>Blog</target>
+      </trans-unit>
+      <trans-unit id="K1w9JnI" resname="Contact">
+        <source>Contact</source>
+        <target>Contato</target>
+      </trans-unit>
+      <trans-unit id="SWFhRVF" resname="Log out">
+        <source>Log out</source>
+        <target>Sair</target>
+      </trans-unit>
+      <trans-unit id="wYmEDPf" resname="Log in">
+        <source>Log in</source>
+        <target>Entrar</target>
+      </trans-unit>
+      <trans-unit id="x5Pg2aH" resname="Registration">
+        <source>Registration</source>
+        <target>Registro</target>
+      </trans-unit>
+      <trans-unit id="_TJnqhH" resname="Remember me">
+        <source>Remember me</source>
+        <target>Lembrar-me</target>
+      </trans-unit>
+      <trans-unit id="YOlNDxu" resname="I forgot my password">
+        <source>I forgot my password</source>
+        <target>Esqueci minha senha</target>
+      </trans-unit>
+      <trans-unit id="v9QCsvb" resname="Sign in">
+        <source>Sign in</source>
+        <target>Entrar</target>
+      </trans-unit>
+      <trans-unit id="G1RbI.r" resname="Don't have an account?">
+        <source>Don't have an account?</source>
+        <target>Não tem uma conta?</target>
+      </trans-unit>
+      <trans-unit id="FCcu3hw" resname="Register here">
+        <source>Register here</source>
+        <target>Registre-se aqui</target>
+      </trans-unit>
+      <trans-unit id="BbJc5H." resname="You already have a confirmed booking for this tour on this date and time. Please check your bookings to modify or cancel it">
+        <source>You already have a confirmed booking for this tour on this date and time. Please check your bookings to modify or cancel it</source>
+        <target>Você já possui uma reserva confirmada para este tour nesta data e horário. Convidamos você a consultar suas reservas para modificá-la ou cancelá-la</target>
+      </trans-unit>
+      <trans-unit id="_I580qL" resname="Please select a time for the tour">
+        <source>Please select a time for the tour</source>
+        <target>Por favor, selecione um horário para o tour</target>
+      </trans-unit>
+      <trans-unit id="L3dmip3" resname="Message">
+        <source>Message</source>
+        <target>Mensagem</target>
+      </trans-unit>
+      <trans-unit id="9vRoj.I" resname="Send">
+        <source>Send</source>
+        <target>Enviar</target>
+      </trans-unit>
+      <trans-unit id="R6rzG4P" resname="Contact us">
+        <source>Contact us</source>
+        <target>Fale conosco</target>
+      </trans-unit>
+      <trans-unit id="TTbtqfm" resname="Your message has been sent">
+        <source>Your message has been sent</source>
+        <target>Sua mensagem foi enviada</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

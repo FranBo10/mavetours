@@ -24,12 +24,12 @@ class BlogCategoriaCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('titulo', 'Titulo'),
             ImageField::new('imagen', 'Imagen')
-                ->setBasePath('uploads/images/blog')->setUploadDir('public/uploads/images/blog/')->setUploadedFileNamePattern('[timestamp]-[slug]-[contenthash].[extension]')->onlyWhenUpdating()->setFormTypeOptions([
+                ->setBasePath('uploads/images/blog')->setUploadDir('public/uploads/images/blog')->setUploadedFileNamePattern('[timestamp]-[slug]-[contenthash].[extension]')->onlyWhenUpdating()->setFormTypeOptions([
                     'required' => false,
                 ]),
             ImageField::new('imagen', 'Imagen')
-                ->setBasePath('uploads/images/blog')->setUploadDir('public/uploads/images/blog/')->setUploadedFileNamePattern('[timestamp]-[slug]-[contenthash].[extension]')->onlyWhenCreating(),
-            ImageField::new('imagen', 'Imagen')->setBasePath('uploads/images/blog/')->hideOnForm(),
+                ->setBasePath('uploads/images/blog')->setUploadDir('public/uploads/images/blog')->setUploadedFileNamePattern('[timestamp]-[slug]-[contenthash].[extension]')->onlyWhenCreating(),
+            ImageField::new('imagen', 'Imagen')->setBasePath('uploads/images/blog')->hideOnForm(),
             DateTimeField::new('fecha_registro')->setFormat('d/M/Y')->hideOnForm(),
         ];
     }

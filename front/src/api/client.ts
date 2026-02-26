@@ -19,8 +19,17 @@ export const api = axios.create({
 api.interceptors.request.use(async (config) => {
   const token = await getAccessToken();
   if (token) {
-    config.headers = config.headers ?? {};
-    config.headers.Authorization = `Bearer ${token}`;
+    if (!config.headers) {
+      config.headers = new axios.AxiosHeaders();
+    }
+
+    // En Axios v1.x, config.headers suele ser AxiosHeaders
+    if (typeof config.headers.set === 'function') {
+      config.headers.set('Authorization', `Bearer ${token}`);
+    } else {
+      // Fallback por si acaso es un objeto plano
+      (config.headers as any)['Authorization'] = `Bearer ${token}`;
+    }
   }
   return config;
 });

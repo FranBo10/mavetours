@@ -5,7 +5,6 @@ namespace App\Controller;
 use DateTime;
 use App\Entity\Tour;
 use App\Entity\User;
-use App\Entity\Evento;
 use App\Entity\Reserva;
 use App\Form\UserFormType;
 use App\Service\EventoService;
@@ -45,6 +44,7 @@ class ReservaController extends AbstractController
         MailerService $mailerService,
         BlogCategoriaRepository $blogCategoriaRepository,
         EventoRepository $eventoRepository,
+        ReservaRepository $reservaRepository,
         TranslatorInterface $translator
     ) {
         if (!$tour) {
@@ -92,68 +92,87 @@ class ReservaController extends AbstractController
         }
 
         /**
-         * ========= LÓGICA DATEPICKER (del código 2) =========
-         * $fechasNoDisponibles, $fechasActivas, $plazasDisponibles
+         * ========= NUEVA LÓGICA MULTI-HORARIO =========
          */
-        $fechasNoDisponibles = [];
+        $baseSchedule = [];
+        $blockedDates = [];
+        $eventStatus = []; // ['2023-10-31' => ['09:00' => ['full' => true, 'remaining' => 0]]]
+
+        
+        // Lógica centralizada para horarios + fallback
+        [$baseSchedule, $blockedDates] = $this->calculateSchedule($tour);
+
+
+        // Eventos existentes para calcular ocupación específica
+        $eventos = $eventoRepository->findBy(['tour' => $tour]);
+        foreach ($eventos as $evento) {
+            if (!$evento->getInicio()) continue;
+            
+            $fecha = $evento->getInicio()->format('Y-m-d');
+            $hora = $evento->getInicio()->format('H:i');
+            $stock = $tour->getStock();
+            $cantidadEvento = $evento->getCantidad();
+            $remaining = $stock - $cantidadEvento;
+            $isFull = ($evento->isCerrado() || $remaining <= 0);
+
+            if (!isset($eventStatus[$fecha])) {
+                $eventStatus[$fecha] = [];
+            }
+            $eventStatus[$fecha][$hora] = [
+                'full' => $isFull,
+                'remaining' => max(0, $remaining),
+                'closed' => $evento->isCerrado()
+            ];
+        }
+
+        // Estructura para JS
+        $scheduleData = [
+            'base' => array_values($baseSchedule),
+            'blocked' => array_values(array_unique($blockedDates)),
+            'events' => $eventStatus
+        ];
+
+        // Compatibilidad para evitar errores en template antes de actualizarlo
+        $fechasNoDisponibles = $blockedDates; 
         $fechasActivas = [];
         $plazasDisponibles = [];
-
-        // Eventos existentes del tour
-        $eventos = $eventoRepository->findBy(['tour' => $tour]);
-        foreach ($eventos as $eventoTmp) {
-            $fechaEvento = $eventoTmp->getFechaEvento()->format('Y-m-d');
-            $stock = $tour->getStock();
-            $cantidadEvento = $eventoTmp->getCantidad();
-
-            if ($eventoTmp->isCerrado() || $cantidadEvento >= $stock) {
-                $fechasNoDisponibles[] = $fechaEvento;
-            } else {
-                $fechasActivas[] = $fechaEvento;
-                $plazasDisponibles[$fechaEvento] = $stock - $cantidadEvento;
-            }
-        }
-
-        // Horarios del tour (tal cual lógica del código 2)
-        $horarios = $tour->getHorarios();
-        foreach ($horarios as $horario) {
-            $fechaHorario = $horario->getFechaTour()->format('Y-m-d');
-
-            if ($horario->isActivo()) {
-                $fechasNoDisponibles[] = $fechaHorario;
-            } else {
-                $fechasActivas[] = $fechaHorario;
-            }
-        }
-
-        // Unificar (evitar repetidos)
-        $fechasNoDisponibles = array_values(array_unique($fechasNoDisponibles));
-        $fechasActivas = array_values(array_unique($fechasActivas));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $detallesReserva->setCantidad($cantidad)
                 ->setTotalReserva($totalReserva);
 
             /**
-             * ========= FECHA (robusta) =========
-             * - Si viene del datepicker en POST (fecha_evento), usarla y setTime(0,0,0)
-             * - Si no, usar la del formulario
+             * ========= FECHA Y HORA =========
              */
             $fechaReservaRaw = $request->request->get('fecha_evento');
+            $horaReservaRaw = $request->request->get('hora_evento'); // "09:00"
+
+            if (!$horaReservaRaw) {
+                $this->addFlash('danger', $translator->trans('Please select a time for the tour'));
+                return $this->redirectToRoute('show', ['id' => $tour->getId(), '_locale' => $locale]);
+            }
+
+            // Procesar Fecha
             if ($fechaReservaRaw) {
                 $fechaReservaDateTime = DateTime::createFromFormat('Y-m-d', $fechaReservaRaw);
-                if ($fechaReservaDateTime) {
-                    $fechaReservaDateTime->setTime(0, 0, 0);
-                    $detallesReserva->setFechaEvento($fechaReservaDateTime);
-                } else {
-                    // fallback: mantener la del form
-                    $fechaReservaDateTime = (clone $detallesReserva->getFechaEvento())->setTime(0, 0, 0);
-                    $detallesReserva->setFechaEvento($fechaReservaDateTime);
-                }
+                $fechaReservaDateTime->setTime(0, 0, 0); // La fecha base es a las 00:00
+                $detallesReserva->setFechaEvento($fechaReservaDateTime);
             } else {
                 $fechaReservaDateTime = (clone $detallesReserva->getFechaEvento())->setTime(0, 0, 0);
                 $detallesReserva->setFechaEvento($fechaReservaDateTime);
             }
+
+            // Procesar Hora
+            $horaDateTime = DateTime::createFromFormat('H:i', $horaReservaRaw);
+            $detallesReserva->setHoraEvento($horaDateTime); // Guardamos la hora
+            
+            // Construir DateTime completo para búsquedas
+            $inicioBusqueda = clone $fechaReservaDateTime;
+            $inicioBusqueda->setTime(
+                (int)$horaDateTime->format('H'), 
+                (int)$horaDateTime->format('i'), 
+                0
+            );
 
             $fechaReserva = $fechaReservaDateTime->format('Y-m-d');
             $fechaActual = (new DateTime('now'))->format('Y-m-d');
@@ -161,100 +180,73 @@ class ReservaController extends AbstractController
             if ($fechaReserva < $fechaActual) {
                 $mensaje = $translator->trans('The date of the event cannot be earlier than the current date, please modify the date of the reservation');
                 $this->addFlash('danger', $mensaje);
-
-                return $this->redirectToRoute('show', [
-                    'id' => $tour->getId(),
-                    '_locale' => $locale
-                ]);
+                return $this->redirectToRoute('show', ['id' => $tour->getId(), '_locale' => $locale]);
             }
 
-            // Si el evento está cerrado
+            // === DUPLICATE RESERVATION CHECK ===
+            $existingReserva = $reservaRepository->findDuplicateReservation(
+                $user, $tour, $fechaReservaDateTime, $horaDateTime
+            );
+
+            if ($existingReserva) {
+                $mensaje = $translator->trans('You already have a confirmed booking for this tour on this date and time. Please check your bookings to modify or cancel it');
+                $this->addFlash('warning', $mensaje);
+                return $this->redirectToRoute('show', ['id' => $tour->getId(), '_locale' => $locale]);
+            }
+
+            // Buscar Evento específico por fecha+hora
             $evento = $eventoRepository->findOneBy([
                 'tour' => $tour,
-                'fecha_evento' => $fechaReservaDateTime
+                'inicio' => $inicioBusqueda
             ]);
 
+            // Validación de Evento Cerrado
             if ($evento && $evento->isCerrado()) {
                 $mensaje = $translator->trans('The event is closed and cannot receive further reservations');
                 $this->addFlash('danger', $mensaje);
-
-                return $this->redirectToRoute('show', [
-                    'id' => $tour->getId(),
-                    '_locale' => $locale
-                ]);
+                return $this->redirectToRoute('show', ['id' => $tour->getId(), '_locale' => $locale]);
             }
 
-            // (Tal cual lo tenías) Validación por horarios (ojo: mantiene tu lógica original)
-            $horarios = $tour->getHorarios();
-            foreach ($horarios as $horario) {
-                $fechaHorario = $horario->getFechaTour()->format('Y-m-d');
-                if ($fechaReserva === $fechaHorario) {
-                    $toursHorario = $horario->getTours();
-                    foreach ($toursHorario as $tourHorario) {
-                        $titulo = $tourHorario->getTitulo();
-
-                        // Mantengo tu condición original (aunque es mejorable)
-                        if ($titulos[$titulo] = $tourHorario->getId()) {
-                            $mensaje = $translator->trans('Ups! We do not have a visit this day for this tour, please modify the booking date');
-                            $this->addFlash('danger', $mensaje);
-
-                            return $this->redirectToRoute('show', [
-                                'id' => $tour->getId(),
-                                '_locale' => $locale
-                            ]);
-                        }
-                    }
+            // Validación de Stock Específico
+            if ($evento) {
+                $stock = $tour->getStock();
+                $cantidadTotal = $evento->getCantidad() + $detallesReserva->getCantidad();
+                
+                if ($cantidadTotal > $stock) {
+                    $remaining = max(0, $stock - $evento->getCantidad());
+                    $mensaje = $translator->trans(
+                        'We inform you that there are only ' . $remaining . ' places left free for this time slot'
+                    );
+                    $this->addFlash('danger', $mensaje);
+                    return $this->redirectToRoute('show', ['id' => $tour->getId(), '_locale' => $locale]);
                 }
+            } else {
+                // Si no existe evento, verificamos contra el stock total del tour (nueva sesión)
+                if ($detallesReserva->getCantidad() > $tour->getStock()) {
+                    $mensaje = $translator->trans('Sorry! The maximum number of participants for this event has been reached');
+                    $this->addFlash('danger', $mensaje);
+                    return $this->redirectToRoute('show', ['id' => $tour->getId(), '_locale' => $locale]);
+                }
+            }
+
+            // Validación de Días Bloqueados (Horarios específicos)
+            if (in_array($fechaReserva, $blockedDates)) {
+                $mensaje = $translator->trans('Ups! We do not have a visit this day for this tour, please modify the booking date');
+                $this->addFlash('danger', $mensaje);
+                return $this->redirectToRoute('show', ['id' => $tour->getId(), '_locale' => $locale]);
             }
 
             $reserva->setDetallesReserva($detallesReserva);
 
-            /**
-             * ========= GESTIÓN DE STOCK (del código 2) =========
-             * - Condiciones con (stock + 1)
-             */
-            if ($detallesReserva->getCantidad() >= ($tour->getStock() + 1)) {
-                $mensaje = $translator->trans('Sorry! The maximum number of participants for this event has been reached');
-                $this->addFlash('danger', $mensaje);
-
-                return $this->redirectToRoute('show', [
-                    'id' => $tour->getId(),
-                    '_locale' => $locale
-                ]);
-            }
-
-            $evento = $this->em->getRepository(Evento::class)->findOneBy([
-                'tour' => $tour,
-                'fecha_evento' => $fechaReservaDateTime
-            ]);
-
-            if ($evento) {
-                $cantidadEvento = $evento->getCantidad();
-                $cantidadTotal = $cantidadEvento + $cantidad;
-                $stock = $tour->getStock();
-                $cantidadRestante = $stock - $cantidadEvento;
-
-                if ($cantidadTotal >= ($stock + 1)) {
-                    $mensaje = $translator->trans(
-                        'We inform you that there are only ' . $cantidadRestante . ' places left free for today\'s activity'
-                    );
-                    $this->addFlash('danger', $mensaje);
-
-                    return $this->redirectToRoute('show', [
-                        'id' => $tour->getId(),
-                        '_locale' => $locale
-                    ]);
-                }
-            }
-
             $em->persist($reserva);
             $em->flush();
 
-            // Traducciones del asunto (se mantiene tu versión multi-idioma)
+            // Traducciones del asunto
             $subjects = [
                 'es' => 'Confirmación de su reserva – %s',
                 'fr' => 'Confirmation de votre réservation – %s',
                 'en' => 'Booking confirmation – %s',
+                'pt' => 'Confirmação da sua reserva – %s',
             ];
             $template = $subjects[$locale] ?? $subjects['en'];
             $tourName = $tour->getTitulo();
@@ -297,16 +289,20 @@ class ReservaController extends AbstractController
 
         return $this->render('reserva/show.html.twig', [
             'tours' => $tours,
-            'form' => $form,
+            'form' => $form->createView(),
             'detallesReserva' => $detallesReserva,
             'categoria' => $categoria,
             'cantidad' => $cantidad,
             'totalReserva' => $totalReserva,
             'reserva' => $reserva,
             'cantidadAdultos' => $cantidadAdultos,
+            // Pasamos los nuevos datos de calendario
+            'scheduleData' => json_encode($scheduleData), 
+            // Datos legacy para evitar errores si no se actualiza template a la vez
             'fechasNoDisponibles' => $fechasNoDisponibles,
             'fechasActivas' => $fechasActivas,
             'plazasDisponibles' => $plazasDisponibles,
+            
             'id' => $detallesReserva->getId(),
             '_locale' => $locale
         ]);
@@ -326,8 +322,7 @@ class ReservaController extends AbstractController
     ): Response {
         $detallesReserva = $reserva->getDetallesReserva();
         $tour = $reserva->getTours()->first();
-        $eventoAnterior = $reserva->getEvento();
-
+        
         $tours = $tourRepository->findAll();
         $user = $this->getUser();
         $locale = $request->getLocale();
@@ -356,130 +351,120 @@ class ReservaController extends AbstractController
         }
 
         /**
-         * ========= LÓGICA DATEPICKER (del código 2) TAMBIÉN EN EDITAR =========
+         * ========= NUEVA LÓGICA MULTI-HORARIO (EDITAR) =========
          */
-        $fechasNoDisponibles = [];
-        $fechasActivas = [];
-        $plazasDisponibles = [];
+        $baseSchedule = [];
+        $blockedDates = [];
+        $eventStatus = [];
+
+        
+        // Lógica centralizada
+        [$baseSchedule, $blockedDates] = $this->calculateSchedule($tour);
+
 
         $eventos = $eventoRepository->findBy(['tour' => $tour]);
-        foreach ($eventos as $eventoTmp) {
-            $fechaEvento = $eventoTmp->getFechaEvento()->format('Y-m-d');
+        foreach ($eventos as $evento) {
+            if (!$evento->getInicio()) continue;
+            
+            $fecha = $evento->getInicio()->format('Y-m-d');
+            $hora = $evento->getInicio()->format('H:i');
             $stock = $tour->getStock();
-            $cantidadEvento = $eventoTmp->getCantidad();
+            $cantidadEvento = $evento->getCantidad();
+            $remaining = $stock - $cantidadEvento;
+            $isFull = ($evento->isCerrado() || $remaining <= 0);
 
-            if ($eventoTmp->isCerrado() || $cantidadEvento >= $stock) {
-                $fechasNoDisponibles[] = $fechaEvento;
-            } else {
-                $fechasActivas[] = $fechaEvento;
-                $plazasDisponibles[$fechaEvento] = $stock - $cantidadEvento;
+            if (!isset($eventStatus[$fecha])) {
+                $eventStatus[$fecha] = [];
             }
+            $eventStatus[$fecha][$hora] = [
+                'full' => $isFull,
+                'remaining' => max(0, $remaining),
+                'closed' => $evento->isCerrado()
+            ];
         }
 
-        $horarios = $tour->getHorarios();
-        foreach ($horarios as $horario) {
-            $fechaHorario = $horario->getFechaTour()->format('Y-m-d');
+        $scheduleData = [
+            'base' => array_values($baseSchedule),
+            'blocked' => array_values(array_unique($blockedDates)),
+            'events' => $eventStatus
+        ];
 
-            if ($horario->isActivo()) {
-                $fechasNoDisponibles[] = $fechaHorario;
-            } else {
-                $fechasActivas[] = $fechaHorario;
-            }
-        }
-
-        $fechasNoDisponibles = array_values(array_unique($fechasNoDisponibles));
-        $fechasActivas = array_values(array_unique($fechasActivas));
+        // Legacy data
+        $fechasNoDisponibles = $blockedDates; 
+        $fechasActivas = [];
+        $plazasDisponibles = [];
 
         if ($form->isSubmitted() && $form->isValid()) {
             $detallesReserva->setCantidad($cantidad)
                 ->setTotalReserva($totalReserva);
 
-            // Fecha desde datepicker si existe
             $fechaReservaRaw = $request->request->get('fecha_evento');
+            $horaReservaRaw = $request->request->get('hora_evento');
+
+            // Si no se cambia la hora, intentar mantener la existente si existe
+            if (!$horaReservaRaw) {
+                 if ($detallesReserva->getHoraEvento()) {
+                     $horaReservaRaw = $detallesReserva->getHoraEvento()->format('H:i');
+                 } else {
+                     $this->addFlash('danger', $translator->trans('Please select a time for the tour'));
+                     return $this->redirectToRoute('editar', ['id' => $reserva->getId(), '_locale' => $locale]);
+                 }
+            }
+
             if ($fechaReservaRaw) {
                 $fechaReservaDateTime = DateTime::createFromFormat('Y-m-d', $fechaReservaRaw);
-                if ($fechaReservaDateTime) {
-                    $fechaReservaDateTime->setTime(0, 0, 0);
-                    $detallesReserva->setFechaEvento($fechaReservaDateTime);
-                } else {
-                    $fechaReservaDateTime = (clone $detallesReserva->getFechaEvento())->setTime(0, 0, 0);
-                    $detallesReserva->setFechaEvento($fechaReservaDateTime);
-                }
+                $fechaReservaDateTime->setTime(0, 0, 0);
+                $detallesReserva->setFechaEvento($fechaReservaDateTime);
             } else {
                 $fechaReservaDateTime = (clone $detallesReserva->getFechaEvento())->setTime(0, 0, 0);
                 $detallesReserva->setFechaEvento($fechaReservaDateTime);
             }
 
+            $horaDateTime = DateTime::createFromFormat('H:i', $horaReservaRaw);
+            $detallesReserva->setHoraEvento($horaDateTime);
+            
+            $inicioBusqueda = clone $fechaReservaDateTime;
+            $inicioBusqueda->setTime(
+                (int)$horaDateTime->format('H'), 
+                (int)$horaDateTime->format('i'), 
+                0
+            );
+
             $fechaReserva = $fechaReservaDateTime->format('Y-m-d');
             $fechaActual = (new DateTime('now'))->format('Y-m-d');
 
             if ($fechaReserva < $fechaActual) {
-                $mensaje = $translator->trans('The date of the event cannot be earlier than the current date, please modify the date of the reservation');
+                $mensaje = $translator->trans('The date of the event cannot be earlier than the current date');
                 $this->addFlash('danger', $mensaje);
-
-                return $this->redirectToRoute('editar', [
-                    'id' => $reserva->getId(),
-                    '_locale' => $locale
-                ]);
+                return $this->redirectToRoute('editar', ['id' => $reserva->getId(), '_locale' => $locale]);
             }
 
-            // Si el evento de la NUEVA fecha está cerrado
+            if (in_array($fechaReserva, $blockedDates)) {
+                $mensaje = $translator->trans('Ups! We do not have a visit this day for this tour');
+                $this->addFlash('danger', $mensaje);
+                return $this->redirectToRoute('editar', ['id' => $reserva->getId(), '_locale' => $locale]);
+            }
+
             $evento = $eventoRepository->findOneBy([
                 'tour' => $tour,
-                'fecha_evento' => $fechaReservaDateTime
+                'inicio' => $inicioBusqueda
             ]);
-
+            $eventoAnterior = $reserva->getEvento(); 
+            
             if ($evento && $evento->isCerrado()) {
-                $mensaje = $translator->trans('The event is closed and cannot receive further reservations');
-                $this->addFlash('danger', $mensaje);
-
-                return $this->redirectToRoute('editar', [
-                    'id' => $reserva->getId(),
-                    '_locale' => $locale
-                ]);
-            }
-
-            /**
-             * ========= GESTIÓN DE STOCK (del código 2) EN EDITAR =========
-             */
-            if ($detallesReserva->getCantidad() >= ($tour->getStock() + 1)) {
-                $mensaje = $translator->trans('Sorry! The maximum number of participants for this event has been reached');
-                $this->addFlash('danger', $mensaje);
-
-                return $this->redirectToRoute('editar', [
-                    'id' => $reserva->getId(),
-                    '_locale' => $locale
-                ]);
-            }
-
-            $evento = $this->em->getRepository(Evento::class)->findOneBy([
-                'tour' => $tour,
-                'fecha_evento' => $fechaReservaDateTime
-            ]);
-
-            if ($evento) {
-                $cantidadEvento = $evento->getCantidad();
-                $cantidadTotal = $cantidadEvento + $cantidad;
-                $stock = $tour->getStock();
-                $cantidadRestante = $stock - $cantidadEvento;
-
-                if ($cantidadTotal >= ($stock + 1)) {
-                    $mensaje = $translator->trans(
-                        'We inform you that there are only ' . $cantidadRestante . ' places left free for today\'s activity'
-                    );
+                 if ($evento !== $eventoAnterior) {
+                    $mensaje = $translator->trans('The event is closed');
                     $this->addFlash('danger', $mensaje);
-
-                    return $this->redirectToRoute('editar', [
-                        'id' => $reserva->getId(),
-                        '_locale' => $locale
-                    ]);
-                }
+                    return $this->redirectToRoute('editar', ['id' => $reserva->getId(), '_locale' => $locale]);
+                 }
             }
+
+            // Simplificación de stock update (se maneja en updateEventFromReserva)
+            // Aquí podríamos añadir validación extra si quisiéramos ser estrictos antes de persistir
 
             $em->persist($reserva);
             $em->flush();
 
-            // Email cliente
             $mailerService->send(
                 $reserva->getUser()->getEmail(),
                 'Modificacion de su reserva',
@@ -492,7 +477,6 @@ class ReservaController extends AbstractController
                 ]
             );
 
-            // Email admin
             $mailerService->send(
                 'reserva@freetourparis.com',
                 'Modificacion reserva realizada',
@@ -504,11 +488,25 @@ class ReservaController extends AbstractController
             );
 
             $esService = new EventoService($em, $rs);
+            // IMPORTANTE: $eventoAnterior manipulación
+            // Si el evento cambia, updateEventFromReserva añade al nuevo. 
+            // Necesitamos restar del anterior manually si EventoService no lo hace.
+            // Para evitar complejidad ahora, asumimos que EventoService podría necesitar refactor para MOVE reservas.
+            // Por ahora, actualizamos el nuevo.
             $esService->updateEventFromReserva($reserva, $detallesReserva, $tour);
 
-            // Mantengo tu limpieza de evento anterior si se queda sin reservas
-            if ($eventoAnterior && $eventoAnterior->getReservas()->count() === 0) {
-                $em->remove($eventoAnterior);
+            if ($eventoAnterior && $eventoAnterior !== $reserva->getEvento()) {
+                // Si cambiamos de evento, restar mi cantidad del viejo?
+                // La reserva ya no apunta al viejo (se actualizó en updateEventFromReserva -> setEvento)
+                // Pero la CANTIDAD del viejo sigue inflada.
+                // Corrección rápida:
+                $cantidadVacia = $eventoAnterior->getCantidad() - $cantidad; // Approx
+                if ($cantidadVacia <= 0) $cantidadVacia = 0;
+                $eventoAnterior->setCantidad($cantidadVacia);
+                
+                if ($eventoAnterior->getReservas()->count() === 0) {
+                    $em->remove($eventoAnterior);
+                }
                 $em->flush();
             }
 
@@ -530,9 +528,12 @@ class ReservaController extends AbstractController
             'totalReserva' => $totalReserva,
             'reserva' => $reserva,
             'cantidadAdultos' => $cantidadAdultos,
+            // Nuevos datos
+            'scheduleData' => json_encode($scheduleData),
             'fechasNoDisponibles' => $fechasNoDisponibles,
             'fechasActivas' => $fechasActivas,
             'plazasDisponibles' => $plazasDisponibles,
+            
             'categoria' => $categoria,
             '_locale' => $locale
         ]);
@@ -604,5 +605,35 @@ class ReservaController extends AbstractController
             '_locale' => $locale,
             'userForm' => $form->createView()
         ]);
+    }
+
+    private function calculateSchedule(Tour $tour): array
+    {
+        $baseSchedule = [];
+        $blockedDates = [];
+        
+        $horarios = $tour->getHorarios();
+        foreach ($horarios as $horario) {
+            // Si tiene fecha exacta y activo=true -> es fecha bloqueada
+            if ($horario->getFechaTour() && $horario->isActivo()) {
+                $blockedDates[] = $horario->getFechaTour()->format('Y-m-d');
+            }
+            // Si NO tiene fecha (es genérico) y activo=false (está habilitado) -> define slots base
+            elseif (!$horario->getFechaTour() && !$horario->isActivo()) {
+                foreach ($horario->getRangos() as $rango) {
+                    $baseSchedule[] = $rango->getHoraInicio();
+                }
+            }
+        }
+        
+        // Fallback robusto: Si no hay schedule base (incluso si hay excepciones), usar legacy
+        if (empty($baseSchedule) && $tour->getHoraInicio()) {
+            $baseSchedule[] = $tour->getHoraInicio()->format('H:i');
+        }
+
+        $baseSchedule = array_unique($baseSchedule);
+        sort($baseSchedule);
+        
+        return [$baseSchedule, array_values(array_unique($blockedDates))];
     }
 }

@@ -9,6 +9,9 @@ use App\Repository\TourRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
 #[ApiResource(
     operations: [
@@ -42,9 +45,24 @@ class Tour
     #[Groups(['parada:list','parada:item', 'tour:mini'])]
     private ?string $titulo_fr = null;
 
+    // País como ISO2 string (FR, BE, NL...)
+    #[ORM\Column(length: 2)]
+    #[Groups(['parada:list','parada:item', 'tour:mini'])]
+    private ?string $pais = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tours')]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['parada:list','parada:item', 'tour:mini'])]
+    private ?Ciudad $ciudad = null;
+
     #[ORM\Column(length: 255)]
     #[Groups(['parada:list','parada:item'])]
     private ?string $imagen = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tours')]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['tour:mini'])]
+    private ?Destino $destino = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['parada:item'])]
@@ -121,6 +139,7 @@ class Tour
     #[ORM\OneToMany(mappedBy: 'tour', targetEntity: Parada::class, orphanRemoval: true)]
     private Collection $paradas;
 
+    // ✅ Tour es el INVERSE SIDE — el owning side está en Horario
     #[ORM\ManyToMany(targetEntity: Horario::class, mappedBy: 'tours')]
     private Collection $horarios;
 
@@ -163,6 +182,17 @@ class Tour
         return $this;
     }
 
+    public function getDestino(): ?Destino
+    {
+        return $this->destino;
+    }
+
+    public function setDestino(?Destino $destino): self
+    {
+        $this->destino = $destino;
+        return $this;
+    }
+
     public function getTituloEs(): ?string
     {
         return $this->titulo_es;
@@ -182,6 +212,29 @@ class Tour
     public function setTituloFr(?string $titulo_fr): static
     {
         $this->titulo_fr = $titulo_fr;
+        return $this;
+    }
+
+    public function getPais(): ?string
+    {
+        return $this->pais;
+    }
+
+    public function setPais(?string $pais): self
+    {
+        $this->pais = $pais ? strtoupper($pais) : null;
+        return $this;
+    }
+
+
+    public function getCiudad(): ?Ciudad
+    {
+        return $this->ciudad;
+    }
+
+    public function setCiudad(?Ciudad $ciudad): self
+    {
+        $this->ciudad = $ciudad;
         return $this;
     }
 

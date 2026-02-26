@@ -1,6 +1,5 @@
 {% extends 'base.html.twig' %} {% block title %}
 {{ "My Account" | trans }}
-{% endblock %} {% block header %} {% include '_partials/_menu2_nav.html.twig' %}
 {% endblock %} {% block body %}
 <div id="main-container" class="container my-5">
   {% for message in app.flashes('success') %}

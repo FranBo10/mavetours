@@ -161,6 +161,10 @@
         <source>action.save_and_continue</source>
         <target>Guardar y seguir editando</target>
       </trans-unit>
+      <trans-unit id="axRh725" resname="action.toggle_dropdown">
+        <source>action.toggle_dropdown</source>
+        <target>Alternar menú desplegable</target>
+      </trans-unit>
       <trans-unit id="oQ9WL.E" resname="batch_action_modal.title">
         <source>batch_action_modal.title</source>
         <target>Se va a aplicar la acción "%action_name%" a %num_items% elemento(s).</target>
@@ -180,6 +184,14 @@
       <trans-unit id="nGU95PH" resname="delete_modal.content">
         <source>delete_modal.content</source>
         <target>Esta acción no se puede deshacer.</target>
+      </trans-unit>
+      <trans-unit id="OrE2IEJ" resname="action_confirmation_modal.title">
+        <source>action_confirmation_modal.title</source>
+        <target>¿Estás seguro de que quieres %action_name%?</target>
+      </trans-unit>
+      <trans-unit id="8jUlGKA" resname="action_confirmation_modal.action">
+        <source>action_confirmation_modal.action</source>
+        <target>Confirmar</target>
       </trans-unit>
       <trans-unit id="5YZoOIF" resname="filter.button.clear">
         <source>filter.button.clear</source>
@@ -220,6 +232,10 @@
       <trans-unit id="ahS9RqM" resname="filter.label.contains">
         <source>filter.label.contains</source>
         <target>contiene</target>
+      </trans-unit>
+      <trans-unit id="fsafOQc" resname="filter.label.contains_all">
+        <source>filter.label.contains_all</source>
+        <target>contiene todo</target>
       </trans-unit>
       <trans-unit id="xHOGg7H" resname="filter.label.not_contains">
         <source>filter.label.not_contains</source>
@@ -364,6 +380,14 @@
       <trans-unit id="hCDMpjH" resname="autocomplete.loading-more-results">
         <source>autocomplete.loading-more-results</source>
         <target>Cargando más resultados…</target>
+      </trans-unit>
+      <trans-unit id="Rd0n9wc" resname="filter.title">
+        <source>filter.title</source>
+        <target>Filtrar</target>
+      </trans-unit>
+      <trans-unit id=".Mt52Jq" resname="datagrid.no_results">
+        <source>datagrid.no_results</source>
+        <target>Sin resultados</target>
       </trans-unit>
     </body>
   </file>

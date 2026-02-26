@@ -4,7 +4,7 @@
 .hero {
 position: relative;
 width: 100%;
-height: 650px;
+height: clamp(350px, 50vw, 650px);
 // quitamos la imagen de aquí
 // y la ponemos en un pseudo-elemento
 &::before {
@@ -25,7 +25,8 @@ z-index: -1;
   //   background-position: center;
   // }
   
-  @include media(smartPhone) {
+  @media only screen and (max-width: 590px) {
+    height: clamp(450px, 25vw, 250px);
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), transparent), url("/public/uploads/images/mave_mini.jpg");
     background-size: cover;
     background-position: center;

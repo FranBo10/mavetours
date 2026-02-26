@@ -1,85 +1,89 @@
-{% extends 'base.html.twig' %} {% block title %} Let's walk {% endblock %} {%
-block nav %} {% include '_partials/_menu_nav.html.twig' %} {% endblock %} {%
-block body %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Let's walk{% endblock %}
+
+{% block nav %}
+    {% include '_partials/_menu_nav.html.twig' %}
+{% endblock %}
+
+{% block body %}
+
 <section class="hero">
-  <div class="hero-background">
-    <div class="hero-content">
-      {% for message in app.flashes('success') %}
-      <div class="alert alert-success text-center w-50 mx-auto my-2">
-        <p>{{ message }}</p>
-      </div>
-      {% endfor %}
-      {# <h3 class="animation">{{ "Let's walk !" | trans }}</h3> #}
-      {#
-      <p class="animation">
-        {{
-          "Join us and discover traditional villages and beautiful places full of life and nature"
-            | trans
-        }}
-      </p>
-      #}
+    <div class="hero-background">
+        <div class="hero-content">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success text-center w-50 mx-auto my-2">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+
+            {# <h3 class="animation">{{ "Let's walk !" | trans }}</h3> #}
+            {#
+            <p class="animation">
+                {{ "Join us and discover traditional villages and beautiful places full of life and nature" | trans }}
+            </p>
+            #}
+        </div>
     </div>
-  </div>
 </section>
 
-<div class="servicios">
-  <div class="titulo__servicios">
-    <h2>{{ "Enjoy the experience" | trans }}</h2>
-  </div>
-  <div class="cards">
-    {% for item in tours %} {% if item.isEstado %}
-    <article class="card">
-      <img
-        src="{{ asset('uploads/images/' ~ item.imagen) }}"
-        alt="{{ item.titulo | trans }}"
-      />
-      <div class="content card-text">
-        <h4>{{ item.titulo | trans | raw }}</h4>
-        <div class="hidden-elements">
-          {% if item.precio == 0 %}
-          <h5>{{ "Price:" | trans }} <span>Free Tour</span></h5>
-          {% else %}
-          <h5>
-            {{ "Price:" | trans }}
-            {{ (item.precio / 100)|number_format(2, '.', ',') }} €
-          </h5>
-          {% endif %}
-          <div class="card-btn">
-            <a
-              href="{{ path('tour', { id: item.id }) }}"
-              class="btn-tertiary-card"
-            >
-              {{ "INFO" | trans }}
-            </a>
-            {% if app.user %}
-            <a
-              href="{{ path('show', { id: item.id }) }}"
-              class="btn-primary-card"
-            >
-              {{ "FREETOUR" | trans }}
-            </a>
-            <a
-              href="{{ path('parada', { id: item.id }) }}"
-              class="btn-warning-card"
-            >
-              {{ "AUDIOGUIDE" | trans }}
-            </a>
-            {% else %}
-            <a href="{{ path('app_login') }}" class="btn-primary-card">
-               {{ "FREETOUR" | trans }}
-            </a>
-            <a href="{{ path('app_login') }}" class="btn-warning-card">
-               {{ "AUDIOGUIDE" | trans }}
-            </a>
-            {% endif %}
-          </div>
+
+
+    {# {% if destino and destino.descripcionLarga %}
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="description">
+                    {{ destino.descripcionLarga|raw }}
+                </div>
+            </div>
         </div>
-      </div>
-    </article>
-    {% endif %} {% endfor %}
-  </div>
-</div>
-{% endblock %} {% block javascripts %}
-{{ encore_entry_script_tags("menu") }}
-{{ encore_entry_script_tags("cookies") }}
-{# {{ encore_entry_script_tags("avatars") }} #} {% endblock %}
+    {% endif %} #}
+
+    {# ===================== #}
+    {#     CIRCUITOS / DESTINOS #}
+    {# ===================== #}
+    <div class="servicios">
+        <div class="titulo__servicios">
+            <h2>{{ "Choose your favourite destination" | trans }}</h2>
+        </div>
+
+        <div class="cards">
+            {% for item in destinos %}
+                {% if item.isActive %}
+                    <article class="card">
+                        {% if item.imagen %}
+        <img
+          src="{{ asset('uploads/images/destinos/' ~ item.imagen) }}"
+          alt="{{ item.titulo }}"
+        />
+        {% endif %}
+
+                        <div class="content card-text">
+                            <h1>{{ item.titulo }}</h1>
+
+                            <div class="hidden-elements">
+                                <div class="card-btn">
+                                    <a href="{{ path('ciudades_destino', { slug: item.slug }) }}" class="btn-tertiary-card">
+                                        {{ "TOURS" | trans }}
+                                    </a>
+                                    <a href="{{ path('circuito', { slug: item.slug }) }}" class="btn-warning-card">
+                                        {{ "CIRCUITS" | trans }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('menu') }}
+    {{ encore_entry_script_tags('cookies') }}
+    {{ encore_entry_script_tags('admin_tour') }}
+    {# {{ encore_entry_script_tags('avatars') }} #}
+{% endblock %}

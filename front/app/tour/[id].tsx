@@ -16,7 +16,7 @@ import {
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useAuth } from "../../src/context/AuthContext";
 import { theme } from "../../src/theme/theme";
-import { fetchTourById, type Tour, getTourTitle, getTourDescription, getTourShortDescription } from "../../src/api/tours";
+import { fetchTourById, type Tour, getTourTitle, getTourDescription, getTourShortDescription, getTourSubtitle } from "../../src/api/tours";
 import i18n from "../../src/i18n";
 import { useLanguage } from "../../src/context/LanguageContext";
 
@@ -164,6 +164,9 @@ export default function TourScreen() {
 
         <View style={styles.heroContent}>
           <Text style={styles.heroTitle}>{getTourTitle(tour, locale)}</Text>
+          {getTourSubtitle(tour, locale) ? (
+            <Text style={styles.heroSubtitle}>{getTourSubtitle(tour, locale)}</Text>
+          ) : null}
 
           <View style={{ flexDirection: "row", gap: 10, marginTop: 4 }}>
             {isLoggedIn ? (
@@ -280,6 +283,21 @@ export default function TourScreen() {
           </Text>
         </Section>
 
+        {/* ITINERARY (Etapas) */}
+        {tour.etapas && tour.etapas.length > 0 ? (
+          <Section title={i18n.t('itinerary') || "Itinerario"}>
+            {tour.etapas.map((etapa) => (
+              <View key={etapa.id} style={styles.etapaContainer}>
+                <View style={styles.etapaHeader}>
+                  <Text style={styles.etapaBadge}>{etapa.orden}</Text>
+                  <Text style={styles.etapaTitle}>{etapa.titulo}</Text>
+                </View>
+                <Text style={styles.etapaDesc}>{stripHtml(etapa.descripcion)}</Text>
+              </View>
+            ))}
+          </Section>
+        ) : null}
+
         {/* MEETING POINT */}
         <Section title={i18n.t('meeting_point')}>
           <InfoRow icon="📍" label={i18n.t('first_meeting_point')} value={tour.comienzo} />
@@ -366,6 +384,15 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0,0,0,0.6)",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 6,
+  },
+  heroSubtitle: {
+    color: theme.colors.white,
+    fontSize: 18,
+    fontWeight: "600",
+    textShadowColor: "rgba(0,0,0,0.6)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
+    marginBottom: 4,
   },
   heroPrice: { color: theme.colors.secondary, fontSize: 16, fontWeight: "800" },
 
@@ -454,4 +481,27 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondary,
     borderColor: theme.colors.secondaryDark ?? theme.colors.secondary,
   },
+
+  /* Etapas */
+  etapaContainer: {
+    marginBottom: 16,
+    backgroundColor: theme.colors.white,
+    borderRadius: 12,
+    padding: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: theme.colors.primary,
+  },
+  etapaHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 6, gap: 10 },
+  etapaBadge: {
+    backgroundColor: theme.colors.primary,
+    color: 'white',
+    fontWeight: 'bold',
+    width: 24,
+    height: 24,
+    textAlign: 'center',
+    lineHeight: 24,
+    borderRadius: 12
+  },
+  etapaTitle: { fontWeight: '700', fontSize: 16, color: theme.colors.black },
+  etapaDesc: { color: theme.colors.grayDarken, fontSize: 14, lineHeight: 20 },
 });

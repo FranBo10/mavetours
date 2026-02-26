@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ circuito.titulo }}{% endblock %}
+
+{% block nav %}
+    {% include '_partials/_menu_nav.html.twig' %}
+{% endblock %}
+
+{% block body %}
+
+{# ── Hero / Slider ── #}
+<div class="carousel-container">
+    <div class="card-image-slider" style="background-image: linear-gradient(rgba(0, 0, 0, 0.42), transparent), url('{{ asset('uploads/images/destinos/' ~ circuito.imagen) }}');">
+        <div class="content-slider">
+            <div class="content-slider-text">
+                <h3 class="animation content-slider-title text-start">
+                    {% if destino %}{{ destino.titulo }}{% endif %}
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ── Menu tabs ── #}
+<div class="menu__detalle-tour">
+    <div class="detalle-tour">
+        <ul>
+            <li><a href="#descripcion" id="selected">{{ "Description" | trans }}</a></li>
+            {% if circuito.precio %}
+                <li><a href="#precio">{{ "Prices" | trans }}</a></li>
+            {% endif %}
+            <li><a href="#itinerario">{{ "Itinerary" | trans }}</a></li>
+            {% if circuito.mapaComienzo or circuito.mapaFinal %}
+                <li><a href="#encuentro">{{ "Meeting point" | trans }}</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<div id="container-detalles">
+    <div id="descripcion" class="container-detalles">
+
+        {# ── Descripción ── #}
+        <h3>{{ circuito.titulo }}</h3>
+        <div class="detalle-descripcion descripcion-visible">
+            {% if app.request.get('_locale') == 'es' and circuito.descripcionEs %}
+                <p>{{ circuito.descripcionEs|raw }}</p>
+            {% elseif app.request.get('_locale') == 'fr' and circuito.descripcionFr %}
+                <p>{{ circuito.descripcionFr|raw }}</p>
+            {% elseif app.request.get('_locale') == 'pt' and circuito.descripcionPt %}
+                <p>{{ circuito.descripcionPt|raw }}</p>
+            {% else %}
+                <p>{{ circuito.descripcion|raw }}</p>
+            {% endif %}
+        </div>
+
+        <hr />
+
+        {# ── Precio ── #}
+        {% if circuito.precio %}
+            <div id="precio" class="detalle-precio">
+                <h3>{{ "Price" | trans }}</h3>
+                <p>{{ (circuito.precio / 100)|number_format(2, '.', ',') }} € {{ "per person" | trans }}</p>
+            </div>
+            <hr />
+        {% endif %}
+
+        {# ── Itinerario (etapas) ── #}
+        {% if circuito.etapas|length > 0 %}
+            <div id="itinerario" class="detalle-general descripcion-visible">
+                <h3>{{ "Itinerary" | trans }}</h3>
+                <div class="circuito-itinerario">
+                    <ul class="circuito-itinerario__lista">
+                        {% for etapa in circuito.etapas %}
+                            <li class="circuito-itinerario__etapa">
+                                <div class="etapa-cabecera">
+                                    <span class="etapa-dia">{{ "Día" | trans }} {{ etapa.diaNumero }}:</span>
+                                    <span class="etapa-titulo">
+                                        ({{ etapa.pais|upper }})
+                                        {{ etapa.titulo }}
+                                        {% if etapa.ciudad %} / {{ etapa.ciudad }}{% endif %}
+                                    </span>
+                                </div>
+
+                                {% if etapa.descripcion %}
+                                    <div class="etapa-descripcion">
+                                        {{ etapa.descripcion|raw }}
+                                    </div>
+                                    <br>
+                                {% endif %}
+
+                                {% if etapa.transporte %}
+                                    <div class="etapa-transporte">
+                                        <small><i class="fas fa-bus"></i> {{ etapa.transporte }}</small>
+                                    </div>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <hr />
+        {% endif %}
+
+        {# ── Mapas ── #}
+        {% if circuito.mapaComienzo or circuito.mapaFinal %}
+            <div id="encuentro" class="detalle-encuentro">
+                <div class="ubicacion">
+                    {% if circuito.mapaComienzo %}
+                        <div class="detalle-location">
+                            <div class="meeting-point">
+                                <h3>{{ "Meeting point" | trans }}</h3>
+                            </div>
+                            <div class="mapa">
+                                <iframe
+                                    src="{{ circuito.mapaComienzo }}"
+                                    width="400"
+                                    height="300"
+                                    style="border: 0"
+                                    allowfullscreen=""
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                ></iframe>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if circuito.mapaFinal %}
+                        <div class="detalle-location">
+                            <div class="meeting-point">
+                                <h3>{{ "End point" | trans }}</h3>
+                            </div>
+                            <div class="mapa">
+                                <iframe
+                                    src="{{ circuito.mapaFinal }}"
+                                    width="400"
+                                    height="300"
+                                    style="border: 0"
+                                    allowfullscreen=""
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                ></iframe>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <hr />
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags("templates") }}
+{% endblock %}

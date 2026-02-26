@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Blog;
 use App\Entity\Tour;
 use App\Entity\User;
+use App\Entity\Circuito;
 use App\Entity\Rango;
 use App\Entity\Evento;
 use App\Entity\Parada;
@@ -71,6 +72,11 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Eventos', 'fa fa-calendar', Evento::class),
             MenuItem::linkToCrud('DetallesEventos', 'fa fa-dollar', DetallesEvento::class),
             MenuItem::linkToCrud('Reservas', 'fa fa-book', Reserva::class),
+            MenuItem::section('Circuitos'),
+            MenuItem::linkToCrud('Circuitos', 'fas fa-route', Circuito::class),
+            MenuItem::section('Configuración'),
+            MenuItem::linkToCrud('Destinos', 'fa fa-globe', \App\Entity\Destino::class),
+            MenuItem::linkToCrud('Ciudades', 'fa fa-city', \App\Entity\Ciudad::class),
             MenuItem::linkToCrud('Tours', 'fa fa-flag', Tour::class),
             MenuItem::linkToCrud('Paradas', 'fa fa-flag', Parada::class),
             MenuItem::subMenu('Disponibilidad', 'fa fa-ban')->setSubItems([

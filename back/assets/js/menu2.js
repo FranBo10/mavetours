@@ -9,9 +9,9 @@ const mobileLinks = document.querySelectorAll(".menu-mobile li");
 const languageToggle = document.querySelectorAll('#navigation-2 .language-toggle');
 
 languageToggle.forEach(toggle => {
-  toggle.addEventListener('click', function(event) {
+  toggle.addEventListener('click', function (event) {
     event.preventDefault();
-    if (window.innerWidth < 1024) {
+    if (window.innerWidth < 1000) {
       const subMenu = this.nextElementSibling;
       if (subMenu && subMenu.classList.contains('show')) {
         subMenu.classList.remove('show');
@@ -48,7 +48,7 @@ closeBtn?.addEventListener("click", () => {
   menuBtn.style.display = "block";
   closeBtn.style.display = "none";
   menuMobile?.classList.remove("active");
-  if (window.innerWidth < 970) {
+  if (window.innerWidth < 1000) {
     navBar2?.classList.add("navigation-2");
   } else {
     navBar2?.classList.remove("navigation-2");
@@ -57,7 +57,7 @@ closeBtn?.addEventListener("click", () => {
 });
 
 function handleResize() {
-  if (window.innerWidth >= 850) {
+  if (window.innerWidth >= 1000) {
     menuBtn.style.display = "none";
     closeBtn.style.display = "none";
     navBar2?.classList.remove("navigation-2");
@@ -98,7 +98,7 @@ window.addEventListener("scroll", () => {
     navBar2?.classList.remove("navigation-2");
     navBarUserName?.classList.remove("logoNombre");
   }
-  
+
   updateNavBarStyles();
 });
 

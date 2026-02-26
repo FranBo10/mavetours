@@ -2,34 +2,36 @@
 
 namespace App\Controller;
 
+use App\Entity\Comentario;
+use App\Entity\DetallesEvento;
+use App\Entity\Reserva;
+use App\Entity\Slider;
 use App\Entity\Tour;
 use App\Entity\User;
-use App\Entity\Slider;
-use App\Entity\Reserva;
-use App\Entity\Comentario;
-use App\Form\UserFormType;
-use App\Entity\DetallesEvento;
 use App\Form\ComentarioFormType;
+use App\Form\DetallesEventoFormType;
+use App\Form\UserFormType;
+use App\Repository\BlogCategoriaRepository;
+use App\Repository\ComentarioRepository;
+use App\Repository\DestinoRepository;
+use App\Repository\CircuitoRepository;
+use App\Repository\DetallesReservaRepository;
+use App\Repository\EventoRepository;
+use App\Repository\ReservaRepository;
 use App\Repository\TourRepository;
 use App\Repository\UserRepository;
 use App\Service\ComentarioService;
-use App\Form\DetallesEventoFormType;
-use App\Repository\EventoRepository;
-use App\Repository\ReservaRepository;
-use App\Repository\ComentarioRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\BlogCategoriaRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use App\Repository\DetallesReservaRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AppController extends AbstractController
 {
@@ -49,22 +51,22 @@ class AppController extends AbstractController
     }
 
     #[Route('/{_locale}', name: 'home')]
-    public function index(TourRepository $repo, BlogCategoriaRepository $blogCategoriaRepository, Request $request): Response
+    public function index(TourRepository $repo, DestinoRepository $destinoRepository, BlogCategoriaRepository $blogCategoriaRepository, Request $request): Response
     {
         $tours = $repo->findBy([], ['orden' => 'ASC']);
+        $destinos = $destinoRepository->findBy(['isActive' => true], ['titulo' => 'ASC']);
         $categorias = $blogCategoriaRepository->findAll();
 
         $locale = $request->getLocale();
         $request->setLocale($locale);
 
-        foreach ($categorias as $categoria) {
-            $categoriaId = $categoria->getId();
-        }
-
-        $categoria = $blogCategoriaRepository->findOneBy(['id' => $categoriaId]);
+        $destino = $destinos[0] ?? null;
+        $categoria = $categorias ? $categorias[0] : null;
 
         return $this->render('app/index.html.twig', [
             'tours' => $tours,
+            'destinos' => $destinos,
+            'destino' => $destino,
             'categoria' => $categoria,
             '_locale' => $locale
         ]);
@@ -286,4 +288,5 @@ class AppController extends AbstractController
             'categoria' => $categoria
         ]);
     }
+
 }

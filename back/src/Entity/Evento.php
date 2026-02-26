@@ -39,7 +39,10 @@ class Evento
     private ?int $cantidad = 0;
 
     #[ORM\ManyToOne(inversedBy: 'eventos')]
-    private ?Tour $tour = null;
+    private ?Tour $tour = null;    
+
+    #[ORM\ManyToOne(inversedBy: 'eventos')]
+    private ?Circuito $circuito = null;
 
     #[ORM\ManyToOne(inversedBy: 'eventos')]
     private ?User $user = null;
@@ -178,6 +181,18 @@ class Evento
     public function setTour(?Tour $tour): static
     {
         $this->tour = $tour;
+
+        return $this;
+    }
+
+    public function getCircuito(): ?Circuito
+    {
+        return $this->circuito;
+    }
+
+    public function setCircuito(?Circuito $circuito): static
+    {
+        $this->circuito = $circuito;
 
         return $this;
     }

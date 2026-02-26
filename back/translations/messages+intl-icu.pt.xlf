@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="es" target-language="pt" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="AEWwFyZ" resname="Thank you for giving your comment, pending for validation">
+        <source>Thank you for giving your comment, pending for validation</source>
+        <target>Obrigado por deixar seu comentário, pendente de validação</target>
+      </trans-unit>
+      <trans-unit id="MlcoR5Z" resname="Your user account has been modified">
+        <source>Your user account has been modified</source>
+        <target>Sua conta de usuário foi modificada</target>
+      </trans-unit>
+      <trans-unit id="qv9MPBX" resname="We have sent you an e-mail to verify your account, please check your spam folder">
+        <source>We have sent you an e-mail to verify your account, please check your spam folder</source>
+        <target>Enviamos um e-mail para verificar sua conta, por favor verifique sua pasta de spam</target>
+      </trans-unit>
+      <trans-unit id="62cdC1_" resname="Your account has been successfully verified, you can now log in">
+        <source>Your account has been successfully verified, you can now log in</source>
+        <target>Sua conta foi verificada com sucesso, agora você pode fazer login</target>
+      </trans-unit>
+      <trans-unit id="I079ucx" resname="The date of the event cannot be earlier than the current date, please modify the date of the reservation">
+        <source>The date of the event cannot be earlier than the current date, please modify the date of the reservation</source>
+        <target>A data do evento não pode ser anterior à data atual, por favor modifique a data da reserva</target>
+      </trans-unit>
+      <trans-unit id="PKyRqSs" resname="The event is closed and cannot receive further reservations">
+        <source>The event is closed and cannot receive further reservations</source>
+        <target>O evento está encerrado e não pode receber mais reservas</target>
+      </trans-unit>
+      <trans-unit id="VgE69sn" resname="Ups! We do not have a visit this day for this tour, please modify the booking date">
+        <source>Ups! We do not have a visit this day for this tour, please modify the booking date</source>
+        <target>Ops! Não temos uma visita neste dia para este tour, por favor modifique a data da reserva</target>
+      </trans-unit>
+      <trans-unit id="8jmPjNe" resname="Sorry! The maximum number of participants for this event has been reached">
+        <source>Sorry! The maximum number of participants for this event has been reached</source>
+        <target>Desculpe! O número máximo de participantes para este evento foi atingido</target>
+      </trans-unit>
+      <trans-unit id="m2FLarB" resname="Your booking has been confirmed, an e-mail has been sent, please check the spam">
+        <source>Your booking has been confirmed, an e-mail has been sent, please check the spam</source>
+        <target>Sua reserva foi confirmada, um e-mail foi enviado, por favor verifique o spam</target>
+      </trans-unit>
+      <trans-unit id="xt8coUt" resname="Your booking has been successfully modified, you can find the details on your profile">
+        <source>Your booking has been successfully modified, you can find the details on your profile</source>
+        <target>Sua reserva foi modificada com sucesso, você pode encontrar os detalhes no seu perfil</target>
+      </trans-unit>
+      <trans-unit id="chY5pjQ" resname="Booking cancelled or deleted">
+        <source>Booking cancelled or deleted</source>
+        <target>Reserva cancelada ou excluída</target>
+      </trans-unit>
+      <trans-unit id="trPRFkp" resname="Book now">
+        <source>Book now</source>
+        <target>Reservar</target>
+      </trans-unit>
+      <trans-unit id="Um4Ah8w" resname="Description">
+        <source>Description</source>
+        <target>Descrição</target>
+      </trans-unit>
+      <trans-unit id="Wm5PVsC" resname="Prices">
+        <source>Prices</source>
+        <target>Preços</target>
+      </trans-unit>
+      <trans-unit id="RZid5J_" resname="Details">
+        <source>Details</source>
+        <target>Detalhes</target>
+      </trans-unit>
+      <trans-unit id="hbMyKFJ" resname="Cancelations">
+        <source>Cancelations</source>
+        <target>Cancelamentos</target>
+      </trans-unit>
+      <trans-unit id="8IGDBZ." resname="Meeting point">
+        <source>Meeting point</source>
+        <target>Ponto de encontro</target>
+      </trans-unit>
+      <trans-unit id="3K3og8k" resname="Opinions">
+        <source>Opinions</source>
+        <target>Opiniões</target>
+      </trans-unit>
+      <trans-unit id="ll5qjEc" resname="See full description">
+        <source>See full description</source>
+        <target>Ver descrição completa</target>
+      </trans-unit>
+      <trans-unit id="rj8kHje" resname="Hide description">
+        <source>Hide description</source>
+        <target>Ocultar descrição</target>
+      </trans-unit>
+      <trans-unit id="k8kchR5" resname="Price">
+        <source>Price</source>
+        <target>Preço</target>
+      </trans-unit>
+      <trans-unit id="B1zmlv3" resname="Free tours do not have a fixed price. Each person values the work of the guide and, at the end of the tour, he delivers the amount he considers to his will according to their satisfaction.">
+        <source>Free tours do not have a fixed price. Each person values the work of the guide and, at the end of the tour, he delivers the amount he considers to his will according to their satisfaction.</source>
+        <target>Os tours gratuitos não têm um preço fixo. Cada pessoa valoriza o trabalho do guia e, ao final do tour, entrega o valor que considera adequado de acordo com sua satisfação.</target>
+      </trans-unit>
+      <trans-unit id="T8UqPEx" resname="Duration">
+        <source>Duration</source>
+        <target>Duração</target>
+      </trans-unit>
+      <trans-unit id="pP5lJk7" resname="Language">
+        <source>Language</source>
+        <target>Idioma</target>
+      </trans-unit>
+      <trans-unit id="pb7KWq0" resname="The activity is carried out with an English-speaking guide">
+        <source>The activity is carried out with an English-speaking guide</source>
+        <target>A atividade é realizada com um guia que fala inglês</target>
+      </trans-unit>
+      <trans-unit id="uoKamLe" resname="Included">
+        <source>Included</source>
+        <target>Incluído</target>
+      </trans-unit>
+      <trans-unit id="kxtze9r" resname="English-speaking guide">
+        <source>English-speaking guide</source>
+        <target>Guia que fala inglês</target>
+      </trans-unit>
+      <trans-unit id="6LW55fz" resname="Not incluided">
+        <source>Not incluided</source>
+        <target>Não incluído</target>
+      </trans-unit>
+      <trans-unit id="ODik2Mu" resname="Tips">
+        <source>Tips</source>
+        <target>Gorjetas</target>
+      </trans-unit>
+      <trans-unit id="jNiQVWY" resname="When to book ?">
+        <source>When to book ?</source>
+        <target>Quando reservar?</target>
+      </trans-unit>
+      <trans-unit id="JQ4GmQK" resname="You can book up to 30 minutes before the tour starts">
+        <source>You can book up to 30 minutes before the tour starts</source>
+        <target>Você pode reservar até 30 minutos antes do início do tour</target>
+      </trans-unit>
+      <trans-unit id="DUqOq60" resname="Accesibility">
+        <source>Accesibility</source>
+        <target>Acessibilidade</target>
+      </trans-unit>
+      <trans-unit id="RZCXY7t" resname="Not wheelchair accessible">
+        <source>Not wheelchair accessible</source>
+        <target>Não acessível para cadeiras de rodas</target>
+      </trans-unit>
+      <trans-unit id="fcHNfq." resname="Pets">
+        <source>Pets</source>
+        <target>Animais de estimação</target>
+      </trans-unit>
+      <trans-unit id="G7IB0Yg" resname="Allowed">
+        <source>Allowed</source>
+        <target>Permitido</target>
+      </trans-unit>
+      <trans-unit id="6VapQEt" resname="Frequently asked questions">
+        <source>Frequently asked questions</source>
+        <target>Perguntas frequentes</target>
+      </trans-unit>
+      <trans-unit id="WdKLGoQ" resname="How to make the reservation ?">
+        <source>How to make the reservation ?</source>
+        <target>Como fazer a reserva?</target>
+      </trans-unit>
+      <trans-unit id="luB1dRj" resname="Is a minimum number of participants needed ?">
+        <source>Is a minimum number of participants needed ?</source>
+        <target>É necessário um número mínimo de participantes?</target>
+      </trans-unit>
+      <trans-unit id="yxICmA6" resname="The minimum number of participants is one person, so if it's your case, sign up and enjoy a pleasant time">
+        <source>The minimum number of participants is one person, so if it's your case, sign up and enjoy a pleasant time</source>
+        <target>O número mínimo de participantes é uma pessoa, então se é o seu caso, inscreva-se e aproveite um momento agradável</target>
+      </trans-unit>
+      <trans-unit id="0YIr1wY" resname="For any other doubt,">
+        <source>For any other doubt,</source>
+        <target>Para qualquer outra dúvida,</target>
+      </trans-unit>
+      <trans-unit id="JsS.tj7" resname="Free cancelation">
+        <source>Free cancelation</source>
+        <target>Cancelamento gratuito</target>
+      </trans-unit>
+      <trans-unit id="j5qD25C" resname="If you will not be able to attend the tour, please cancel the reservation, otherwise, the guide will be waiting for you.">
+        <source>If you will not be able to attend the tour, please cancel the reservation, otherwise, the guide will be waiting for you.</source>
+        <target>Se você não poderá comparecer ao tour, por favor cancele a reserva, caso contrário, o guia estará esperando por você.</target>
+      </trans-unit>
+      <trans-unit id="mxzPP1h" resname="Second meeting point">
+        <source>Second meeting point</source>
+        <target>Segundo ponto de encontro</target>
+      </trans-unit>
+      <trans-unit id="T943n.D" resname="What our customers say">
+        <source>What our customers say</source>
+        <target>O que nossos clientes dizem</target>
+      </trans-unit>
+      <trans-unit id="8EAv4e9" resname="All reviews have been written by real customers who have booked with us.">
+        <source>All reviews have been written by real customers who have booked with us.</source>
+        <target>Todas as avaliações foram escritas por clientes reais que reservaram conosco.</target>
+      </trans-unit>
+      <trans-unit id="h16XilN" resname="Leave a comment">
+        <source>Leave a comment</source>
+        <target>Deixar um comentário</target>
+      </trans-unit>
+      <trans-unit id="VHBQJdZ" resname="Leave us your review">
+        <source>Leave us your review</source>
+        <target>Deixe-nos sua avaliação</target>
+      </trans-unit>
+      <trans-unit id="VF_AdQF" resname="Leave your comments">
+        <source>Leave your comments</source>
+        <target>Deixe seus comentários</target>
+      </trans-unit>
+      <trans-unit id="kovyuFz" resname="Log in to leave a comment">
+        <source>Log in to leave a comment</source>
+        <target>Faça login para deixar um comentário</target>
+      </trans-unit>
+      <trans-unit id="o_45aKS" resname="Click here to connect">
+        <source>Click here to connect</source>
+        <target>Clique aqui para se conectar</target>
+      </trans-unit>
+      <trans-unit id="klpG.vz" resname="You may also like">
+        <source>You may also like</source>
+        <target>Você também pode gostar</target>
+      </trans-unit>
+      <trans-unit id="v8id2CK" resname="Price:">
+        <source>Price:</source>
+        <target>Preço:</target>
+      </trans-unit>
+      <trans-unit id="6Qi_Fni" resname="Free Tour">
+        <source>Free Tour</source>
+        <target>Tour Gratuito</target>
+      </trans-unit>
+      <trans-unit id="CfYkImZ" resname="More information">
+        <source>More information</source>
+        <target>Mais informações</target>
+      </trans-unit>
+      <trans-unit id="3CAVSYb" resname="Welcome to our site !">
+        <source>Welcome to our site !</source>
+        <target>Bem-vindo ao nosso site!</target>
+      </trans-unit>
+      <trans-unit id="zSKW61o" resname="Enjoy the experience">
+        <source>Enjoy the experience</source>
+        <target>Aproveite a experiência</target>
+      </trans-unit>
+      <trans-unit id="Jiy.S9b" resname="For booking the tour of">
+        <source>For booking the tour of</source>
+        <target>Para reservar o tour de</target>
+      </trans-unit>
+      <trans-unit id="zwxZdii" resname=", choose the desired date and complete the form, indicating the number of participants. Confirmation is immediate.">
+        <source>, choose the desired date and complete the form, indicating the number of participants. Confirmation is immediate.</source>
+        <target>, escolha a data desejada e preencha o formulário, indicando o número de participantes. A confirmação é imediata.</target>
+      </trans-unit>
+      <trans-unit id="rQGHrde" resname="My Account">
+        <source>My Account</source>
+        <target>Minha Conta</target>
+      </trans-unit>
+      <trans-unit id="MwXrWAk" resname="Phone:">
+        <source>Phone:</source>
+        <target>Telefone:</target>
+      </trans-unit>
+      <trans-unit id="Y9sQ2KC" resname="E-mail:">
+        <source>E-mail:</source>
+        <target>E-mail:</target>
+      </trans-unit>
+      <trans-unit id="OohneGN" resname="Personal Details">
+        <source>Personal Details</source>
+        <target>Dados Pessoais</target>
+      </trans-unit>
+      <trans-unit id="PUpFZgq" resname="Choose your preferred avatar">
+        <source>Choose your preferred avatar</source>
+        <target>Escolha seu avatar preferido</target>
+      </trans-unit>
+      <trans-unit id="Ib1WVfQ" resname="Validate changes">
+        <source>Validate changes</source>
+        <target>Validar alterações</target>
+      </trans-unit>
+      <trans-unit id="7quc1EI" resname="Validated">
+        <source>Validated</source>
+        <target>Validado</target>
+      </trans-unit>
+      <trans-unit id="pVqWkgV" resname="Booking Details">
+        <source>Booking Details</source>
+        <target>Detalhes da Reserva</target>
+      </trans-unit>
+      <trans-unit id="lI4D5wV" resname="Booking">
+        <source>Booking</source>
+        <target>Reserva</target>
+      </trans-unit>
+      <trans-unit id="n_MLE5c" resname="Tour date">
+        <source>Tour date</source>
+        <target>Data do tour</target>
+      </trans-unit>
+      <trans-unit id="yKdZKAW" resname="Adults">
+        <source>Adults</source>
+        <target>Adultos</target>
+      </trans-unit>
+      <trans-unit id="j1q9km3" resname="Kids">
+        <source>Kids</source>
+        <target>Crianças</target>
+      </trans-unit>
+      <trans-unit id="7uoQHHd" resname="See my bookings">
+        <source>See my bookings</source>
+        <target>Ver minhas reservas</target>
+      </trans-unit>
+      <trans-unit id="xUJRALY" resname="Proceed to payment">
+        <source>Proceed to payment</source>
+        <target>Prosseguir para o pagamento</target>
+      </trans-unit>
+      <trans-unit id="JhI9gGp" resname="Booking details not available.">
+        <source>Booking details not available.</source>
+        <target>Detalhes da reserva não disponíveis.</target>
+      </trans-unit>
+      <trans-unit id="0Q7aDLn" resname="No bookings available.">
+        <source>No bookings available.</source>
+        <target>Não há reservas disponíveis.</target>
+      </trans-unit>
+      <trans-unit id="WOHDomw" resname="Make your reservation">
+        <source>Make your reservation</source>
+        <target>Faça sua reserva</target>
+      </trans-unit>
+      <trans-unit id="Q974PDR" resname="Select a date">
+        <source>Select a date</source>
+        <target>Selecione uma data</target>
+      </trans-unit>
+      <trans-unit id="wljpTh2" resname="More tours...">
+        <source>More tours...</source>
+        <target>Mais tours...</target>
+      </trans-unit>
+      <trans-unit id="_h4X2Ph" resname="Confirm booking">
+        <source>Confirm booking</source>
+        <target>Confirmar reserva</target>
+      </trans-unit>
+      <trans-unit id="iK9586p" resname="Select number of adults">
+        <source>Select number of adults</source>
+        <target>Selecione o número de adultos</target>
+      </trans-unit>
+      <trans-unit id="PSSXq2p" resname="Select number of kids">
+        <source>Select number of kids</source>
+        <target>Selecione o número de crianças</target>
+      </trans-unit>
+      <trans-unit id="awNjpQs" resname="My Bookings">
+        <source>My Bookings</source>
+        <target>Minhas Reservas</target>
+      </trans-unit>
+      <trans-unit id="mcQKtAW" resname="Date">
+        <source>Date</source>
+        <target>Data</target>
+      </trans-unit>
+      <trans-unit id="MxGRTkP" resname="Modify your booking date">
+        <source>Modify your booking date</source>
+        <target>Modificar a data da sua reserva</target>
+      </trans-unit>
+      <trans-unit id="8tJjORm" resname="Cancel / Delete booking">
+        <source>Cancel / Delete booking</source>
+        <target>Cancelar / Excluir reserva</target>
+      </trans-unit>
+      <trans-unit id="oEKOT5v" resname="Come on, book your first tour with us and, let's walk !!!">
+        <source>Come on, book your first tour with us and, let's walk !!!</source>
+        <target>Vamos lá, reserve seu primeiro tour conosco e, vamos caminhar!!!</target>
+      </trans-unit>
+      <trans-unit id="yzX3MyE" resname="Back to homepage">
+        <source>Back to homepage</source>
+        <target>Voltar à página inicial</target>
+      </trans-unit>
+      <trans-unit id="RzqNsSa" resname="Edit booking">
+        <source>Edit booking</source>
+        <target>Editar reserva</target>
+      </trans-unit>
+      <trans-unit id="V.vnwR." resname="Modify reservation">
+        <source>Modify reservation</source>
+        <target>Modificar reserva</target>
+      </trans-unit>
+      <trans-unit id="5_Lnakf" resname="No booking registered yet">
+        <source>No booking registered yet</source>
+        <target>Nenhuma reserva registrada ainda</target>
+      </trans-unit>
+      <trans-unit id="mYRwTXf" resname="Come on, book your first tour with us and let's walk!!!">
+        <source>Come on, book your first tour with us and let's walk!!!</source>
+        <target>Vamos lá, reserve seu primeiro tour conosco e vamos caminhar!!!</target>
+      </trans-unit>
+      <trans-unit id="tGSH4aA" resname="All rights reserved 2023-2024">
+        <source>All rights reserved 2023-2024</source>
+        <target>Todos os direitos reservados 2023-2024</target>
+      </trans-unit>
+      <trans-unit id="NOb68Vq" resname="Terms and Conditions">
+        <source>Terms and Conditions</source>
+        <target>Termos e Condições</target>
+      </trans-unit>
+      <trans-unit id="BPtACwx" resname="Who are we?">
+        <source>Who are we?</source>
+        <target>Quem somos?</target>
+      </trans-unit>
+      <trans-unit id="ZorMn7L" resname="Check the status of your reservation">
+        <source>Check the status of your reservation</source>
+        <target>Verifique o status da sua reserva</target>
+      </trans-unit>
+      <trans-unit id="eB_u2Yx" resname="Booking N°.">
+        <source>Booking N°.</source>
+        <target>Reserva N°.</target>
+      </trans-unit>
+      <trans-unit id="uUisBLh" resname="Payment method">
+        <source>Payment method</source>
+        <target>Método de pagamento</target>
+      </trans-unit>
+      <trans-unit id="VdCKOL7" resname="Join us and discover traditional villages and beautiful places full of life and nature">
+        <source>Join us and discover traditional villages and beautiful places full of life and nature</source>
+        <target>Junte-se a nós e descubra vilarejos tradicionais e lugares bonitos cheios de vida e natureza</target>
+      </trans-unit>
+      <trans-unit id="C.6Tkop" resname="nombre">
+        <source>nombre</source>
+        <target>Nome</target>
+      </trans-unit>
+      <trans-unit id="NMVJ8m4" resname="apellidos">
+        <source>apellidos</source>
+        <target>Sobrenome</target>
+      </trans-unit>
+      <trans-unit id="giREF.l" resname="email">
+        <source>email</source>
+        <target>E-mail</target>
+      </trans-unit>
+      <trans-unit id="dQPuUrm" resname="telefono">
+        <source>telefono</source>
+        <target>N°. Telefone</target>
+      </trans-unit>
+      <trans-unit id="HXbUfuw" resname="plainPassword.first_options">
+        <source>plainPassword.first_options</source>
+        <target>Senha</target>
+      </trans-unit>
+      <trans-unit id="o7ZcG7j" resname="plainPassword.second_options">
+        <source>plainPassword.second_options</source>
+        <target>Confirmar senha</target>
+      </trans-unit>
+      <trans-unit id="oETQ4D1" resname="pais">
+        <source>pais</source>
+        <target>País</target>
+      </trans-unit>
+      <trans-unit id="wMTyxmW" resname="Select your country">
+        <source>Select your country</source>
+        <target>Selecione seu país</target>
+      </trans-unit>
+      <trans-unit id="dInFXJ_" resname="The Latin Quarter of Paris, known as the Quartier Latin, is a charming district located in the heart of the city. Famous for its bohemian atmosphere and rich intellectual history, it is home to the Sorbonne University and Notre-Dame Cathedral. Cobblestone streets, antique bookshops, and cozy cafés create a unique ambiance. It's a gathering spot for students, artists, and culture lovers, with a vibrant mix of shops, restaurants, and nightlife.">
+        <source>The Latin Quarter of Paris, known as the Quartier Latin, is a charming district located in the heart of the city. Famous for its bohemian atmosphere and rich intellectual history, it is home to the Sorbonne University and Notre-Dame Cathedral. Cobblestone streets, antique bookshops, and cozy cafés create a unique ambiance. It's a gathering spot for students, artists, and culture lovers, with a vibrant mix of shops, restaurants, and nightlife.</source>
+        <target>O Bairro Latino de Paris, conhecido como Quartier Latin, é um distrito encantador localizado no coração da cidade. Famoso por sua atmosfera boêmia e rica história intelectual, abriga a Universidade Sorbonne e a Catedral de Notre-Dame. Ruas de paralelepípedos, livrarias antigas e cafés aconchegantes criam um ambiente único. É um ponto de encontro para estudantes, artistas e amantes da cultura, com uma vibrante mistura de lojas, restaurantes e vida noturna.</target>
+      </trans-unit>
+      <trans-unit id="ExsO0Hn" resname="Let's walk !">
+        <source>Let's walk !</source>
+        <target>Vamos caminhar!</target>
+      </trans-unit>
+      <trans-unit id="XqX76BH" resname="Navigate">
+        <source>Navigate</source>
+        <target>Navegar</target>
+      </trans-unit>
+      <trans-unit id="dxdy0Iz" resname="Stops of the Tour">
+        <source>Stops of the Tour</source>
+        <target>Paradas do Tour</target>
+      </trans-unit>
+      <trans-unit id="sv78c5V" resname="No stops found for this tour.">
+        <source>No stops found for this tour.</source>
+        <target>Nenhuma parada encontrada para este tour.</target>
+      </trans-unit>
+      <trans-unit id="hgM.daT" resname="Create an account">
+        <source>Create an account</source>
+        <target>Criar uma conta</target>
+      </trans-unit>
+      <trans-unit id="u3I07BJ" resname="Register">
+        <source>Register</source>
+        <target>Registrar-se</target>
+      </trans-unit>
+      <trans-unit id="wcUcnF2" resname="Are you already registered ?">
+        <source>Are you already registered ?</source>
+        <target>Já está registrado?</target>
+      </trans-unit>
+      <trans-unit id="le5Eu9S" resname="Click here to log in">
+        <source>Click here to log in</source>
+        <target>Clique aqui para fazer login</target>
+      </trans-unit>
+      <trans-unit id="jgEqXKD" resname="Wander through its narrow streets with charming cafés this neighborhood has to offer.">
+        <source>Wander through its narrow streets with charming cafés this neighborhood has to offer.</source>
+        <target>Passeie pelas suas ruas estreitas com cafés encantadores que este bairro tem a oferecer.</target>
+      </trans-unit>
+      <trans-unit id="yjUFq2F" resname="Include an '{{ value }}' sign in the email address. The address '{{ value }}' does not contain the '{{ value }}' sign.">
+        <source>Include an '{{ value }}' sign in the email address. The address '{{ value }}' does not contain the '{{ value }}' sign.</source>
+        <target>Inclua um sinal '{{ value }}' no endereço de e-mail. O endereço '{{ value }}' não contém o sinal '{{ value }}'.</target>
+      </trans-unit>
+      <trans-unit id="FjpwCw5" resname="The neighborhood is located on the banks of the Seine River.">
+        <source>The neighborhood is located on the banks of the Seine River.</source>
+        <target>O bairro está localizado às margens do Rio Sena.</target>
+      </trans-unit>
+      <trans-unit id="6IZnbAk" resname="The happy hunting ground of all minds that have lost their balance.">
+        <source>The happy hunting ground of all minds that have lost their balance.</source>
+        <target>O feliz campo de caça de todas as mentes que perderam o equilíbrio.</target>
+      </trans-unit>
+      <trans-unit id="zUYkWQC" resname="Saint Michael defeating the devil">
+        <source>Saint Michael defeating the devil</source>
+        <target>São Miguel derrotando o diabo</target>
+      </trans-unit>
+      <trans-unit id="1b0vOJC" resname="The majestic Paris Opera">
+        <source>The majestic Paris Opera</source>
+        <target>A majestosa Ópera de Paris</target>
+      </trans-unit>
+      <trans-unit id="rHHLPoa" resname="The medieval prison &quot;La Conciergerie&quot;">
+        <source>The medieval prison "La Conciergerie"</source>
+        <target>A prisão medieval "La Conciergerie"</target>
+      </trans-unit>
+      <trans-unit id="aU4QM66" resname="The Louvre Museum Pyramids">
+        <source>The Louvre Museum Pyramids</source>
+        <target>As pirâmides do Museu do Louvre</target>
+      </trans-unit>
+      <trans-unit id="WbB9Igb" resname="The Champs-Élysées">
+        <source>The Champs-Élysées</source>
+        <target>Os Campos Elísios</target>
+      </trans-unit>
+      <trans-unit id="hOah.UH" resname="The Arc de Triomphe">
+        <source>The Arc de Triomphe</source>
+        <target>O Arco do Triunfo</target>
+      </trans-unit>
+      <trans-unit id="feF2Gdl" resname="The tower in detail">
+        <source>The tower in detail</source>
+        <target>A torre em detalhes</target>
+      </trans-unit>
+      <trans-unit id="k1yLPLB" resname="The majestic Iron Lady">
+        <source>The majestic Iron Lady</source>
+        <target>A majestosa Dama de Ferro</target>
+      </trans-unit>
+      <trans-unit id="s7KhLbz" resname="The carousel">
+        <source>The carousel</source>
+        <target>O carrossel</target>
+      </trans-unit>
+      <trans-unit id="B2QmwwJ" resname="Magical by night">
+        <source>Magical by night</source>
+        <target>Mágico à noite</target>
+      </trans-unit>
+      <trans-unit id="fecqEbK" resname="The most famous cabaret in the world">
+        <source>The most famous cabaret in the world</source>
+        <target>O cabaré mais famoso do mundo</target>
+      </trans-unit>
+      <trans-unit id="bqJyewh" resname="Wander through its bohemian streets">
+        <source>Wander through its bohemian streets</source>
+        <target>Passeie por suas ruas boêmias</target>
+      </trans-unit>
+      <trans-unit id="MKZ3IqE" resname="Panoramic view of the city">
+        <source>Panoramic view of the city</source>
+        <target>Vista panorâmica da cidade</target>
+      </trans-unit>
+      <trans-unit id="wGvlfFv" resname="Basilica of the Sacred Heart">
+        <source>Basilica of the Sacred Heart</source>
+        <target>Basílica do Sagrado Coração</target>
+      </trans-unit>
+      <trans-unit id="PSwrxmo" resname="The Legend of the Gargoyles">
+        <source>The Legend of the Gargoyles</source>
+        <target>A Lenda das Gárgulas</target>
+      </trans-unit>
+      <trans-unit id="QrBbyuD" resname="The forbidden knowledge of alchemy">
+        <source>The forbidden knowledge of alchemy</source>
+        <target>O conhecimento proibido da alquimia</target>
+      </trans-unit>
+      <trans-unit id="DMMbI.V" resname="The whispers of forgotten tales in every cobblestone and arch">
+        <source>The whispers of forgotten tales in every cobblestone and arch</source>
+        <target>Os sussurros de contos esquecidos em cada paralelepípedo e arco</target>
+      </trans-unit>
+      <trans-unit id="uz_3U9a" resname="World capital of fashion and luxury brands">
+        <source>World capital of fashion and luxury brands</source>
+        <target>Capital mundial da moda e das marcas de luxo</target>
+      </trans-unit>
+      <trans-unit id="VmKjwLK" resname="Discover the history behind the Battle of Austerlitz">
+        <source>Discover the history behind the Battle of Austerlitz</source>
+        <target>Descubra a história por trás da Batalha de Austerlitz</target>
+      </trans-unit>
+      <trans-unit id="VDLb2Cn" resname="Pompidou, a politician-artist">
+        <source>Pompidou, a politician-artist</source>
+        <target>Pompidou, um político artista</target>
+      </trans-unit>
+      <trans-unit id="9gvTKSR" resname="Buren's columns adorn the royal gardens">
+        <source>Buren's columns adorn the royal gardens</source>
+        <target>As colunas de Buren decoram os jardins reais</target>
+      </trans-unit>
+      <trans-unit id="bFZbu2P" resname="Paris, city of towers">
+        <source>Paris, city of towers</source>
+        <target>Paris, cidade das torres</target>
+      </trans-unit>
+      <trans-unit id="a8KRKYY" resname="The Stravinsky Fountain, Urban art's challenge to academic art">
+        <source>The Stravinsky Fountain, Urban art's challenge to academic art</source>
+        <target>A Fonte Stravinsky, um desafio da arte urbana à arte acadêmica</target>
+      </trans-unit>
+      <trans-unit id="SAc4lj4" resname="The Treasures of Le Marais">
+        <source>The Treasures of Le Marais</source>
+        <target>Os tesouros do Marais</target>
+      </trans-unit>
+      <trans-unit id="uQVLgX6" resname="Bastille, where the revolution began">
+        <source>Bastille, where the revolution began</source>
+        <target>A Bastilha, onde a revolução começou</target>
+      </trans-unit>
+      <trans-unit id="THMKDG4" resname="The most cinematic bridge in Paris">
+        <source>The most cinematic bridge in Paris</source>
+        <target>A ponte mais cinematográfica de Paris</target>
+      </trans-unit>
+      <trans-unit id="js6n4VY" resname="The most beautiful avenue in Paris">
+        <source>The most beautiful avenue in Paris</source>
+        <target>A avenida mais bonita de Paris</target>
+      </trans-unit>
+      <trans-unit id="KktCOW9" resname="The French Language Academy">
+        <source>The French Language Academy</source>
+        <target>A Academia Francesa</target>
+      </trans-unit>
+      <trans-unit id="SXZFflt" resname="Eiffel Tower / Arc de Triomphe">
+        <source>Eiffel Tower / Arc de Triomphe</source>
+        <target>Torre Eiffel / Arco do Triunfo</target>
+      </trans-unit>
+      <trans-unit id="FKHXaj1" resname="The History of Paris">
+        <source>The History of Paris</source>
+        <target>A história de Paris</target>
+      </trans-unit>
+      <trans-unit id="lquppIk" resname="Montmartre, the bohemian neighborhood">
+        <source>Montmartre, the bohemian neighborhood</source>
+        <target>Montmartre, o bairro boêmio</target>
+      </trans-unit>
+      <trans-unit id="STdhjn1" resname="Mysteries, Myths, and Legends">
+        <source>Mysteries, Myths, and Legends</source>
+        <target>Mistérios, mitos e lendas</target>
+      </trans-unit>
+      <trans-unit id="JIrN4Gy" resname="The Latin Quarter">
+        <source>The Latin Quarter</source>
+        <target>O Bairro Latino</target>
+      </trans-unit>
+      <trans-unit id="027v76p" resname="Paris By Night">
+        <source>Paris By Night</source>
+        <target>Paris à noite</target>
+      </trans-unit>
+      <trans-unit id="VCI541E" resname="The Comédie-Française / Pompidou Museum">
+        <source>The Comédie-Française / Pompidou Museum</source>
+        <target>A Comédia Francesa / Centro Pompidou</target>
+      </trans-unit>
+      <trans-unit id="eyDBAoL" resname="Le Marais and the Bastille">
+        <source>Le Marais and the Bastille</source>
+        <target>O Marais e a Bastilha</target>
+      </trans-unit>
+      <trans-unit id="eS3bmO4" resname="The Quartier Latin, is a fascinating enclave nestled in the historic heart of the City of Light. This picturesque district has served as the cultural and intellectual epicenter of the city for centuries. Its name derives from Latin, the language spoken in medieval universities. At the core of the Latin Quarter stands the renowned Sorbonne University, founded in the 13th century, whose cloisters and lecture halls have nurtured great thinkers, philosophers, and writers throughout history. This venerable institution counts among its alumni luminaries like René Descartes and Marie Curie. The neighborhood also hosts one of Paris's most iconic landmarks, the majestic Notre-Dame Cathedral. With its soaring Gothic architecture and intricate details, the cathedral stands as a silent witness to centuries of history and has inspired countless artists and writers. The Latin Quarter's narrow cobblestone streets breathe bohemian and artistic charm. Here, antiquarian bookshops, art galleries, and independent boutiques mingle with traditional cafés and brasseries that invite visitors to pause and watch the world go by. Vine-covered façades and colorful shuttered windows add extra allure to this almost cinematic neighborhood.">
+        <source>The Quartier Latin, is a fascinating enclave nestled in the historic heart of the City of Light. This picturesque district has served as the cultural and intellectual epicenter of the city for centuries. Its name derives from Latin, the language spoken in medieval universities. At the core of the Latin Quarter stands the renowned Sorbonne University, founded in the 13th century, whose cloisters and lecture halls have nurtured great thinkers, philosophers, and writers throughout history. This venerable institution counts among its alumni luminaries like René Descartes and Marie Curie. The neighborhood also hosts one of Paris's most iconic landmarks, the majestic Notre-Dame Cathedral. With its soaring Gothic architecture and intricate details, the cathedral stands as a silent witness to centuries of history and has inspired countless artists and writers. The Latin Quarter's narrow cobblestone streets breathe bohemian and artistic charm. Here, antiquarian bookshops, art galleries, and independent boutiques mingle with traditional cafés and brasseries that invite visitors to pause and watch the world go by. Vine-covered façades and colorful shuttered windows add extra allure to this almost cinematic neighborhood.</source>
+        <target>O Quartier Latin é um enclave fascinante aninhado no coração histórico da Cidade Luz. Este distrito pitoresco tem servido como epicentro cultural e intelectual da cidade durante séculos. Seu nome deriva do latim, a língua falada nas universidades medievais. No centro do Bairro Latino ergue-se a renomada Universidade Sorbonne, fundada no século XIII, cujos claustros e salas de aula formaram grandes pensadores, filósofos e escritores ao longo da história. Esta venerável instituição conta entre seus ex-alunos luminares como René Descartes e Marie Curie. O bairro também abriga um dos marcos mais icônicos de Paris, a majestosa Catedral de Notre-Dame. Com sua imponente arquitetura gótica e detalhes intrincados, a catedral se ergue como testemunha silenciosa de séculos de história e inspirou inúmeros artistas e escritores. As ruas estreitas de paralelepípedos do Bairro Latino respiram charme boêmio e artístico. Aqui, livrarias antiquárias, galerias de arte e butiques independentes se misturam com cafés e brasseries tradicionais que convidam os visitantes a fazer uma pausa e observar o mundo passar. Fachadas cobertas por trepadeiras e janelas com persianas coloridas acrescentam um charme extra a este bairro quase cinematográfico.</target>
+      </trans-unit>
+      <trans-unit id="_po95cu" resname="Do you know medieval Paris? To discover it, we recommend joining this free tour of Le Marais, one of the most picturesque neighborhoods in the French capital. We'll also explore the history of the Bastille!">
+        <source>Do you know medieval Paris? To discover it, we recommend joining this free tour of Le Marais, one of the most picturesque neighborhoods in the French capital. We'll also explore the history of the Bastille!</source>
+        <target>Você conhece a Paris medieval? Para descobri-la, recomendamos participar deste tour gratuito pelo Marais, um dos bairros mais pitorescos da capital francesa. Também exploraremos a história da Bastilha!</target>
+      </trans-unit>
+      <trans-unit id="PactTJC" resname="Do you know Paris's art trail? To discover it, we recommend joining this free tour of the French capital's renowned cultural institutions. We'll also explore the historic Faubourg district !">
+        <source>Do you know Paris's art trail? To discover it, we recommend joining this free tour of the French capital's renowned cultural institutions. We'll also explore the historic Faubourg district !</source>
+        <target>Você conhece a rota artística de Paris? Para descobri-la, recomendamos participar deste tour gratuito pelas renomadas instituições culturais da capital francesa. Também exploraremos o histórico distrito de Faubourg!</target>
+      </trans-unit>
+      <trans-unit id="45UrF8p" resname="Under Paris' nocturnal cloak, the Galeries Lafayette shimmer with elegance. The Opéra Garnier rises majestically, its illuminated façade glowing like a jewel. At Place Vendôme, twinkling lights dance in harmony with the classical architecture. The city dresses in its finest at every corner.">
+        <source>Under Paris' nocturnal cloak, the Galeries Lafayette shimmer with elegance. The Opéra Garnier rises majestically, its illuminated façade glowing like a jewel. At Place Vendôme, twinkling lights dance in harmony with the classical architecture. The city dresses in its finest at every corner.</source>
+        <target>Sob o manto noturno de Paris, as Galerias Lafayette brilham com elegância. A Ópera Garnier se ergue majestosamente, sua fachada iluminada resplandece como uma joia. Na Place Vendôme, luzes cintilantes dançam em harmonia com a arquitetura clássica. A cidade se veste com suas melhores galas em cada esquina.</target>
+      </trans-unit>
+      <trans-unit id="K3DmjpV" resname="Embark on an unforgettable tour starting at the iconic Arc de Triunfo, exploring Paris's elegant boulevards. Wander through the city's opulent avenues where elegance comes to life, and culminate your adventure at the majestic Eiffel Tower.">
+        <source>Embark on an unforgettable tour starting at the iconic Arc de Triunfo, exploring Paris's elegant boulevards. Wander through the city's opulent avenues where elegance comes to life, and culminate your adventure at the majestic Eiffel Tower.</source>
+        <target>Embarque em um tour inesquecível começando no icônico Arco do Triunfo, explorando os elegantes bulevares de Paris. Passeie pelas avenidas opulentas onde a elegância ganha vida e culmine sua aventura na majestosa Torre Eiffel.</target>
+      </trans-unit>
+      <trans-unit id="tTvKkeN" resname="This picturesque bohemian neighborhood in Paris is famous for its artistic charm and cobblestone streets. At its summit stands the iconic Sacré-Cœur Basilica, offering panoramic views of this unique, history-filled city.">
+        <source>This picturesque bohemian neighborhood in Paris is famous for its artistic charm and cobblestone streets. At its summit stands the iconic Sacré-Cœur Basilica, offering panoramic views of this unique, history-filled city.</source>
+        <target>Este pitoresco bairro boêmio de Paris é famoso por seu charme artístico e suas ruas de paralelepípedos. Em seu cume ergue-se a icônica Basílica do Sacré-Cœur, oferecendo vistas panorâmicas desta cidade única, repleta de história.</target>
+      </trans-unit>
+      <trans-unit id="gHXLCG7" resname="Discover the essence of Paris on a journey that begins at the feet of the majestic Notre-Dame Cathedral. Let yourself be enchanted by streets that breathe history, façades that whisper centuries of art, and the unrivaled splendor of the Louvre Museum. An experience that will transport you to the very heart of Parisian beauty.">
+        <source>Discover the essence of Paris on a journey that begins at the feet of the majestic Notre-Dame Cathedral. Let yourself be enchanted by streets that breathe history, façades that whisper centuries of art, and the unrivaled splendor of the Louvre Museum. An experience that will transport you to the very heart of Parisian beauty.</source>
+        <target>Descubra a essência de Paris em uma jornada que começa aos pés da majestosa Catedral de Notre-Dame. Deixe-se encantar por ruas que respiram história, fachadas que sussurram séculos de arte e o esplendor incomparável do Museu do Louvre. Uma experiência que o transportará ao próprio coração da beleza parisiense.</target>
+      </trans-unit>
+      <trans-unit id="cpZUihm" resname="St. Michael's Square">
+        <source>St. Michael's Square</source>
+        <target>Praça de São Miguel</target>
+      </trans-unit>
+      <trans-unit id="Il0p9iA" resname="Listen">
+        <source>Listen</source>
+        <target>Ouvir</target>
+      </trans-unit>
+      <trans-unit id="ixF9t3A" resname="See more...">
+        <source>See more...</source>
+        <target>Ver mais...</target>
+      </trans-unit>
+      <trans-unit id="lpzL089" resname="Email">
+        <source>Email</source>
+        <target>Email</target>
+      </trans-unit>
+      <trans-unit id="1X1ItxA" resname="Log Out">
+        <source>Log Out</source>
+        <target>Sair</target>
+      </trans-unit>
+      <trans-unit id="mkgz5m1" resname="Reservation confirmed">
+        <source>Reservation confirmed</source>
+        <target>Reserva confirmada</target>
+      </trans-unit>
+      <trans-unit id="u5S.DOi" resname="See you soon">
+        <source>See you soon</source>
+        <target>Até breve</target>
+      </trans-unit>
+      <trans-unit id="60xOI5E" resname="Date of birth">
+        <source>Date of birth</source>
+        <target>Data de nascimento</target>
+      </trans-unit>
+      <trans-unit id="1dCjC1F" resname="Calendar">
+        <source>Calendar</source>
+        <target>Calendário</target>
+      </trans-unit>
+      <trans-unit id="tki9Bmv" resname="Your tour will be unlocked in">
+        <source>Your tour will be unlocked in</source>
+        <target>Seu tour será desbloqueado em</target>
+      </trans-unit>
+      <trans-unit id="sC6kCRE" resname="The date of the event cannot be earlier than the current date">
+        <source>The date of the event cannot be earlier than the current date</source>
+        <target>A data do evento não pode ser anterior à data atual</target>
+      </trans-unit>
+      <trans-unit id="9AWiqXA" resname="Ups! We do not have a visit this day for this tour">
+        <source>Ups! We do not have a visit this day for this tour</source>
+        <target>Ops! Não temos uma visita neste dia para este tour</target>
+      </trans-unit>
+      <trans-unit id="B7JPJqo" resname="The event is closed">
+        <source>The event is closed</source>
+        <target>O evento está encerrado</target>
+      </trans-unit>
+      <trans-unit id="Lg0Zugn" resname="Circuits in">
+        <source>Circuits in</source>
+        <target>Circuitos em</target>
+      </trans-unit>
+      <trans-unit id="zaFNCy2" resname="INFO">
+        <source>INFO</source>
+        <target>INFO</target>
+      </trans-unit>
+      <trans-unit id="1l.iedy" resname="Itinerary">
+        <source>Itinerary</source>
+        <target>Itinerário</target>
+      </trans-unit>
+      <trans-unit id="8aVRYHW" resname="per person">
+        <source>per person</source>
+        <target>por pessoa</target>
+      </trans-unit>
+      <trans-unit id=".9bySxi" resname="Día">
+        <source>Día</source>
+        <target>Dia</target>
+      </trans-unit>
+      <trans-unit id="s9XTyUz" resname="End point">
+        <source>End point</source>
+        <target>Ponto de chegada</target>
+      </trans-unit>
+      <trans-unit id="viXmmL8" resname="Choose your favourite destination">
+        <source>Choose your favourite destination</source>
+        <target>Escolha o seu destino favorito</target>
+      </trans-unit>
+      <trans-unit id="Ti2IVK." resname="CIRCUITS">
+        <source>CIRCUITS</source>
+        <target>CIRCUITOS</target>
+      </trans-unit>
+      <trans-unit id="SxJz1Ss" resname="FREETOUR">
+        <source>FREETOUR</source>
+        <target>FREE TOUR</target>
+      </trans-unit>
+      <trans-unit id="h6n74y." resname="AUDIOGUIDE">
+        <source>AUDIOGUIDE</source>
+        <target>AUDIOGUIA</target>
+      </trans-unit>
+      <trans-unit id="M7k0ds9" resname="Time">
+        <source>Time</source>
+        <target>Hora</target>
+      </trans-unit>
+      <trans-unit id="a5g6geX" resname="Restart">
+        <source>Restart</source>
+        <target>Reiniciar</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

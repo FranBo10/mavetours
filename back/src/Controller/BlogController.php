@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
 {
-    #[Route('/blog/{id}/{_locale}', name: 'blog', requirements: ['_locale' => 'en|es|fr'])]
+    #[Route('/blog/{id}/{_locale}', name: 'blog', requirements: ['_locale' => 'en|es|fr|pt'])]
     public function blog($id, TourRepository $tourRepository, BlogEtiquetaRepository $blogEtiquetaRepository, BlogCategoriaRepository $blogCategoriaRepository,  BuilderInterface $qrBuilder, Request $request): Response
     {
         if (!$request->attributes->get('_locale')) {

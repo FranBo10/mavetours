@@ -2,41 +2,24 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Tour;
-use App\Entity\User;
 use App\Entity\Evento;
-use App\Entity\Reserva;
 use App\Entity\Imagenes;
-use App\Entity\CartItems;
-use App\Form\UserFormType;
-use App\Form\EventoFormType;
 use App\Entity\DetallesEvento;
-use App\Entity\DetallesReserva;
 use App\Entity\ObservacionGuia;
 use App\Service\PictureService;
-use App\Repository\GuiaRepository;
 use App\Repository\TourRepository;
-use App\Repository\UserRepository;
 use App\Form\ImagenesFormType;
 use App\Repository\EventoRepository;
 use App\Form\ObservacionGuiaFormType;
-use App\Repository\ReservaRepository;
 use App\Service\ObservacionGuiaService;
-use App\Repository\CalendarioRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\BlogCategoriaRepository;
-use App\Repository\DetallesReservaRepository;
 use App\Repository\ObservacionGuiaRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminController extends AbstractController
@@ -57,13 +40,32 @@ class AdminController extends AbstractController
     $visitas = [];
 
     foreach ($events as $event) {
+        $locale = $request->getLocale();
         $tour = $event->getTour();
         $reservas = $event->getReservas();
         $observaciones = $event->getObservacionesGuia();
         $imagenes = $event->getImagenes();
-        $title = $event->isCerrado() ? '🔒' . $event->getTitulo() : $event->getTitulo();
-        $inicio = $event->getFechaEvento()->format('d/m/Y');
-        $fin = $event->getFechaEvento()->format('d/m/Y');
+        
+        // Localization logic
+        $tourTitle = $tour->getTitulo();
+        if ($locale === 'es' && $tour->getTituloEs()) {
+            $tourTitle = $tour->getTituloEs();
+        } elseif ($locale === 'fr' && $tour->getTituloFr()) {
+            $tourTitle = $tour->getTituloFr();
+        } elseif ($locale === 'pt' && $tour->getTituloPt()) {
+            $tourTitle = $tour->getTituloPt();
+        }
+
+        // Time format (e.g. 11H)
+        $timePrefix = $event->getInicio()->format('H\H');
+        
+        // Final Title: "11H - Title"
+        $displayTitle = $timePrefix . ' - ' . $tourTitle;
+        
+        // Lock if closed
+        $title = $event->isCerrado() ? '🔒' . $displayTitle : $displayTitle;
+        $inicio = $event->getInicio()->format('d/m/Y');
+        $fin = $event->getInicio()->format('d/m/Y');
         $color = $event->getGuiaColor() ?: 'black';
         $guia = $event->getUser();
         $cerrado = $event->isCerrado();
@@ -287,4 +289,24 @@ class AdminController extends AbstractController
 //     ]);
 // }
     
+    #[Route('/admin/api/cities', name: 'admin_api_cities', methods: ['GET'])]
+    public function getCities(Request $request, \App\Repository\CiudadRepository $ciudadRepository): JsonResponse
+    {
+        $country = $request->query->get('country');
+
+        if (!$country) {
+            return new JsonResponse([]);
+        }
+
+        $ciudades = $ciudadRepository->findByPais($country);
+
+        // Devolvemos {id: nombre} para que el JS pueda usar el ID como value del <option>
+        $result = [];
+        foreach ($ciudades as $ciudad) {
+            $result[(string) $ciudad->getId()] = $ciudad->getNombre();
+        }
+
+        return new JsonResponse($result);
+    }
+
 }

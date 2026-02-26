@@ -11,16 +11,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContactoController extends AbstractController
 {
-    #[Route('/contacto', name: 'contacto')]
-    public function index(Request $request, ContactoService $cs, TourRepository $repo, BlogCategoriaRepository $blogCategoriaRepository): Response
+    #[Route('/contacto/{_locale}', name: 'contacto', requirements: ['_locale' => 'en|es|fr|pt'], defaults: ['_locale' => 'es'])]
+    public function index(Request $request, ContactoService $cs, TourRepository $repo, BlogCategoriaRepository $blogCategoriaRepository, TranslatorInterface $translator): Response
     {
         $contacto = new Contacto;
 
         $tours = $repo->findAll(); 
         $categorias = $blogCategoriaRepository->findAll();
+        $locale = $request->getLocale();
 
         foreach($categorias as $categoria) {
             $categoriaId = $categoria->getId();
@@ -35,7 +37,11 @@ class ContactoController extends AbstractController
             $contacto = $form->getData();
             $cs->persistContacto($contacto);
 
-            return $this->redirectToRoute('contacto');
+            $mensaje = $translator->trans('Your message has been sent');
+
+            $this->addFlash('success', $mensaje);
+            return $this->redirectToRoute('contacto', 
+            ['_locale' => $locale]);
         }
 
 

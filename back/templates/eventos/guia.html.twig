@@ -1,24 +1,23 @@
 {% extends 'base.html.twig' %} {% block title %} Guia {% endblock %} {% block
 header %} {% include '_partials/_menu_guia.html.twig' %} {% endblock %} {% block
 body %}
-<style>
-  .modal-above-navbar {
-    z-index: 10000; /* Ajusta este valor según sea necesario */
-  }
-</style>
-<div class="calendario-container">
-  {% for message in app.flashes('success') %}
-  <div class="alert alert-success text-center w-50 mx-auto my-2">
-    <p>{{ message }}</p>
-  </div>
-  {% endfor %} {% for message in app.flashes('danger') %}
-  <div class="alert alert-danger text-center w-50 mx-auto my-2">
-    <p>{{ message }}</p>
-  </div>
-  {% endfor %}
-
+  <style>
+    .modal-above-navbar {
+      z-index: 10000; /* Ajusta este valor según sea necesario */
+    }
+  </style>
+  <div class="calendario-container">
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success text-center w-50 mx-auto my-2">
+      <p>{{ message }}</p>
+    </div>
+    {% endfor %} {% for message in app.flashes('danger') %}
+    <div class="alert alert-danger text-center w-50 mx-auto my-2">
+      <p>{{ message }}</p>
+    </div>
+    {% endfor %}
   <div
-    class="modal fade mt-5 modal-above-navbar"
+    class="modal fade mt-5"
     id="reservaModal"
     tabindex="-1"
     role="dialog"
@@ -94,7 +93,7 @@ body %}
               id="evento_img_id"
               value=""
             />
-            <button type="submit" class="btn-tertiary">
+            <button type="submit" class="btn-success">
               {{ button_label|default('Publicar foto') }}
             </button>
             {{ form_end(imagenesForm) }}
@@ -175,7 +174,7 @@ body %}
             <div class="modal-footer">
               <button
                 type="button"
-                class="btn-secondary"
+                class="btn-primary"
                 data-bs-dismiss="modal"
               >
                 Cerrar
@@ -205,11 +204,7 @@ body %}
 {% endblock %} {% block javascripts %}
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-  crossorigin="anonymous"
-></script>
+
 <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 <script
   src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"
@@ -244,7 +239,7 @@ body %}
                 
                 let events = eventData.filter(event => event.reservas && event.reservas.length > 0).map(event => ({
                   id: event.id,
-                  title: event.cerrado ? event.titulo + '🔒' : event.titulo,
+                  title: event.titulo,
                   start: moment(event.inicio, "DD/MM/YYYY").format('YYYY-MM-DD'),
                   end: moment(event.fin, "DD/MM/YYYY").format('YYYY-MM-DD'),
                   color: event.color,

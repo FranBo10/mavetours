@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User;
 use App\Entity\Evento;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,21 +9,17 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use App\Controller\Admin\Filter\DateCalendarFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ColorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class EventoCrudController extends AbstractCrudController
 {
@@ -49,13 +44,13 @@ class EventoCrudController extends AbstractCrudController
         return $crud
         ->setEntityLabelInPlural('Eventos')
         ->setEntityLabelInSingular('Evento')
-        ->setDefaultSort(['fecha_evento' => 'DESC']);
+        ->setDefaultSort(['inicio' => 'DESC']);
     }
 
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add(DateTimeFilter::new('fecha_evento', 'Filtrar por Fecha del Evento'));
+            ->add(DateTimeFilter::new('inicio', 'Filtrar por Fecha del Evento'));
     }
 
 
@@ -86,7 +81,6 @@ class EventoCrudController extends AbstractCrudController
             CollectionField::new('imagenes', 'Imagenes')
                 ->setEntryType(FileType::class)
                 ->setFormTypeOptions([
-                    'multiple' => true,
                     'mapped' => false,
                 ]),
             //     ImageField::new('imagenes', 'Imagen')
@@ -112,7 +106,7 @@ class EventoCrudController extends AbstractCrudController
         $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         
         if (0 === count($searchDto->getSort())) {
-            $queryBuilder->addOrderBy('entity.fecha_evento', 'DESC');
+            $queryBuilder->addOrderBy('entity.inicio', 'DESC');
         }
 
         return $queryBuilder;

@@ -22,13 +22,30 @@ class EventoService
         // Lógica para crear o actualizar el evento según el tour y la fecha de la reserva
         $tours = $reserva->getTours();
         $detallesReserva = $reserva->getDetallesReserva();
-        $fechaReserva = $detallesReserva->getFechaEvento()->format('Y-m-d');
+        
+        $fechaReservaDate = $detallesReserva->getFechaEvento(); // DateTime sin hora (00:00)
+        $horaEvento = $detallesReserva->getHoraEvento(); // DateTime (hora)
+
+        // Construir el DateTime de inicio combinando fecha y hora
+        $inicioDateTime = clone $fechaReservaDate;
+        if ($horaEvento) {
+            $inicioDateTime->setTime(
+                (int)$horaEvento->format('H'),
+                (int)$horaEvento->format('i'),
+                0
+            );
+        } else {
+            // Si no hay hora, se queda a las 00:00 (o lógica por defecto)
+            $inicioDateTime->setTime(0, 0, 0);
+        }
+
+        // Calcular Fin (por defecto +2h si no hay lógica compleja de duración)
+        $finDateTime = clone $inicioDateTime;
+        $finDateTime->modify('+2 hours');
 
         $tour = $tours->first();
         $titulo = $tour->getTitulo();
 
-        $inicio = $fechaReserva;
-        $fin = $fechaReserva;
         $cantidadAdultos = $detallesReserva->getCantidadAdultos();
         $cantidadKids = $detallesReserva->getCantidadKids();
         $color = "#18bb9c";
@@ -39,22 +56,21 @@ class EventoService
             $cantidadAsistentes = 0;
         }
 
-        // Consulta si ya existe un evento para este tour y fecha
+        // Consulta si ya existe un evento para este tour e INICIO exacto
         $evento = $this->em
             ->getRepository(Evento::class)
-            ->findOneBy(['tour' => $tour, 'fecha_evento' => new DateTime($fechaReserva)]);
+            ->findOneBy(['tour' => $tour, 'inicio' => $inicioDateTime]);
 
         if (!$evento) {
             // Si no existe, crea un nuevo evento
             $evento = new Evento();
             $evento->setTour($tour)
-                ->setFechaEvento(new DateTime($fechaReserva));
+                ->setFechaEvento($fechaReservaDate); // Mantiene la fecha base (Y-m-d 00:00)
 
             $evento->setTitulo($titulo)
-                ->setInicio(new DateTime($inicio))
-                ->setFin(new DateTime($fin))
-                ->setFechaEvento(new DateTime($fechaReserva))
-                ->setCantidad($cantidadAsistentes) // Establece la cantidad de la primera reserva como cantidad inicial
+                ->setInicio($inicioDateTime)
+                ->setFin($finDateTime)
+                ->setCantidad($cantidadAsistentes) 
                 ->setColor($color)
                 ->setCerrado(false)
                 ->addReserva($reserva);
@@ -68,9 +84,9 @@ class EventoService
 
             // Actualiza las propiedades del evento según la reserva
             $evento->setTitulo($titulo)
-                ->setInicio(new DateTime($inicio))
-                ->setFin(new DateTime($fin))
-                ->setFechaEvento(new DateTime($fechaReserva))
+                ->setInicio($inicioDateTime)
+                ->setFin($finDateTime)
+                // ->setFechaEvento($fechaReservaDate) // Ya debería estar correcto
                 ->setColor($color)
                 ->setCerrado(false)
                 ->addReserva($reserva);

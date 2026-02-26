@@ -46,6 +46,10 @@ class Blog
     #[ORM\ManyToMany(targetEntity: BlogEtiqueta::class, inversedBy: 'blogs')]
     private Collection $blogEtiquetas;
 
+    #[ORM\ManyToOne(inversedBy: 'blogs')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Ciudad $ciudad = null;
+
     public function __construct()
     {
         $this->blogEtiquetas = new ArrayCollection();
@@ -184,6 +188,17 @@ class Blog
     {
         $this->blogEtiquetas->removeElement($blogEtiqueta);
 
+        return $this;
+    }
+
+    public function getCiudad(): ?Ciudad
+    {
+        return $this->ciudad;
+    }
+
+    public function setCiudad(?Ciudad $ciudad): self
+    {
+        $this->ciudad = $ciudad;
         return $this;
     }
 }

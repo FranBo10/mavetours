@@ -116,6 +116,16 @@
         "/build/chat.js"
       ]
     },
+    "admin_tour": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_classof_js-node_modules_core-js_internals_export_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-from_js-node_modules_core-js_internals_check-cor-06316a.js",
+        "/build/vendors-node_modules_core-js_modules_es_promise_js.js",
+        "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_dom--661e7d.js",
+        "/build/admin_tour.js"
+      ]
+    },
     "templates": {
       "js": [
         "/build/runtime.js",

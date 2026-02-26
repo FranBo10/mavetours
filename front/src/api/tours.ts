@@ -1,6 +1,15 @@
 // src/api/tours.ts
 import { api } from "./client";
 import { API_BASE_URL } from "../config/env";
+// Import Destino if needed, but to avoid circular deps we might just use 'any' or a partial type if Destino imports Tour
+// import { Destino } from "./destinos"; 
+
+export type Etapa = {
+  id: number;
+  titulo: string;
+  descripcion: string;
+  orden: number;
+};
 
 export type Tour = {
   id: number;
@@ -11,6 +20,9 @@ export type Tour = {
   precio: number; // céntimos
   isEstado: boolean;
   descripcionCorta?: string | null;
+  subtitulo?: string | null;
+  subtituloEs?: string | null;
+  subtituloFr?: string | null;
   descripcionLarga?: string | null;
   duracion?: string | null;
   comienzo?: string | null;
@@ -25,6 +37,8 @@ export type Tour = {
   descripcionLargaFr?: string | null;
   descripcionCortaEs?: string | null;
   descripcionCortaFr?: string | null;
+  destino?: any | null; // Typed as any to avoid circular dependency for now
+  etapas?: Etapa[];
 };
 
 export type TourApi = {
@@ -37,6 +51,9 @@ export type TourApi = {
   imagen: string;
   precio: number; // euros (double) en tu API
   estado: boolean | number;
+  subtitulo?: string | null;
+  subtitulo_es?: string | null;
+  subtitulo_fr?: string | null;
   descripcion_corta?: string | null;
   descripcion_larga?: string | null;
   duracion?: string | null;
@@ -52,6 +69,8 @@ export type TourApi = {
   descripcion_larga_fr?: string | null;
   descripcion_corta_es?: string | null;
   descripcion_corta_fr?: string | null;
+  destino?: any; // API response structure
+  etapas?: any[];
 };
 
 // Hydra (API Platform)
@@ -77,7 +96,7 @@ function eurosToCents(value: number) {
   return Math.round((value ?? 0) * 100);
 }
 
-function mapTour(t: TourApi): Tour {
+export function mapTour(t: TourApi): Tour {
   return {
     id: t.id,
     titulo: t.titulo,
@@ -101,17 +120,27 @@ function mapTour(t: TourApi): Tour {
     descripcionLargaEs: t.descripcion_larga_es ?? null,
     descripcionLargaFr: t.descripcion_larga_fr ?? null,
     descripcionCortaEs: t.descripcion_corta_es ?? null,
-    descripcionCortaFr: t.descripcion_corta_fr ?? null
+    descripcionCortaFr: t.descripcion_corta_fr ?? null,
+    subtitulo: t.subtitulo ?? null,
+    subtituloEs: t.subtitulo_es ?? null,
+    subtituloFr: t.subtitulo_fr ?? null,
+    // @ts-ignore
+    etapas: Array.isArray(t.etapas) ? t.etapas.map((e: any) => ({
+      id: e.id,
+      titulo: e.titulo,
+      descripcion: e.descripcion,
+      orden: e.orden
+    })) : []
   };
 }
 
-function extractList(payload: unknown): TourApi[] {
+export function extractList(payload: unknown): any[] {
   // 1) Array directo
-  if (Array.isArray(payload)) return payload as TourApi[];
+  if (Array.isArray(payload)) return payload as any[];
 
   // 2) Objeto (Hydra / envelope)
   if (payload && typeof payload === "object") {
-    const obj = payload as HydraCollection<TourApi> & CollectionEnvelope<TourApi>;
+    const obj = payload as HydraCollection<any> & CollectionEnvelope<any>;
 
     if (Array.isArray(obj["hydra:member"])) return obj["hydra:member"];
     if (Array.isArray(obj.member)) return obj.member;
@@ -170,10 +199,26 @@ export function getTourShortDescription(tour: Tour, locale: string): string | nu
   return tour.descripcionCorta || null;
 }
 
+// Helper to get localized subtitle
+export function getTourSubtitle(tour: Tour, locale: string): string | null {
+  // 1. Specific matches
+  if (locale.startsWith('es') && tour.subtituloEs) return tour.subtituloEs;
+  if (locale.startsWith('fr') && tour.subtituloFr) return tour.subtituloFr;
+
+  // 2. English (Base)
+  if (locale.startsWith('en') && tour.subtitulo) return tour.subtitulo;
+
+  // 3. Fallback to Spanish (Default preferred)
+  if (tour.subtituloEs) return tour.subtituloEs;
+
+  // 4. Last resort (Base)
+  return tour.subtitulo || null;
+}
+
 export async function fetchTours(): Promise<Tour[]> {
   const res = await api.get<unknown>("/api/tours");
   const list = extractList(res.data);
-  return list.map(mapTour);
+  return list.map((item: any) => mapTour(item));
 }
 
 export async function fetchTourById(id: number): Promise<Tour> {

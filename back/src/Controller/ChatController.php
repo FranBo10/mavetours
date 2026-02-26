@@ -12,7 +12,7 @@ use App\Repository\TourRepository;
 #[IsGranted('ROLE_USER')]
 class ChatController extends AbstractController
 {
-    #[Route('/chat', name: 'chat')]
+    #[Route('/chat/{_locale}', name: 'chat', requirements: ['_locale' => 'en|es|fr|pt'], defaults: ['_locale' => 'es'])]
     public function index(BlogCategoriaRepository $blogCategoriaRepository, TourRepository $tourRepository): Response
     {
         $categoria = $blogCategoriaRepository->findOneBy([]);

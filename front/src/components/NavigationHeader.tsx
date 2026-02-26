@@ -14,6 +14,7 @@ import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/env";
 import { useLanguage } from "../context/LanguageContext";
 import i18n from "../i18n";
+import { Destino, fetchDestinos } from "../api/tipos";
 
 type Locale = "es" | "en" | "fr";
 
@@ -41,6 +42,14 @@ export default function NavigationHeader() {
 
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [destinosOpen, setDestinosOpen] = useState(false);
+  const [destinos, setDestinos] = useState<Destino[]>([]);
+
+  useEffect(() => {
+    fetchDestinos()
+      .then(setDestinos)
+      .catch((err) => console.error("Failed to load continents", err));
+  }, []);
 
   // Animación: menú entra desde la izquierda (tipo panel)
   const anim = useRef(new Animated.Value(0)).current; // 0 cerrado, 1 abierto
@@ -52,7 +61,10 @@ export default function NavigationHeader() {
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start(() => {
-      if (!open) setLangOpen(false);
+      if (!open) {
+        setLangOpen(false);
+        setDestinosOpen(false);
+      }
     });
   }, [open, anim]);
 
@@ -73,6 +85,7 @@ export default function NavigationHeader() {
   const setLang = async (_lang: Locale) => {
     await setLocale(_lang);
     setLangOpen(false);
+    setDestinosOpen(false);
     closeMenu();
     router.replace("/");
   };
@@ -91,6 +104,7 @@ export default function NavigationHeader() {
       <View style={styles.navBar}>
         <View style={styles.logo}>
           <Text style={styles.logoText}>
+
             Mave <Text style={styles.logoNombre}>Tours</Text>
           </Text>
         </View>
@@ -160,7 +174,35 @@ export default function NavigationHeader() {
             </>
           ) : null}
 
+
           <MenuRow title={i18n.t("home")} icon="🏠" onPress={() => go("/")} />
+
+          {/* Destinations Dropdown */}
+          <Pressable
+            style={({ pressed }) => [styles.item, pressed && { opacity: 0.9 }]}
+            onPress={() => setDestinosOpen((v) => !v)}
+          >
+            <View style={styles.row}>
+              <Text style={styles.icon}>🌍</Text>
+              <Text style={styles.title}>{i18n.t("destinations") || "Destinos"}</Text>
+            </View>
+            <Text style={styles.chevron}>{destinosOpen ? "▲" : "▼"}</Text>
+          </Pressable>
+
+          {destinosOpen && (
+            <View style={styles.languageDropdown}>
+              <MenuRow title="Todos" icon="🌐" onPress={() => go("/destinos")} />
+              {destinos.map(c => (
+                <MenuRow
+                  key={c.id}
+                  title={c.nombre}
+                  icon="📍"
+                  onPress={() => go(`/destinos/${c.slug}`)}
+                />
+              ))}
+            </View>
+          )}
+
 
           {isAuthenticated && isAdminOrGuia ? (
             <>

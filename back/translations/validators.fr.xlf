@@ -777,6 +777,10 @@
         <source>Please enter your date of birth</source>
         <target>__Please enter your date of birth</target>
       </trans-unit>
+      <trans-unit id="4KJXv9U" resname="Este slug ya existe.">
+        <source>Este slug ya existe.</source>
+        <target>__Este slug ya existe.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

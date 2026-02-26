@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
+use App\Repository\HorarioRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\HorarioRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: HorarioRepository::class)]
 class Horario
@@ -16,13 +16,15 @@ class Horario
     #[ORM\Column]
     private ?int $id = null;
 
+    // ✅ Horario es el OWNING SIDE de la relación con Tour
     #[ORM\ManyToMany(targetEntity: Tour::class, inversedBy: 'horarios')]
+    #[ORM\JoinTable(name: 'horario_tour')]
     private Collection $tours;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => false])]
     private ?bool $activo = false;
 
-    #[ORM\OneToMany(mappedBy: 'horario', targetEntity: Rango::class)]
+    #[ORM\OneToMany(mappedBy: 'horario', targetEntity: Rango::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $rangos;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
@@ -39,6 +41,10 @@ class Horario
         return $this->id;
     }
 
+    /* ========================= */
+    /*           TOURS           */
+    /* ========================= */
+
     /**
      * @return Collection<int, Tour>
      */
@@ -47,31 +53,40 @@ class Horario
         return $this->tours;
     }
 
-    public function addTour(Tour $tour): static
+    public function addTour(Tour $tour): self
     {
         if (!$this->tours->contains($tour)) {
             $this->tours->add($tour);
+            // Important: mantener consistencia bidireccional
+            $tour->addHorario($this);
         }
 
         return $this;
     }
 
-    public function removeTour(Tour $tour): static
+    public function removeTour(Tour $tour): self
     {
-        $this->tours->removeElement($tour);
+        if ($this->tours->removeElement($tour)) {
+            $tour->removeHorario($this);
+        }
 
         return $this;
     }
+
+
+
+    /* ========================= */
+    /*        OTROS CAMPOS       */
+    /* ========================= */
 
     public function isActivo(): ?bool
     {
         return $this->activo;
     }
 
-    public function setActivo(bool $activo): static
+    public function setActivo(bool $activo): self
     {
         $this->activo = $activo;
-
         return $this;
     }
 
@@ -83,7 +98,7 @@ class Horario
         return $this->rangos;
     }
 
-    public function addRango(Rango $rango): static
+    public function addRango(Rango $rango): self
     {
         if (!$this->rangos->contains($rango)) {
             $this->rangos->add($rango);
@@ -93,10 +108,9 @@ class Horario
         return $this;
     }
 
-    public function removeRango(Rango $rango): static
+    public function removeRango(Rango $rango): self
     {
         if ($this->rangos->removeElement($rango)) {
-            // set the owning side to null (unless already changed)
             if ($rango->getHorario() === $this) {
                 $rango->setHorario(null);
             }
@@ -110,10 +124,9 @@ class Horario
         return $this->fecha_tour;
     }
 
-    public function setFechaTour(?\DateTimeInterface $fecha_tour): static
+    public function setFechaTour(?\DateTimeInterface $fecha_tour): self
     {
         $this->fecha_tour = $fecha_tour;
-
         return $this;
     }
 }

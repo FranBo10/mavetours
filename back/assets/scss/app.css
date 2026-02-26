@@ -599,7 +599,7 @@ nav ul li:hover .not-user {
   visibility: visible;
   opacity: 1;
   top: 70px;
-  width: 400px;
+  width: 470px;
   transition: all 400ms ease;
   border-radius: 10px;
 }
@@ -1362,10 +1362,10 @@ nav ul li ul li a:hover {
   text-align: center;
 }
 
-.animation {
+/* .animation {
   opacity: 0;
   animation: fade-in 1s forwards;
-}
+} */
 
 @keyframes fade-in {
   from {

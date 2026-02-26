@@ -1,0 +1,645 @@
+{% extends 'base.html.twig' %} {% block title %}Calendario{% endblock %} {% block
+body %}
+<div id="calendario-container">
+<div class="cal" id="calendarApp"
+     data-initial-date="{{ initialDate|default('2026-02-01') }}"
+     data-initial-view="{{ initialView|default('month') }}"
+     data-events='{{ (events|default([]))|json_encode(constant("JSON_HEX_TAG")
+        b-or constant("JSON_HEX_AMP")
+        b-or constant("JSON_HEX_APOS")
+        b-or constant("JSON_HEX_QUOT"))|raw }}'
+     data-programs='{{ (programs|default([]))|json_encode(constant("JSON_HEX_TAG")
+        b-or constant("JSON_HEX_AMP")
+        b-or constant("JSON_HEX_APOS")
+        b-or constant("JSON_HEX_QUOT"))|raw }}'
+>
+
+  {# TOP BAR #}
+  <div class="cal__top">
+    <div class="cal__left">
+      <h1 class="cal__title" id="calTitle">Febrero 2026</h1>
+
+      <div class="cal__selectWrap">
+        <select id="programSelect" class="cal__select">
+          <option value="all">Todos los programas</option>
+          {# Opcional: si el controller pasa programs, los pintamos aquí.
+             Si no, el JS los rellenará igualmente. #}
+          {% for p in programs|default([]) %}
+            <option value="{{ p }}">{{ p }}</option>
+          {% endfor %}
+        </select>
+        <span class="cal__chev">▾</span>
+      </div>
+    </div>
+
+    <div class="cal__right">
+      <button class="cal__iconBtn" id="prevBtn" type="button">‹</button>
+      <button class="cal__iconBtn" id="nextBtn" type="button">›</button>
+
+      <button class="cal__btn" id="todayBtn" type="button">Hoy</button>
+
+      <div class="cal__segmented" role="tablist" aria-label="Vista calendario">
+        <button class="cal__segBtn" id="weekBtn" type="button" role="tab">Semanal</button>
+        <button class="cal__segBtn" id="monthBtn" type="button" role="tab">Mensual</button>
+      </div>
+    </div>
+  </div>
+
+  {# GRID WRAP #}
+  <div class="cal__gridWrap">
+    <div class="cal__dowRow">
+      <div class="cal__dow">LUN</div>
+      <div class="cal__dow">MAR</div>
+      <div class="cal__dow">MIÉ</div>
+      <div class="cal__dow">JUE</div>
+      <div class="cal__dow">VIE</div>
+      <div class="cal__dow">SÁB</div>
+      <div class="cal__dow">DOM</div>
+    </div>
+
+    <div class="cal__grid" id="calGrid">
+      {# El JS rellena las celdas #}
+    </div>
+  </div>
+
+  {# MODAL "+n más" #}
+  <div class="cal__modalOverlay" id="moreOverlay" aria-hidden="true">
+    <div class="cal__modal" role="dialog" aria-modal="true" aria-labelledby="moreTitle">
+      <div class="cal__modalHeader">
+        <div class="cal__modalTitle" id="moreTitle"></div>
+        <button class="cal__iconBtn" id="closeMoreBtn" type="button">✕</button>
+      </div>
+      <div class="cal__modalBody" id="moreBody"></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<style>
+/* Estilo oscuro similar a la captura */
+.cal {
+  background: #0f2633;
+  color: #e8f2f6;
+  min-height: 100vh;
+  padding: 18px 18px 28px;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.cal__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.cal__left { display: flex; align-items: center; gap: 14px; }
+.cal__title {
+  font-size: 36px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: .3px;
+}
+
+.cal__selectWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.cal__select {
+  appearance: none;
+  background: #132f3f;
+  color: #e8f2f6;
+  border: 1px solid rgba(255,255,255,.12);
+  padding: 10px 36px 10px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.cal__chev {
+  position: absolute;
+  right: 12px;
+  pointer-events: none;
+  opacity: .8;
+}
+
+.cal__right { display: flex; align-items: center; gap: 10px; }
+
+.cal__iconBtn {
+  background: transparent;
+  color: #e8f2f6;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.cal__iconBtn:hover { background: rgba(255,255,255,.06); }
+
+.cal__btn {
+  background: #132f3f;
+  color: #e8f2f6;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cal__btn:hover { background: rgba(255,255,255,.06); }
+
+.cal__segmented {
+  display: inline-flex;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.cal__segBtn {
+  background: transparent;
+  color: #e8f2f6;
+  padding: 9px 14px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 800;
+}
+.cal__segBtn.is-active {
+  background: rgba(255,255,255,.10);
+}
+
+.cal__gridWrap {
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cal__dowRow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: rgba(0,0,0,.12);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.cal__dow {
+  text-align: center;
+  font-weight: 800;
+  padding: 14px 8px;
+  letter-spacing: .6px;
+  font-size: 12px;
+}
+
+.cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.cal__cell {
+  min-height: 128px;
+  padding: 10px 10px 8px;
+  border-right: 1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  position: relative;
+}
+.cal__cell:nth-child(7n) { border-right: 0; }
+
+.cal__cell.is-out { opacity: .45; }
+
+.cal__dayNum {
+  font-weight: 800;
+  font-size: 12px;
+  opacity: .95;
+  display: inline-flex;
+}
+
+.cal__cell.is-today .cal__dayNum {
+  background: #ffffff;
+  color: #0f2633;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+.cal__events {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cal__event {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal__eventBar {
+  width: 3px;
+  height: 14px;
+  border-radius: 999px;
+  background: #25d0da;
+  flex: 0 0 auto;
+}
+.cal__eventTime {
+  color: #79e6ef;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+.cal__eventTitle {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cal__more {
+  margin-top: 2px;
+  width: fit-content;
+  background: transparent;
+  border: 0;
+  color: #79e6ef;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+}
+.cal__more:hover { text-decoration: underline; }
+
+/* Week mode: una fila más alta */
+.cal__grid.is-week .cal__cell { min-height: 280px; }
+
+/* Modal */
+.cal__modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 50;
+}
+.cal__modalOverlay.is-open { display: flex; }
+
+.cal__modal {
+  width: min(720px, 100%);
+  background: #0f2633;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.cal__modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.cal__modalTitle { font-weight: 900; }
+
+.cal__modalBody {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cal__modalEvent {
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.cal__modalEventTime {
+  color: #79e6ef;
+  font-weight: 900;
+  font-size: 13px;
+}
+.cal__modalEventTitle {
+  font-weight: 800;
+  margin-top: 2px;
+}
+.cal__pill {
+  display: inline-flex;
+  margin-top: 8px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  opacity: .9;
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+{# Si quieres con Encore:  {{ encore_entry_script_tags('calendario') }} #}
+<script>
+(function () {
+  const app = document.getElementById('calendarApp');
+  if (!app) return;
+
+  // ---------- Helpers ----------
+  const parseJSONSafe = (raw) => {
+    try { return JSON.parse(raw || "[]"); } catch (e) { return []; }
+  };
+
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const dateKey = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+
+  const isSameDay = (a, b) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+
+  const startOfMonth = (d) => new Date(d.getFullYear(), d.getMonth(), 1);
+  const startOfWeekMonday = (d) => {
+    const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const jsDay = x.getDay(); // 0 dom ... 1 lun
+    const mondayIndex = (jsDay + 6) % 7; // lun=0 ... dom=6
+    x.setDate(x.getDate() - mondayIndex);
+    x.setHours(0,0,0,0);
+    return x;
+  };
+
+  const formatMonthTitle = (d) => {
+    const s = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(d);
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
+
+  const formatTime = (iso) => {
+    const d = new Date(iso);
+    return new Intl.DateTimeFormat('es-ES', { hour: 'numeric', minute: '2-digit' }).format(d);
+  };
+
+  const formatLongDate = (d) => {
+    return new Intl.DateTimeFormat("es-ES", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric",
+    }).format(d);
+  };
+
+  // ---------- Data from Twig ----------
+  const initialDateStr = app.dataset.initialDate || '2026-02-01';
+  const initialView = app.dataset.initialView || 'month';
+
+  let events = parseJSONSafe(app.dataset.events);
+  let programs = parseJSONSafe(app.dataset.programs);
+
+  // Normaliza eventos esperados:
+  // {id, title, start, program?}
+  events = (events || []).map(e => ({
+    id: e.id ?? cryptoRandomId(),
+    title: e.title ?? e.name ?? 'Evento',
+    start: e.start ?? e.date ?? e.beginAt ?? null,
+    program: e.program ?? e.category ?? null
+  })).filter(e => !!e.start);
+
+  if (!programs.length) {
+    const set = new Set(events.map(e => e.program).filter(Boolean));
+    programs = Array.from(set).sort();
+  }
+
+  // ---------- Elements ----------
+  const titleEl = document.getElementById('calTitle');
+  const gridEl = document.getElementById('calGrid');
+  const programSelect = document.getElementById('programSelect');
+
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const todayBtn = document.getElementById('todayBtn');
+
+  const weekBtn = document.getElementById('weekBtn');
+  const monthBtn = document.getElementById('monthBtn');
+
+  const moreOverlay = document.getElementById('moreOverlay');
+  const moreTitle = document.getElementById('moreTitle');
+  const moreBody = document.getElementById('moreBody');
+  const closeMoreBtn = document.getElementById('closeMoreBtn');
+
+  // ---------- State ----------
+  const today = new Date();
+  let viewMode = (initialView === 'week' ? 'week' : 'month');
+  let cursor = new Date(initialDateStr + 'T00:00:00'); // evita parse raro
+  cursor = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+
+  let selectedProgram = programSelect.value || 'all';
+  const MAX_VISIBLE = 3;
+
+  // Si el select no venía relleno desde Twig, lo rellenamos
+  ensureProgramOptions(programs);
+
+  // ---------- Events ----------
+  programSelect.addEventListener('change', () => {
+    selectedProgram = programSelect.value;
+    render();
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (viewMode === 'week') {
+      const d = new Date(cursor);
+      d.setDate(d.getDate() - 7);
+      cursor = d;
+    } else {
+      cursor = new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1);
+    }
+    render();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (viewMode === 'week') {
+      const d = new Date(cursor);
+      d.setDate(d.getDate() + 7);
+      cursor = d;
+    } else {
+      cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1);
+    }
+    render();
+  });
+
+  todayBtn.addEventListener('click', () => {
+    cursor = new Date(today.getFullYear(), today.getMonth(), 1);
+    render();
+  });
+
+  weekBtn.addEventListener('click', () => {
+    viewMode = 'week';
+    render();
+  });
+
+  monthBtn.addEventListener('click', () => {
+    viewMode = 'month';
+    render();
+  });
+
+  closeMoreBtn.addEventListener('click', closeMore);
+  moreOverlay.addEventListener('click', (e) => {
+    if (e.target === moreOverlay) closeMore();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMore();
+  });
+
+  // ---------- Render ----------
+  function render() {
+    titleEl.textContent = formatMonthTitle(cursor);
+
+    weekBtn.classList.toggle('is-active', viewMode === 'week');
+    monthBtn.classList.toggle('is-active', viewMode === 'month');
+
+    gridEl.classList.toggle('is-week', viewMode === 'week');
+
+    const days = buildVisibleDays();
+    gridEl.innerHTML = '';
+
+    days.forEach(day => {
+      const cell = document.createElement('div');
+      cell.className = 'cal__cell';
+      if (!day.inMonth && viewMode === 'month') cell.classList.add('is-out');
+      if (isSameDay(day.date, today)) cell.classList.add('is-today');
+
+      const dayNum = document.createElement('div');
+      dayNum.className = 'cal__dayNum';
+      dayNum.textContent = String(day.date.getDate());
+      cell.appendChild(dayNum);
+
+      const eventsWrap = document.createElement('div');
+      eventsWrap.className = 'cal__events';
+
+      const evs = day.events;
+      evs.slice(0, MAX_VISIBLE).forEach(ev => {
+        const row = document.createElement('div');
+        row.className = 'cal__event';
+
+        const bar = document.createElement('span');
+        bar.className = 'cal__eventBar';
+
+        const time = document.createElement('span');
+        time.className = 'cal__eventTime';
+        time.textContent = formatTime(ev.start);
+
+        const title = document.createElement('span');
+        title.className = 'cal__eventTitle';
+        title.textContent = ev.title;
+
+        row.appendChild(bar);
+        row.appendChild(time);
+        row.appendChild(title);
+
+        eventsWrap.appendChild(row);
+      });
+
+      if (evs.length > MAX_VISIBLE) {
+        const moreBtn = document.createElement('button');
+        moreBtn.type = 'button';
+        moreBtn.className = 'cal__more';
+        moreBtn.textContent = `+${evs.length - MAX_VISIBLE} más`;
+        moreBtn.addEventListener('click', () => openMore(day.date, evs));
+        eventsWrap.appendChild(moreBtn);
+      }
+
+      cell.appendChild(eventsWrap);
+      gridEl.appendChild(cell);
+    });
+  }
+
+  function buildVisibleDays() {
+    const filtered = getFilteredEvents();
+
+    if (viewMode === 'week') {
+      const start = startOfWeekMonday(cursor);
+      const days = [];
+      for (let i=0; i<7; i++) {
+        const d = new Date(start);
+        d.setDate(start.getDate() + i);
+        days.push(buildDay(d, cursor, filtered));
+      }
+      return days;
+    }
+
+    // month: 6 filas => 42 días
+    const first = startOfMonth(cursor);
+    const startGrid = startOfWeekMonday(first);
+    const days = [];
+    for (let i=0; i<42; i++) {
+      const d = new Date(startGrid);
+      d.setDate(startGrid.getDate() + i);
+      days.push(buildDay(d, cursor, filtered));
+    }
+    return days;
+  }
+
+  function buildDay(date, cursorDate, filteredEvents) {
+    const inMonth = date.getMonth() === cursorDate.getMonth();
+    const evs = filteredEvents
+      .filter(ev => isSameDay(new Date(ev.start), date))
+      .sort((a,b) => new Date(a.start) - new Date(b.start));
+
+    return { date, inMonth, events: evs };
+  }
+
+  function getFilteredEvents() {
+    if (selectedProgram === 'all') return events;
+    return events.filter(e => e.program === selectedProgram);
+  }
+
+  // ---------- Modal ----------
+  function openMore(date, evs) {
+    moreTitle.textContent = formatLongDate(date);
+    moreBody.innerHTML = '';
+
+    evs.forEach(ev => {
+      const box = document.createElement('div');
+      box.className = 'cal__modalEvent';
+
+      const t = document.createElement('div');
+      t.className = 'cal__modalEventTime';
+      t.textContent = formatTime(ev.start);
+
+      const title = document.createElement('div');
+      title.className = 'cal__modalEventTitle';
+      title.textContent = ev.title;
+
+      box.appendChild(t);
+      box.appendChild(title);
+
+      if (ev.program) {
+        const pill = document.createElement('div');
+        pill.className = 'cal__pill';
+        pill.textContent = ev.program;
+        box.appendChild(pill);
+      }
+
+      moreBody.appendChild(box);
+    });
+
+    moreOverlay.classList.add('is-open');
+    moreOverlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeMore() {
+    moreOverlay.classList.remove('is-open');
+    moreOverlay.setAttribute('aria-hidden', 'true');
+  }
+
+  // ---------- Utils ----------
+  function ensureProgramOptions(list) {
+    // si ya vienen (Twig), no duplicamos
+    const existingValues = new Set([...programSelect.options].map(o => o.value));
+    list.forEach(p => {
+      if (!existingValues.has(p)) {
+        const opt = document.createElement('option');
+        opt.value = p;
+        opt.textContent = p;
+        programSelect.appendChild(opt);
+      }
+    });
+  }
+
+  function cryptoRandomId() {
+    return 'ev_' + Math.random().toString(16).slice(2) + Date.now().toString(16);
+  }
+
+  // First render
+  render();
+})();
+</script>
+
+{% endblock %}

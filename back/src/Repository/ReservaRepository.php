@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Tour;
+use App\Entity\User;
 use App\Entity\Reserva;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,29 +41,24 @@ class ReservaRepository extends ServiceEntityRepository
         }
     }
 
-
-    //    /**
-    //     * @return Reserva[] Returns an array of Reserva objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Reserva
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Checks if a user already has a reservation for the same tour, date and time.
+     */
+    public function findDuplicateReservation(User $user, Tour $tour, \DateTimeInterface $fechaEvento, \DateTimeInterface $horaEvento): ?Reserva
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.tours', 't')
+            ->innerJoin('r.detallesReserva', 'dr')
+            ->where('r.user = :user')
+            ->andWhere('t = :tour')
+            ->andWhere('dr.fecha_evento = :fecha')
+            ->andWhere('dr.hora_evento = :hora')
+            ->setParameter('user', $user)
+            ->setParameter('tour', $tour)
+            ->setParameter('fecha', $fechaEvento)
+            ->setParameter('hora', $horaEvento)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

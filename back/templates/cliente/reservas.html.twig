@@ -39,6 +39,10 @@ endblock %} {% block body %}
             {{ reserva.detallesReserva.fechaEvento|date("d/m/Y") }}
           </li>
           <li>
+            {{ "Time" | trans }}:
+            {{ reserva.detallesReserva.horaEvento|date("H:i") }}H
+          </li>
+          <li>
             {{ "Adults" | trans }}:
             {{ reserva.detallesReserva.cantidadAdultos }}
           </li>

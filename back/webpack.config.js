@@ -27,13 +27,14 @@ Encore
     .addEntry('menu2', './assets/js/menu2.js')
     .addEntry('avatars', './assets/js/avatars.js')
     .addEntry('cookies', './assets/js/cookies.js')
-    .addEntry('qrCode', './assets/js/qrCode.js')  
+    .addEntry('qrCode', './assets/js/qrCode.js')
     .addEntry('paradas', './assets/js/paradas.js')
     .addEntry('valoraciones', './assets/js/valoraciones.js')
     .addEntry('pagination', './assets/js/pagination.js')
     .addEntry('cuenta', './assets/js/cuenta.js')
     .addEntry('calendario', './assets/js/calendario.js')
     .addEntry('chat', './assets/js/chat.js')
+    .addEntry('admin_tour', './assets/js/admin_tour.js')
     .addEntry('templates', ['./assets/js/tour.js', './assets/js/menu.js'])
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
@@ -91,16 +92,16 @@ Encore
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
     // .enableScriptAttributes({ defer: true })  
-    ;  
+    ;
 
-    // 🔧 Añadir alias requerido por stimulus-bridge
-    Encore.addAliases({
-        '@symfony/stimulus-bridge/controllers.json': path.resolve(__dirname, 'assets/controllers.json')
-    });
-    
-    const config = Encore.getWebpackConfig();
-    
-    module.exports = config;
+// 🔧 Añadir alias requerido por stimulus-bridge
+Encore.addAliases({
+    '@symfony/stimulus-bridge/controllers.json': path.resolve(__dirname, 'assets/controllers.json')
+});
+
+const config = Encore.getWebpackConfig();
+
+module.exports = config;
 
 
 // module.exports = Encore.getWebpackConfig();

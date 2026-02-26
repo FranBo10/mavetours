@@ -21,30 +21,41 @@ class ParadaCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            IdField::new('id')->hideOnForm(),
-            TextField::new('titulo', 'Titulo'),            
-            TextEditorField::new('contenido', 'Contenido Inglés')->onlyOnForms(),
-            TextEditorField::new('contenido_fr', 'Contenido Francés')->onlyOnForms(),            
-            TextEditorField::new('contenido_es', 'Contenido Espanol')->onlyOnForms(),
-            TextareaField::new('mapa', 'Direccion de la parada (Google)')->onlyOnForms(),
-            IntegerField::new('longitud', "Longitud"),
-            IntegerField::new('latitud', "Latitud"),
-            ImageField::new('imagen', 'Imagen')
+        yield AssociationField::new('tour', 'Tour')
+            ->renderAsNativeWidget()
+            ->setColumns(12);
+
+        yield TextField::new('titulo', 'Titulo')
+            ->setColumns(12);
+
+        yield IntegerField::new('longitud', "Longitud")->setColumns(6);
+        yield IntegerField::new('latitud', "Latitud")->setColumns(6);
+
+        yield TextareaField::new('mapa', 'Direccion de la parada (Google)')
+            ->onlyOnForms()
+            ->setColumns(12);
+
+        yield TextEditorField::new('contenido', 'Contenido Inglés')->onlyOnForms()->setColumns(12);
+        yield TextEditorField::new('contenido_fr', 'Contenido Francés')->onlyOnForms()->setColumns(12);            
+        yield TextEditorField::new('contenido_es', 'Contenido Espanol')->onlyOnForms()->setColumns(12);
+
+        yield ImageField::new('imagen', 'Imagen')
             ->setBasePath('uploads/images')
             ->setUploadDir('public/uploads/images/')
             ->setUploadedFileNamePattern('[timestamp]-[slug]-[contenthash].[extension]')
             ->onlyWhenUpdating()
-            ->setFormTypeOptions([
-                'required' => false
-            ]),
-             ImageField::new('imagen', 'Imagen')
-                ->setBasePath('uploads/images')
-                ->setUploadDir('public/uploads/images/')
-                ->setUploadedFileNamePattern('[timestamp]-[slug]-[contenthash].[extension]')
-                ->onlyWhenCreating(),
-            ImageField::new('imagen', 'Imagen')->setBasePath('uploads/images/')->hideOnForm(),
-            AssociationField::new('tour', 'Tour')->renderAsNativeWidget(),
-            ];
+            ->setFormTypeOptions(['required' => false])
+            ->setColumns(12);
+
+        yield ImageField::new('imagen', 'Imagen')
+            ->setBasePath('uploads/images')
+            ->setUploadDir('public/uploads/images/')
+            ->setUploadedFileNamePattern('[timestamp]-[slug]-[contenthash].[extension]')
+            ->onlyWhenCreating()
+            ->setColumns(12);
+
+        yield ImageField::new('imagen', 'Imagen')
+            ->setBasePath('uploads/images/')
+            ->hideOnForm();
         }
     }

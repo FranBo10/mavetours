@@ -232,7 +232,7 @@ export default function HomeScreen() {
         style={styles.hero}
         resizeMode="cover"
       >
-        <View style={styles.heroOverlay} />
+        {/* <View style={styles.heroOverlay} /> */}
       </ImageBackground>
 
       {/* SERVICIOS */}
@@ -275,10 +275,10 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.colors.grayLight },
 
   hero: { height: 230, width: "100%" },
-  heroOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.4)",
-  },
+  // heroOverlay: {
+  //   ...StyleSheet.absoluteFillObject,
+  //   backgroundColor: "rgba(0,0,0,0.4)",
+  // },
 
   servicios: {
     backgroundColor: theme.colors.grayLight,

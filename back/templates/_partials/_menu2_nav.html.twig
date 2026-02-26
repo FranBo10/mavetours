@@ -1,6 +1,6 @@
 <header id="navigation-2" class="navigation-2">
   <div class="logo">
-    <a href="{{ path('home') }}">Mave<span class="logoNombre-2">Tours</span></a>
+    <a href="{{ path('home', {'_locale': app.request.locale}) }}">Mave<span class="logoNombre-2">Tours</span></a>
   </div>
  <nav class="elementos">
     <ul>
@@ -24,30 +24,31 @@
         <a href="{{ path('contacto', {'_locale': app.request.locale}) }}">{{ 'Contact' | trans }}</a>
       </li>
       <li>
-        <a href="{{ path('chat') }}">Chat</a>
+        <a href="{{ path('chat', {'_locale': app.request.locale}) }}">Chat</a>
       </li>
       <li class="idioma-nav">
         <a href="#">{{ 'Language' | trans }}</a>
-       <div class="container__user">
-    <ul>
+        <div class="container__idiomas">
+          <ul>
             <div class="idiomas">
-            {% set routeParams = app.request.query.all %}
-            {% if app.request.attributes.get('id') is not null %}
-                {% set routeParams = routeParams|merge({'id': app.request.attributes.get('id')}) %}
-            {% endif %}
-            <li class="idioma">
-                <img class="flag-icon" src="{{ asset('uploads/images/icons/en.png') }}" alt="en">
-                <a href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'en'})) }}">English</a>              
-            </li>
-            <li class="idioma">
-                <img class="flag-icon" src="{{ asset('uploads/images/icons/fr.png') }}" alt="fr">
-                <a href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'fr'})) }}">Français</a>              
-            </li>
-            <li class="idioma">
-                <img class="flag-icon" src="{{ asset('uploads/images/icons/es.png') }}" alt="es">
-                <a href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'es'})) }}">Español</a>              
-            </li>
-        </div>
+              {% set routeParams = app.request.attributes.get('_route_params')|default({})|merge(app.request.query.all) %}
+              <li class="idioma">
+                  <img class="flag-icon" src="{{ asset('uploads/images/icons/uk.png') }}" alt="en">
+                  <a href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'en'})) }}">English</a>              
+              </li>
+              <li class="idioma">
+                  <img class="flag-icon" src="{{ asset('uploads/images/icons/france.png') }}" alt="fr">
+                  <a href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'fr'})) }}">Français</a>              
+              </li>
+              <li class="idioma">
+                  <img class="flag-icon" src="{{ asset('uploads/images/icons/spain.png') }}" alt="es">
+                  <a href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'es'})) }}">Español</a>              
+              </li>
+              <li class="idioma">
+                  <img class="flag-icon" src="{{ asset('uploads/images/icons/brazil.png') }}" alt="pt">
+                  <a href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'pt'})) }}">Português</a>              
+              </li>
+            </div>
           </ul>
         </div>
       </li>
@@ -66,20 +67,20 @@
           <ul>
             <div class="cuenta-reservas">
               <li>
-                <a href="{{ path('cuenta', { id: app.user.id }) }}"
-                  >My Account</a
+                <a href="{{ path('cuenta', { 'id': app.user.id, '_locale': app.request.locale }) }}"
+                  >{{ 'My Account' | trans }}</a
                 >
                 <i class="fas fa-user"></i>
               </li>
               <hr />
               <li>
-                <a href="{{ path('reservas') }}">My Bookings</a>
+                <a href="{{ path('reservas', {'_locale': app.request.locale}) }}">{{ 'My Bookings' | trans }}</a>
                 <i class="fas fa-clipboard-list"></i>
               </li>
               <hr />
             </div>
-            <a href="{{ path('app_logout') }}" class="btn-danger mx-auto"
-              >Log out</a
+            <a href="{{ path('app_logout', {'_locale': app.request.locale}) }}" class="btn-danger mx-auto"
+              >{{ 'Log out' | trans }}</a
             >
           </ul>
         </div>
@@ -91,16 +92,16 @@
         </a>
         <ul class="not-user">
           <div class="container">
-            <form method="post" action="{{ path('app_login') }}">
+            <form method="post" action="{{ path('app_login', {'_locale': app.request.locale}) }}">
               <div class="titulo-login">
-                <h3>Log in</h3>
+                <h3>{{ 'Log in' | trans }}</h3>
               </div>
               <div class="form-login">
                 <input
                   type="email"
                   name="email"
                   id="inputEmail"
-                  placeholder="E-Mail"
+                  placeholder="{{ 'Email' | trans }}"
                   class="form-control"
                   autocomplete="off"
                   required
@@ -110,7 +111,7 @@
                   type="password"
                   name="password"
                   id="inputPassword"
-                  placeholder="Contraseña"
+                  placeholder="{{ 'Password' | trans }}"
                   class="form-control"
                   autocomplete="current-password"
                   required
@@ -124,22 +125,22 @@
                   <div class="checkbox-login">
                     <label>
                       <input type="checkbox" name="_remember_me" />
-                      Remember me
+                      {{ 'Remember me' | trans }}
                     </label>
                     <small>
-                      <a href="{{ path('app_forgot_password_request') }}"
-                        >I forgot my password</a
+                      <a href="{{ path('app_forgot_password_request', {'_locale': app.request.locale}) }}"
+                        >{{ 'I forgot my password' | trans }}</a
                       >
                     </small>
                   </div>
                   <div class="button-login">
-                    <button class="btn-primary" type="submit">Log in</button>
-                    <a>Don't have an account?</a>
+                    <button class="btn-primary" type="submit">{{ 'Sign in' | trans }}</button>
+                    <a>{{ "Don't have an account?" | trans }}</a>
                     <a
                       href="#"
                       data-bs-toggle="modal"
                       data-bs-target="#registro"
-                      >Register here</a
+                      >{{ 'Register here' | trans }}</a
                     >
                   </div>
                 </div>
@@ -175,63 +176,53 @@
       </li>
       <div class="item-separator"></div>
       <li class="item">
-        <a href="{{ path('home') }}">
+        <a href="{{ path('home', {'_locale': app.request.locale}) }}">
           <div class="icon">
             <i class="fas fa-home"></i>
           </div>
-          <div class="title">Ho<span>me</span></div>
+          <div class="title">{{ 'Home' | trans }}</div>
         </a>
       </li>
-      {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_GUIA') %} {#
-      <div class="item-separator"></div>
-      #}
+      {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_GUIA') %}
       <li class="item">
-        <a href="{{ path('admin') }}">
+        <a href="{{ path('admin', {'_locale': app.request.locale}) }}">
           <div class="icon">
             <i class="fas fa-user"></i>
           </div>
-          <div class="title">Ad<span>min</span></div>
+          <div class="title">Admin</div>
         </a>
       </li>
-      {#
-      <div class="item-separator"></div>
-      #}
       <li class="item">
-        <a href="{{ path('guia') }}">
+        <a href="{{ path('guia', {'_locale': app.request.locale}) }}">
           <div class="icon">
             <i class="fas fa-flag"></i>
           </div>
-          <div class="title">Calen<span>dar</span></div>
+          <div class="title">{{ 'Calendar' | trans }}</div>
         </a>
       </li>
-      {% endif %} {#
-      <div class="item-separator"></div>
-      #}
+      {% endif %}
       <li class="item">
-        <a href="{{ path('blog', { id: categoria.id }) }}">
+        <a href="{{ path('blog', { 'id': categoria.id, '_locale': app.request.locale }) }}">
           <div class="icon">
             <i class="fas fa-book"></i>
           </div>
-          <div class="title">Bl<span>og</span></div>
-        </a>
-      </li>
-      {#
-      <div class="item-separator"></div>
-      #}
-      <li class="item">
-        <a href="{{ path('contacto') }}">
-          <div class="icon">
-            <i class="fas fa-comments"></i>
-          </div>
-          <div class="title">Con<span>tact</span></div>
+          <div class="title">{{ 'Blog' | trans }}</div>
         </a>
       </li>
       <li class="item">
-        <a href="{{ path('chat') }}">
+        <a href="{{ path('contacto', {'_locale': app.request.locale}) }}">
           <div class="icon">
             <i class="fas fa-comments"></i>
           </div>
-          <div class="title">Ch<span>at</span></div>
+          <div class="title">{{ 'Contact' | trans }}</div>
+        </a>
+      </li>
+      <li class="item">
+        <a href="{{ path('chat', {'_locale': app.request.locale}) }}">
+          <div class="icon">
+            <i class="fas fa-comments"></i>
+          </div>
+          <div class="title">Chat</div>
         </a>
       </li>
       <li class="item">
@@ -239,79 +230,71 @@
           <div class="icon">
             <i class="fas fa-language"></i>
           </div>
-          <div class="title">Lan<span>guage</span> <i class="fas fa-chevron-down chevron-custom"></i></div>
+          <div class="title">{{ 'Language' | trans }} <i class="fas fa-chevron-down chevron-custom"></i></div>
         </a>
         <ul class="idioma-submenu language-dropdown">
-          {% set routeParams = app.request.query.all %}
-          {% if app.request.attributes.get('id') is not null %}
-              {% set routeParams = routeParams|merge({'id': app.request.attributes.get('id')}) %}
-          {% endif %}
+          {% set routeParams = app.request.attributes.get('_route_params')|default({})|merge(app.request.query.all) %}
           <li>
               <a class="idioma-link" href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'en'})) }}">
-                  <img src="{{ asset('uploads/images/icons/en.png') }}" alt="en" class="flag-icon"><span class="ms-3">English</span>
+                  <img src="{{ asset('uploads/images/icons/uk.png') }}" alt="en" class="flag-icon"><span class="ms-3">English</span>
               </a>
           </li>
           <li>
               <a class="idioma-link" href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'fr'})) }}">
-                  <img src="{{ asset('uploads/images/icons/fr.png') }}" alt="fr" class="flag-icon"><span class="ms-3">Français</span>
+                  <img src="{{ asset('uploads/images/icons/france.png') }}" alt="fr" class="flag-icon"><span class="ms-3">Français</span>
+              </a>
+          </li>
+          <li>
+              <a class="idioma-link" href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'es'})) }}">
+                  <img src="{{ asset('uploads/images/icons/spain.png') }}" alt="es" class="flag-icon"><span class="ms-3">Español</span>
+              </a>
+          </li>
+          <li>
+              <a class="idioma-link" href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'pt'})) }}">
+                  <img src="{{ asset('uploads/images/icons/brazil.png') }}" alt="pt" class="flag-icon"><span class="ms-3">Português</span>
               </a>
           </li>
         </ul>
       </li>
-      {#
-      <div class="item-separator"></div>
-      #}
       <li class="item">
-        <a href="{{ path('cuenta', { id: app.user.id }) }}">
+        <a href="{{ path('cuenta', { 'id': app.user.id, '_locale': app.request.locale }) }}">
           <div class="icon">
             <i class="fas fa-fingerprint"></i>
           </div>
-          <div class="title">My Acc<span>ount</span></div>
+          <div class="title">{{ 'My Account' | trans }}</div>
         </a>
       </li>
-      {#
-      <div class="item-separator"></div>
-      #}
       <li class="item">
-        <a href="{{ path('reservas') }}">
+        <a href="{{ path('reservas', {'_locale': app.request.locale}) }}">
           <div class="icon">
             <i class="fas fa-clipboard-list"></i>
           </div>
-          <div class="title">My Boo<span>kings</span></div>
+          <div class="title">{{ 'My Bookings' | trans }}</div>
         </a>
       </li>
-      {#
-      <div class="item-separator"></div>
-      #}
       <li class="item">
-        <a href="{{ path('app_logout') }}">
-          <div class="icon"><i class="fas fa-globe"></i></div>
-          <div class="title">Lo<span>g Out</span></div>
+        <a href="{{ path('app_logout', {'_locale': app.request.locale}) }}">
+          <div class="icon"><i class="fas fa-sign-out-alt"></i></div>
+          <div class="title">{{ 'Log out' | trans }}</div>
         </a>
       </li>
       {% else %}
       <li class="item">
-        <a href="{{ path('home') }}">
+        <a href="{{ path('home', {'_locale': app.request.locale}) }}">
           <div class="icon"><i class="fas fa-home"></i></div>
-          <div class="title">Ho<span>me</span></div>
+          <div class="title">{{ 'Home' | trans }}</div>
         </a>
       </li>
-      {#
-      <div class="item-separator"></div>
-      #}
       <li class="item">
-        <a href="{{ path('blog', { id: categoria.id }) }}">
+        <a href="{{ path('blog', { 'id': categoria.id, '_locale': app.request.locale }) }}">
           <div class="icon"><i class="fas fa-book"></i></div>
-          <div class="title">Bl<span>og</span></div>
+          <div class="title">{{ 'Blog' | trans }}</div>
         </a>
       </li>
-      {#
-      <div class="item-separator"></div>
-      #}
       <li class="item">
-        <a href="{{ path('contacto') }}">
-          <div class="icon"><i class="fas fa-book"></i></div>
-          <div class="title">Co<span>ntacto</span></div>
+        <a href="{{ path('contacto', {'_locale': app.request.locale}) }}">
+          <div class="icon"><i class="fas fa-comments"></i></div>
+          <div class="title">{{ 'Contact' | trans }}</div>
         </a>
       </li>
       <li class="item">
@@ -319,13 +302,10 @@
           <div class="icon">
             <i class="fas fa-language"></i>
           </div>
-          <div class="title">Lan<span>guage</span> <i class="fas fa-chevron-down chevron-custom"></i></div>
+          <div class="title">{{ 'Language' | trans }} <i class="fas fa-chevron-down chevron-custom"></i></div>
         </a>
         <ul class="idioma-submenu language-dropdown">
-          {% set routeParams = app.request.query.all %}
-          {% if app.request.attributes.get('id') is not null %}
-              {% set routeParams = routeParams|merge({'id': app.request.attributes.get('id')}) %}
-          {% endif %}
+          {% set routeParams = app.request.attributes.get('_route_params')|default({})|merge(app.request.query.all) %}
           <li>
               <a class="idioma-link" href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'en'})) }}">
                   <img src="{{ asset('uploads/images/icons/en.png') }}" alt="en" class="flag-icon"><span class="ms-3">English</span>
@@ -336,24 +316,28 @@
                   <img src="{{ asset('uploads/images/icons/fr.png') }}" alt="fr" class="flag-icon"><span class="ms-3">Français</span>
               </a>
           </li>
+          <li>
+              <a class="idioma-link" href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'es'})) }}">
+                  <img src="{{ asset('uploads/images/icons/es.png') }}" alt="es" class="flag-icon"><span class="ms-3">Español</span>
+              </a>
+          </li>
+          <li>
+              <a class="idioma-link" href="{{ path(app.request.attributes.get('_route'), routeParams|merge({'_locale': 'pt'})) }}">
+                  <img src="{{ asset('uploads/images/icons/brasil.png') }}" alt="pt" class="flag-icon"><span class="ms-3">Português</span>
+              </a>
+          </li>
         </ul>
       </li>
-      {#
-      <div class="item-separator"></div>
-      #}
       <li class="item">
-        <a href="{{ path('app_login') }}">
+        <a href="{{ path('app_login', {'_locale': app.request.locale}) }}">
           <div class="icon"><i class="fas fa-user"></i></div>
-          <div class="title">Lo<span>g in</span></div>
+          <div class="title">{{ 'Log in' | trans }}</div>
         </a>
       </li>
-      {#
-      <div class="item-separator"></div>
-      #}
       <li class="item">
-        <a href="{{ path('registro_tratar') }}">
+        <a href="{{ path('registro_tratar', {'_locale': app.request.locale}) }}">
           <div class="icon"><i class="fas fa-clipboard"></i></div>
-          <div class="title">Regi<span>stration</span></div>
+          <div class="title">{{ 'Registration' | trans }}</div>
         </a>
       </li>
       {% endif %}

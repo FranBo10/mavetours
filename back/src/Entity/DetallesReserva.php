@@ -30,6 +30,9 @@ class DetallesReserva
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $fecha_evento = null;
 
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $hora_evento = null;
+
     public function __construct()
     {
         $this->fecha_evento = new \DateTime();
@@ -104,6 +107,18 @@ class DetallesReserva
     public function setFechaEvento(\DateTimeInterface $fecha_evento): static
     {
         $this->fecha_evento = $fecha_evento;
+
+        return $this;
+    }
+
+    public function getHoraEvento(): ?\DateTimeInterface
+    {
+        return $this->hora_evento;
+    }
+
+    public function setHoraEvento(?\DateTimeInterface $hora_evento): static
+    {
+        $this->hora_evento = $hora_evento;
 
         return $this;
     }
