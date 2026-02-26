@@ -1,0 +1,14 @@
+# Symfony env files
+.env
+.env.*
+/back/.env
+/back/.env.*
+
+# Composer
+/vendor/
+
+# Node
+/node_modules/
+
+# Build
+/public/build/
