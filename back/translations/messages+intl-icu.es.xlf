@@ -694,60 +694,84 @@
         <target>La fecha del evento no puede ser anterior a la fecha actual</target>
       </trans-unit>
       <trans-unit id="9AWiqXA" resname="Ups! We do not have a visit this day for this tour">
-          <source>Ups! We do not have a visit this day for this tour</source>
-          <target>¡Ups! No tenemos visita este día para este tour</target>
+        <source>Ups! We do not have a visit this day for this tour</source>
+        <target>¡Ups! No tenemos visita este día para este tour</target>
       </trans-unit>
       <trans-unit id="B7JPJqo" resname="The event is closed">
-          <source>The event is closed</source>
-          <target>El evento está cerrado</target>
+        <source>The event is closed</source>
+        <target>El evento está cerrado</target>
       </trans-unit>
       <trans-unit id="Lg0Zugn" resname="Circuits in">
-          <source>Circuits in</source>
-          <target>Circuitos en</target>
+        <source>Circuits in</source>
+        <target>Circuitos en</target>
       </trans-unit>
       <trans-unit id="zaFNCy2" resname="INFO">
-          <source>INFO</source>
-          <target>INFO</target>
+        <source>INFO</source>
+        <target>INFO</target>
       </trans-unit>
       <trans-unit id="1l.iedy" resname="Itinerary">
-          <source>Itinerary</source>
-          <target>Itinerario</target>
+        <source>Itinerary</source>
+        <target>Itinerario</target>
       </trans-unit>
       <trans-unit id="8aVRYHW" resname="per person">
-          <source>per person</source>
-          <target>por persona</target>
+        <source>per person</source>
+        <target>por persona</target>
       </trans-unit>
       <trans-unit id=".9bySxi" resname="Día">
-          <source>Día</source>
-          <target>Día</target>
+        <source>Día</source>
+        <target>Día</target>
       </trans-unit>
       <trans-unit id="s9XTyUz" resname="End point">
-          <source>End point</source>
-          <target>Punto final</target>
+        <source>End point</source>
+        <target>Punto final</target>
       </trans-unit>
       <trans-unit id="viXmmL8" resname="Choose your favourite destination">
-          <source>Choose your favourite destination</source>
-          <target>Elige tu destino favorito</target>
+        <source>Choose your favourite destination</source>
+        <target>Elige tu destino favorito</target>
       </trans-unit>
-      <trans-unit id="Ti2IVK." resname="CIRCUITS">
-          <source>CIRCUITS</source>
-          <target>CIRCUITOS</target>
+      <trans-unit id="ijuZxQt" resname="CIRCUITS">
+        <source>CIRCUITS</source>
+        <target>CIRCUITOS</target>
       </trans-unit>
       <trans-unit id="SxJz1Ss" resname="FREETOUR">
-          <source>FREETOUR</source>
-          <target>FREETOUR</target>
+        <source>FREETOUR</source>
+        <target>FREETOUR</target>
       </trans-unit>
       <trans-unit id="h6n74y." resname="AUDIOGUIDE">
-          <source>AUDIOGUIDE</source>
-          <target>AUDIOGUÍA</target>
+        <source>AUDIOGUIDE</source>
+        <target>AUDIOGUÍA</target>
       </trans-unit>
       <trans-unit id="M7k0ds9" resname="Time">
-          <source>Time</source>
-          <target>Hora</target>
+        <source>Time</source>
+        <target>Hora</target>
       </trans-unit>
       <trans-unit id="a5g6geX" resname="Restart">
-          <source>Restart</source>
-          <target>Reiniciar</target>
+        <source>Restart</source>
+        <target>Reiniciar</target>
+      </trans-unit>
+      <trans-unit id="lWl9FEl" resname="Cities">
+        <source>Cities</source>
+        <target>Ciudades</target>
+      </trans-unit>
+      <trans-unit id="IxdA_ja" resname="Choose a city in">
+        <source>Choose a city in</source>
+        <target>Elige una ciudad en</target>
+      </trans-unit>
+      <trans-unit id="xPb4f34" resname="TOURS">
+        <source>TOURS</source>
+        <target>TOURS</target>
+      </trans-unit>
+      <trans-unit id="vYGKcsA" resname="No cities available yet for">
+        <source>No cities available yet for</source>
+        <target>Aún no hay ciudades disponibles para</target>
+      </trans-unit>
+      <trans-unit id="9JxgR86" resname="Tours in">
+        <source>Tours in</source>
+        <target>Tours en</target>
+      </trans-unit>
+      <trans-unit id="8fI5jCr" resname="No tours available yet in">
+        <source>No tours available yet in</source>
+        <target>Aún no hay tours disponibles en</target>
       </trans-unit>
     </body>
   </file>

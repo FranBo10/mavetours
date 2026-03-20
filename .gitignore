@@ -1,14 +1,41 @@
-# Symfony env files
+# --- Configuración del Sistema y Editores ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+
+# --- Archivos de Entorno (Seguridad) ---
 .env
 .env.*
-/back/.env
-/back/.env.*
+back/.env
+back/.env.local
+back/.env.*.local
+front/.env*.local
 
-# Composer
-/vendor/
+# --- Back-end (Symfony) ---
+back/vendor/
+back/var/
+back/public/bundles/
+back/public/build/
+back/config/secrets/prod/prod.decrypt.private.php
 
-# Node
-/node_modules/
+# Ignorar imágenes subidas pero mantener la carpeta
+back/public/uploads/images/*
+!back/public/uploads/images/.gitkeep
 
-# Build
-/public/build/
+# --- Front-end (React / Expo / Node) ---
+node_modules/
+front/node_modules/
+front/.expo/
+front/dist/
+front/web-build/
+front/app-example/
+front/ios/
+front/android/
+front/*.tsbuildinfo
+
+# --- Logs y Debug de Paquetes ---
+npm-debug.*
+yarn-debug.*
+yarn-error.*

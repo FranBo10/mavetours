@@ -42,6 +42,10 @@ security:
     - { path: ^/api/tours, roles: PUBLIC_ACCESS, methods: [GET] }
     - { path: ^/api/paradas, roles: PUBLIC_ACCESS, methods: [GET] }
     - { path: ^/api/blog, roles: PUBLIC_ACCESS, methods: [GET] }
+    - { path: ^/api/destinos, roles: PUBLIC_ACCESS, methods: [GET] }
+    - { path: ^/api/ciudades, roles: PUBLIC_ACCESS, methods: [GET] }
+    - { path: ^/api/circuitos, roles: PUBLIC_ACCESS, methods: [GET] }
+    - { path: ^/api/etapas, roles: PUBLIC_ACCESS, methods: [GET] }
     - { path: ^/api/cuenta, roles: [ROLE_USER, ROLE_ADMIN], methods: [GET] }
 
   # 🔐 /api/me requiere JWT

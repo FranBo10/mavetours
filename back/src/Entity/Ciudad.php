@@ -7,38 +7,64 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['ciudad:list']]
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['ciudad:list', 'ciudad:item']]
+        )
+    ]
+)]
+#[ApiFilter(SearchFilter::class, properties: ['destino' => 'exact'])]
 #[ORM\Entity(repositoryClass: CiudadRepository::class)]
 class Ciudad
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ciudad:list', 'ciudad:item', 'destino:item', 'tour:mini'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 120)]
+    #[Groups(['ciudad:list', 'ciudad:item', 'destino:item', 'tour:mini'])]
     private ?string $nombre = null;
 
     #[ORM\Column(length: 200, unique: true)]
+    #[Groups(['ciudad:list', 'ciudad:item', 'destino:item'])]
     private ?string $slug = null;
 
     // País como ISO2 string (FR, BE, NL...)
     #[ORM\Column(length: 2)]
+    #[Groups(['ciudad:list', 'ciudad:item', 'destino:item'])]
     private ?string $pais = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['ciudad:list', 'ciudad:item', 'destino:item'])]
     private ?string $imagen = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['ciudad:item'])]
     private ?string $descripcion = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['ciudad:item'])]
     private ?string $descripcion_es = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['ciudad:item'])]
     private ?string $descripcion_fr = null;
 
     #[ORM\Column(options: ['default' => true])]
+    #[Groups(['ciudad:list', 'destino:item'])]
     private bool $isActive = true;
 
     #[ORM\ManyToOne(inversedBy: 'ciudades')]

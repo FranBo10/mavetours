@@ -26,3 +26,21 @@ Message: Message
 Send: Envoyer
 Contact us: Contactez-nous
 Your message has been sent: Votre message a été envoyé
+
+# Destinos (títulos dinámicos de la BDD)
+EUROPA: EUROPE
+CARIBE: CARAÏBES
+AMERICA CONO SUR: AMÉRIQUE DU SUD
+AFRICA: AFRIQUE
+DISNEY: DISNEY
+ASIA ORIENTE OCEANIA: ASIE ORIENT OCÉANIE
+TIERRA SANTA: TERRE SAINTE
+CRUCERO: CROISIÈRE
+E.E.U.U: ÉTATS-UNIS
+
+# Ciudades (nombres dinámicos de la BDD)
+Paris: Paris
+Copenhague: Copenhague
+Varsovia: Varsovie
+Budapest: Budapest
+Praga: Prague

@@ -29,6 +29,10 @@
         <source>page_title.exception</source>
         <target>Error|Errores</target>
       </trans-unit>
+      <trans-unit id=".Mt52Jq" resname="datagrid.no_results">
+        <source>datagrid.no_results</source>
+        <target>Sin resultados</target>
+      </trans-unit>
       <trans-unit id="LH5Uvfy" resname="paginator.first">
         <source>paginator.first</source>
         <target>Primera</target>
@@ -192,6 +196,10 @@
       <trans-unit id="8jUlGKA" resname="action_confirmation_modal.action">
         <source>action_confirmation_modal.action</source>
         <target>Confirmar</target>
+      </trans-unit>
+      <trans-unit id="Rd0n9wc" resname="filter.title">
+        <source>filter.title</source>
+        <target>Filtrar</target>
       </trans-unit>
       <trans-unit id="5YZoOIF" resname="filter.button.clear">
         <source>filter.button.clear</source>
@@ -380,14 +388,6 @@
       <trans-unit id="hCDMpjH" resname="autocomplete.loading-more-results">
         <source>autocomplete.loading-more-results</source>
         <target>Cargando más resultados…</target>
-      </trans-unit>
-      <trans-unit id="Rd0n9wc" resname="filter.title">
-        <source>filter.title</source>
-        <target>Filtrar</target>
-      </trans-unit>
-      <trans-unit id=".Mt52Jq" resname="datagrid.no_results">
-        <source>datagrid.no_results</source>
-        <target>Sin resultados</target>
       </trans-unit>
     </body>
   </file>

@@ -14,7 +14,7 @@ import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/env";
 import { useLanguage } from "../context/LanguageContext";
 import i18n from "../i18n";
-import { Destino, fetchDestinos } from "../api/tipos";
+import { Destino, fetchDestinos } from "../api/destinos";
 
 type Locale = "es" | "en" | "fr";
 
@@ -189,19 +189,16 @@ export default function NavigationHeader() {
             <Text style={styles.chevron}>{destinosOpen ? "▲" : "▼"}</Text>
           </Pressable>
 
-          {destinosOpen && (
-            <View style={styles.languageDropdown}>
-              <MenuRow title="Todos" icon="🌐" onPress={() => go("/destinos")} />
-              {destinos.map(c => (
-                <MenuRow
-                  key={c.id}
-                  title={c.nombre}
-                  icon="📍"
-                  onPress={() => go(`/destinos/${c.slug}`)}
-                />
-              ))}
-            </View>
-          )}
+          <AccordionDropdown isOpen={destinosOpen} estimatedHeight={destinos.length * 52 + 20}>
+            {destinos.map(c => (
+              <MenuRow
+                key={c.id}
+                title={c.titulo}
+                icon="📍"
+                onPress={() => go(`/destinos/${c.slug}`)}
+              />
+            ))}
+          </AccordionDropdown>
 
 
           {isAuthenticated && isAdminOrGuia ? (
@@ -226,13 +223,11 @@ export default function NavigationHeader() {
             <Text style={styles.chevron}>{langOpen ? "▲" : "▼"}</Text>
           </Pressable>
 
-          {langOpen ? (
-            <View style={styles.languageDropdown}>
-              <LangRow flag="🇬🇧" label="English" onPress={() => setLang("en")} />
-              <LangRow flag="🇫🇷" label="Français" onPress={() => setLang("fr")} />
-              <LangRow flag="🇪🇸" label="Español" onPress={() => setLang("es")} />
-            </View>
-          ) : null}
+          <AccordionDropdown isOpen={langOpen} estimatedHeight={3 * 52 + 20}>
+            <LangRow flag="🇬🇧" label="English" onPress={() => setLang("en")} />
+            <LangRow flag="🇫🇷" label="Français" onPress={() => setLang("fr")} />
+            <LangRow flag="🇪🇸" label="Español" onPress={() => setLang("es")} />
+          </AccordionDropdown>
 
           {isAuthenticated ? (
             <>
@@ -293,6 +288,61 @@ function LangRow({
       <Text style={styles.langFlag}>{flag}</Text>
       <Text style={styles.langLabel}>{label}</Text>
     </Pressable>
+  );
+}
+
+function AccordionDropdown({
+  isOpen,
+  estimatedHeight,
+  children
+}: {
+  isOpen: boolean;
+  estimatedHeight: number;
+  children?: React.ReactNode;
+}) {
+  const anim = useRef(new Animated.Value(isOpen ? 1 : 0)).current;
+
+  useEffect(() => {
+    Animated.timing(anim, {
+      toValue: isOpen ? 1 : 0,
+      duration: 250,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
+    }).start();
+  }, [isOpen, anim]);
+
+  const maxHeight = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, estimatedHeight],
+  });
+
+  const opacity = anim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, 0, 1],
+  });
+
+  const marginVertical = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 8],
+  });
+
+  return (
+    <Animated.View
+      pointerEvents={isOpen ? "auto" : "none"}
+      style={[
+        styles.languageDropdown,
+        {
+          maxHeight,
+          opacity,
+          marginTop: marginVertical,
+          marginBottom: marginVertical,
+        }
+      ]}
+    >
+      <View style={{ paddingVertical: 6, paddingHorizontal: 8 }}>
+        {children}
+      </View>
+    </Animated.View>
   );
 }
 
@@ -423,13 +473,10 @@ const styles = StyleSheet.create({
   chevron: { color: "rgba(255,255,255,0.85)", fontWeight: "900" },
 
   languageDropdown: {
-    marginTop: 6,
-    marginBottom: 8,
     marginHorizontal: 10,
     backgroundColor: "rgba(0,0,0,0.15)",
     borderRadius: 14,
-    paddingVertical: 6,
-    paddingHorizontal: 8,
+    overflow: "hidden",
   },
   langItem: {
     flexDirection: "row",

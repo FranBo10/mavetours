@@ -10,23 +10,14 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootStackParamList } from '../navigation/AppNavigator';
-import NavigationHeader from '../components/NavigationHeader';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { createReserva } from '../api/reservas';
 
-type ReservaRouteProp = RouteProp<RootStackParamList, 'ReservaCreate'>;
-type ReservaNavProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'ReservaCreate'
->;
-
 const ReservaCreateScreen: React.FC = () => {
-  const route = useRoute<ReservaRouteProp>();
-  const navigation = useNavigation<ReservaNavProp>();
+  const { tourId } = useLocalSearchParams<{ tourId: string }>();
+  const router = useRouter();
 
-  const { tourId } = route.params;
+  // const { tourId } = route.params; // Replaced by useLocalSearchParams
 
   const [fechaEvento, setFechaEvento] = useState(''); // 'YYYY-MM-DD'
   const [cantidadAdultos, setCantidadAdultos] = useState('1');
@@ -51,7 +42,7 @@ const ReservaCreateScreen: React.FC = () => {
 
     try {
       const data = await createReserva({
-        tour_id: tourId,
+        tour_id: Number(tourId),
         fecha_evento: fechaEvento,
         cantidad_adultos: adultosNum,
         cantidad_kids: kidsNum,
@@ -62,7 +53,7 @@ const ReservaCreateScreen: React.FC = () => {
       } else {
         Alert.alert('OK', data.message || 'Reserva creada correctamente');
         // Podrías navegar a un detalle de reserva o a "Mis reservas"
-        navigation.goBack();
+        router.back();
       }
     } catch (e: any) {
       console.log(e?.response?.data || e);

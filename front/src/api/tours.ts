@@ -242,3 +242,9 @@ export async function fetchTourById(id: number): Promise<Tour> {
 
   return mapTour(t);
 }
+
+export async function fetchToursByCity(ciudadId: number): Promise<Tour[]> {
+  const res = await api.get<unknown>(`/api/tours?estado=true&ciudad.id=${ciudadId}`);
+  const list = extractList(res.data);
+  return list.map((item: any) => mapTour(item));
+}

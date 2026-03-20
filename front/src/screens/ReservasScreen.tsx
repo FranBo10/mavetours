@@ -11,8 +11,6 @@ import {
   Alert,
 } from "react-native";
 import { router } from "expo-router";
-
-import NavigationHeader from "../components/NavigationHeader";
 import { theme } from "../theme/theme";
 import { API_BASE_URL } from "../config/env";
 import { api } from "../api/client";

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ destino.titulo }} - {{ "Cities" | trans }}{% endblock %}
+{% block title %}{{ destino.titulo | trans }} - {{ "Cities" | trans }}{% endblock %}
 
 {% block nav %}
     {% include '_partials/_menu_nav.html.twig' %}
@@ -11,7 +11,7 @@
     
 </section>
 
-    {% if destino.descripcionLarga %}
+    {# {% if destino.descripcionLarga %}
         <div class="row mb-5">
             <div class="col-12">
                 <div class="description">
@@ -19,25 +19,25 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+    {% endif %} #}
 
     {% if ciudades|length > 0 %}
         <div class="servicios">
             <div class="titulo__servicios">
-                <h2>{{ "Choose a city in" | trans }} {{ destino.titulo }}</h2>
+                <h2>{{ "Choose a city in" | trans }} {{ destino.titulo | trans }}</h2>
             </div>
-            <div class="cards">
+            <div class="cards-ciudad">
                 {% for item in ciudades %}
-                    <article class="card">
+                    <article class="card-ciudad">
                         {% if item.imagen %}
                             <img src="{{ asset('uploads/images/ciudades/' ~ item.imagen) }}" alt="{{ item.nombre }}">
                         {% elseif destino.imagen %}
                             <img src="{{ asset('uploads/images/destinos/' ~ destino.imagen) }}" alt="{{ item.nombre }}">
                         {% endif %}
-                        <div class="content card-text">
-                            <h4>{{ item.nombre }}</h4>
-                             <div class="hidden-elements">
-                                <div class="card-btn">
+                        <div class="card-ciudad__content card-ciudad__text">
+                            <h1 class="card-ciudad__title">{{ item.nombre | trans}}</h1>
+                             <div class="card-ciudad__hidden">
+                                <div class="card-ciudad__btn-container">
                                     <a href="{{ path('tours_ciudad', {slug: item.slug}) }}" class="btn-tertiary-card">{{ "TOURS" | trans }}</a>
                                 </div>
                              </div>
@@ -49,7 +49,7 @@
     {% else %}
         <div class="servicios">
             <div class="titulo__servicios">
-                <h2>{{ "No cities available yet for" | trans }} {{ destino.titulo }}</h2>
+                <h2>{{ "No cities available yet for" | trans }} {{ destino.titulo | trans }}</h2>
             </div>
         </div>
     {% endif %}

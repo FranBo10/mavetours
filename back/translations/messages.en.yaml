@@ -1,2 +1,20 @@
 
 Incluye un signo "{{ value }}" en la dirección de correo electrónico. La dirección "{{ value }}" no incluye el signo "{{ value }}".: Include an '{{ value }}' sign in the email address. The address '{{ value }}' does not contain the '{{ value }}' sign.
+
+# Destinos (títulos dinámicos de la BDD)
+EUROPA: EUROPE
+CARIBE: CARIBBEAN
+AMERICA CONO SUR: SOUTH AMERICA
+AFRICA: AFRICA
+DISNEY: DISNEY
+ASIA ORIENTE OCEANIA: ASIA EAST OCEANIA
+TIERRA SANTA: HOLY LAND
+CRUCERO: CRUISE
+E.E.U.U: USA
+
+# Ciudades (nombres dinámicos de la BDD)
+Paris: Paris
+Copenhague: Copenhagen
+Varsovia: Warsaw
+Budapest: Budapest
+Praga: Prague

@@ -11,8 +11,8 @@ import {
 import { Link, useRouter, useLocalSearchParams } from "expo-router";
 import { theme } from "../../src/theme/theme";
 import i18n from "../../src/i18n";
-import { Destino, fetchDestinoBySlug } from "../../src/api/tipos";
-import NavigationHeader from "../../src/components/NavigationHeader";
+import { Destino, fetchDestinoBySlug } from "../../src/api/destinos";
+import { Circuito } from "../../src/api/circuitos";
 
 export default function DestinoDetailScreen() {
     const router = useRouter();
@@ -45,7 +45,6 @@ export default function DestinoDetailScreen() {
     if (loading) {
         return (
             <View style={styles.container}>
-                <NavigationHeader />
                 <View style={styles.center}>
                     <ActivityIndicator size="large" color={theme.colors.primary} />
                 </View>
@@ -56,7 +55,6 @@ export default function DestinoDetailScreen() {
     if (error || !destino) {
         return (
             <View style={styles.container}>
-                <NavigationHeader />
                 <View style={styles.center}>
                     <Text style={styles.errorText}>{error || "Destino no encontrado"}</Text>
                     <Pressable style={styles.btnRetry} onPress={() => router.replace("/destinos" as any)}>
@@ -69,20 +67,37 @@ export default function DestinoDetailScreen() {
 
     return (
         <View style={styles.container}>
-            <NavigationHeader />
             <ScrollView contentContainerStyle={styles.content}>
                 <Pressable onPress={() => router.push("/destinos" as any)} style={styles.backBtn}>
-                    <Text style={styles.backBtnText}>← Volver</Text>
+                    <Text style={styles.backBtnText}>← {i18n.t("back")}</Text>
                 </Pressable>
 
                 <View style={styles.headerContainer}>
-                    <Text style={styles.detailTitle}>{destino.nombre}</Text>
+                    <Text style={styles.detailTitle}>{destino.titulo}</Text>
                     {destino.descripcionCorta ? (
                         <Text style={styles.detailDesc}>{destino.descripcionCorta}</Text>
                     ) : null}
                 </View>
 
-                <Text style={styles.sectionTitle}>Circuitos en {destino.nombre}</Text>
+                {/* Action Buttons */}
+                <View style={styles.actionButtons}>
+                    <Link
+                        href={{
+                            pathname: "/ciudades/[destinoId]" as any,
+                            params: {
+                                destinoId: String(destino.id),
+                                destinoNombre: destino.titulo,
+                            },
+                        }}
+                        asChild
+                    >
+                        <Pressable style={[styles.actionBtn, styles.actionBtnPrimary]}>
+                            <Text style={styles.actionBtnText}>{i18n.t("see_tours")}</Text>
+                        </Pressable>
+                    </Link>
+                </View>
+
+                <Text style={styles.sectionTitle}>{i18n.t("circuits")} {i18n.t("cities_in").toLowerCase().includes("en") ? "en" : "à"} {destino.titulo}</Text>
 
                 <View style={styles.grid}>
                     {destino.circuitos && destino.circuitos.length > 0 ? (
@@ -196,6 +211,35 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     badgeText: { color: theme.colors.white, fontWeight: "bold", fontSize: 12 },
+
+    actionButtons: {
+        flexDirection: 'row',
+        gap: 12,
+        marginBottom: 24,
+    },
+    actionBtn: {
+        flex: 1,
+        paddingVertical: 14,
+        paddingHorizontal: 20,
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 3 },
+    },
+    actionBtnPrimary: {
+        backgroundColor: theme.colors.primary,
+    },
+    actionBtnText: {
+        color: theme.colors.white,
+        fontSize: 16,
+        fontWeight: '800',
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
+    },
 
     btnRetry: {
         paddingVertical: 12,

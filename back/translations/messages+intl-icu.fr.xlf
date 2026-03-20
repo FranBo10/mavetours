@@ -733,7 +733,7 @@
         <source>Choose your favourite destination</source>
         <target>Choisissez votre destination préférée</target>
       </trans-unit>
-      <trans-unit id="Ti2IVK." resname="CIRCUITS">
+      <trans-unit id="ijuZxQt" resname="CIRCUITS">
         <source>CIRCUITS</source>
         <target>CIRCUITS</target>
       </trans-unit>
@@ -752,6 +752,30 @@
       <trans-unit id="a5g6geX" resname="Restart">
         <source>Restart</source>
         <target>Réinitialiser</target>
+      </trans-unit>
+      <trans-unit id="lWl9FEl" resname="Cities">
+        <source>Cities</source>
+        <target>Villes</target>
+      </trans-unit>
+      <trans-unit id="IxdA_ja" resname="Choose a city in">
+        <source>Choose a city in</source>
+        <target>Choisissez une ville en</target>
+      </trans-unit>
+      <trans-unit id="xPb4f34" resname="TOURS">
+        <source>TOURS</source>
+        <target>VISITES</target>
+      </trans-unit>
+      <trans-unit id="vYGKcsA" resname="No cities available yet for">
+        <source>No cities available yet for</source>
+        <target>Aucune ville n'est encore disponible pour</target>
+      </trans-unit>
+      <trans-unit id="9JxgR86" resname="Tours in">
+        <source>Tours in</source>
+        <target>Visites en</target>
+      </trans-unit>
+      <trans-unit id="8fI5jCr" resname="No tours available yet in">
+        <source>No tours available yet in</source>
+        <target>Aucune visite n'est encore disponible en</target>
       </trans-unit>
     </body>
   </file>

@@ -11,35 +11,25 @@ import {
   Animated,
   Easing,
   useWindowDimensions,
+  ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
 import { theme } from "../theme/theme";
-import { fetchTours, type Tour, getTourTitle } from "../api/tours";
+import { Destino, fetchDestinos } from "../api/destinos";
 import { useLanguage } from "../context/LanguageContext";
-import { useAuth } from "../context/AuthContext";
 
-function formatPrice(precio: number) {
-  if (!precio) return i18n.t("free");
-  return `${(precio / 100).toFixed(2)} €`;
-}
+const COLLAPSED_H = 50;
+const EXPANDED_H = 140; // Ajustado para destinos
 
-const COLLAPSED_H = 60;
-const EXPANDED_H = 240; // Maximize to cover full card image (height: 240)
-
-function TourCard({
-  tour,
-  isLoggedIn,
+function DestinoCard({
+  destino,
   expanded,
   onToggle,
 }: {
-  tour: Tour;
-  isLoggedIn: boolean;
+  destino: Destino;
   expanded: boolean;
   onToggle: () => void;
 }) {
-  const { locale } = useLanguage();
-
-  // 0 = closed, 1 = open
   const anim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -66,20 +56,15 @@ function TourCard({
     outputRange: [12, 0],
   });
 
-  const goMoreInfo = () => {
-    router.push({ pathname: "/tour/[id]", params: { id: String(tour.id) } });
+  const goCircuitos = () => {
+    router.push({ pathname: "/destinos/[slug]" as any, params: { slug: destino.slug } });
   };
 
-  const goFreeTour = () => {
-    router.push({ pathname: "/tour/[id]/book", params: { id: String(tour.id) } });
-  };
-
-  const goAudioguide = () => {
-    router.push({ pathname: "/audioguide/[id]", params: { id: String(tour.id) } });
-  };
-
-  const goLogin = () => {
-    router.push("/login");
+  const goTours = () => {
+    router.push({
+      pathname: "/ciudades/[destinoId]" as any,
+      params: { destinoId: String(destino.id), destinoNombre: destino.titulo },
+    });
   };
 
   return (
@@ -88,7 +73,7 @@ function TourCard({
       style={({ pressed }) => [styles.card, pressed && { opacity: 0.95 }]}
     >
       <ImageBackground
-        source={{ uri: tour.imagen }}
+        source={{ uri: destino.imagen }}
         style={styles.cardImage}
         resizeMode="cover"
       >
@@ -96,7 +81,7 @@ function TourCard({
 
         {/* Animated Footer */}
         <Animated.View style={[styles.cardBottom, { height: footerHeight }]}>
-          <Text style={styles.cardTitle}>{getTourTitle(tour, locale)}</Text>
+          <Text style={styles.cardTitle}>{destino.titulo}</Text>
 
           {/* Hidden Content */}
           <Animated.View
@@ -106,82 +91,29 @@ function TourCard({
               transform: [{ translateY: slideUp }],
             }}
           >
-            <Text style={styles.cardPrice}>
-              {i18n.t("price")}{" "}
-              <Text style={styles.cardPriceValue}>{formatPrice(tour.precio)}</Text>
-            </Text>
-
             <View style={styles.cardButtonsRow}>
-              {/* INFO (Always visible, full width) */}
               <Pressable
-                onPress={goMoreInfo}
+                onPress={goCircuitos}
                 style={({ pressed }) => [
                   styles.btnBase,
                   styles.btnSecondary,
                   pressed && styles.btnPressed,
-                  { width: "100%" }
+                  { flex: 1 },
                 ]}
               >
-                <Text style={styles.btnText}>{i18n.t("info")}</Text>
+                <Text style={styles.btnText}>{i18n.t("circuits")}</Text>
               </Pressable>
-
-              {isLoggedIn ? (
-                <>
-                  {/* FREETOUR */}
-                  <Pressable
-                    onPress={goFreeTour}
-                    style={({ pressed }) => [
-                      styles.btnBase,
-                      styles.btnPrimary,
-                      pressed && styles.btnPressed,
-                      { flex: 1, minWidth: "45%" }
-                    ]}
-                  >
-                    <Text style={styles.btnText}>{i18n.t("freetour")}</Text>
-                  </Pressable>
-
-                  {/* AUDIOGUIDE */}
-                  <Pressable
-                    onPress={goAudioguide}
-                    style={({ pressed }) => [
-                      styles.btnBase,
-                      styles.btnWarning,
-                      pressed && styles.btnPressed,
-                      { flex: 1, minWidth: "45%" }
-                    ]}
-                  >
-                    <Text style={styles.btnText}>{i18n.t("audioguide")}</Text>
-                  </Pressable>
-                </>
-              ) : (
-                <>
-                  {/* Book now -> Login */}
-                  <Pressable
-                    onPress={goLogin}
-                    style={({ pressed }) => [
-                      styles.btnBase,
-                      styles.btnPrimary,
-                      pressed && styles.btnPressed,
-                      { flex: 1, minWidth: "45%" }
-                    ]}
-                  >
-                    <Text style={styles.btnText}>{i18n.t("freetour")}</Text>
-                  </Pressable>
-
-                  {/* Navigate -> Login */}
-                  <Pressable
-                    onPress={goLogin}
-                    style={({ pressed }) => [
-                      styles.btnBase,
-                      styles.btnWarning,
-                      pressed && styles.btnPressed,
-                      { flex: 1, minWidth: "45%" }
-                    ]}
-                  >
-                    <Text style={styles.btnText}>{i18n.t("audioguide")}</Text>
-                  </Pressable>
-                </>
-              )}
+              <Pressable
+                onPress={goTours}
+                style={({ pressed }) => [
+                  styles.btnBase,
+                  styles.btnPrimary,
+                  pressed && styles.btnPressed,
+                  { flex: 1 },
+                ]}
+              >
+                <Text style={styles.btnText}>{i18n.t("tours")}</Text>
+              </Pressable>
             </View>
 
             <Text style={styles.tapHint}>{i18n.t("tap_to_hide")}</Text>
@@ -199,25 +131,25 @@ function TourCard({
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const numColumns = width >= 700 ? 2 : 1;
-  const { isAuthenticated, user } = useAuth();
   const { locale } = useLanguage();
 
-  const [tours, setTours] = useState<Tour[]>([]);
+  const [destinos, setDestinos] = useState<Destino[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedCardId, setExpandedCardId] = useState<string | number | null>(null);
 
   useEffect(() => {
-    fetchTours()
-      .then((res: Tour[]) => {
-        setTours(res);
+    setLoading(true);
+    fetchDestinos()
+      .then((res: Destino[]) => {
+        setDestinos(res);
       })
       .catch((e: unknown) => {
-        console.log("TOURS ERROR:", e);
+        console.log("DESTINOS ERROR:", e);
       })
       .finally(() => setLoading(false));
   }, []);
 
-  const visibleTours = tours.filter((t) => t.isEstado);
+  const visibleDestinos = destinos.filter((d) => d.isActive);
 
   const handleToggleCard = (id: string | number) => {
     setExpandedCardId((prev) => (prev === id ? null : id));
@@ -225,45 +157,43 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container} key={locale}>
-
       {/* HERO */}
       <ImageBackground
         source={require("../../assets/images/mave.jpg")}
         style={styles.hero}
         resizeMode="cover"
-      >
-        {/* <View style={styles.heroOverlay} /> */}
-      </ImageBackground>
+      />
 
-      {/* SERVICIOS */}
-      <View style={styles.servicios}>
-        <Text style={styles.serviciosTitle}>{i18n.t("enjoy")}</Text>
+      {/* CONTENIDO */}
+      <View style={styles.mainContent}>
+        <Text style={styles.sectionTitle}>{i18n.t("destinations")}</Text>
 
-        <FlatList
-          data={visibleTours}
-          key={numColumns}
-          numColumns={numColumns}
-          contentContainerStyle={styles.cardsContainer}
-          columnWrapperStyle={numColumns > 1 ? styles.columnWrapper : undefined}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => (
-            <View style={[styles.cardWrapper, numColumns > 1 && { flex: 1 }]}>
-              <TourCard
-                tour={item}
-                isLoggedIn={isAuthenticated}
-                expanded={expandedCardId === item.id}
-                onToggle={() => handleToggleCard(item.id)}
-              />
-            </View>
-          )}
-          ListEmptyComponent={
-            !loading ? (
-              <Text style={{ textAlign: "center", marginTop: 40 }}>
-                {i18n.t("no_tours")}
-              </Text>
-            ) : null
-          }
-        />
+        {loading ? (
+          <View style={styles.center}>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+          </View>
+        ) : (
+          <FlatList
+            data={visibleDestinos}
+            key={numColumns}
+            numColumns={numColumns}
+            contentContainerStyle={styles.cardsContainer}
+            columnWrapperStyle={numColumns > 1 ? styles.columnWrapper : undefined}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={({ item }) => (
+              <View style={[styles.cardWrapper, numColumns > 1 && { flex: 1 }]}>
+                <DestinoCard
+                  destino={item}
+                  expanded={expandedCardId === item.id}
+                  onToggle={() => handleToggleCard(item.id)}
+                />
+              </View>
+            )}
+            ListEmptyComponent={
+              <Text style={styles.emptyText}>{i18n.t("no_destinations")}</Text>
+            }
+          />
+        )}
       </View>
     </View>
   );
@@ -273,28 +203,24 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.colors.grayLight },
+  hero: { height: 180, width: "100%" },
 
-  hero: { height: 230, width: "100%" },
-  // heroOverlay: {
-  //   ...StyleSheet.absoluteFillObject,
-  //   backgroundColor: "rgba(0,0,0,0.4)",
-  // },
-
-  servicios: {
-    backgroundColor: theme.colors.grayLight,
-    paddingTop: theme.spacing.lg,
-    paddingBottom: theme.spacing.xl,
+  mainContent: {
+    flex: 1,
+    paddingTop: theme.spacing.sm,
   },
-  serviciosTitle: {
+  sectionTitle: {
     textAlign: "center",
-    fontSize: theme.typography.fontSize.h2,
+    fontSize: 20,
+    fontWeight: "900",
     color: theme.colors.black,
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.sm,
+    textTransform: "uppercase",
   },
 
   cardsContainer: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingBottom: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.sm,
+    paddingBottom: 40,
   },
   columnWrapper: { gap: 16 },
   cardWrapper: { marginBottom: 16 },
@@ -303,85 +229,62 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
     backgroundColor: theme.colors.white,
-    ...theme.shadow.soft,
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
-  cardImage: { height: 240, width: "100%", justifyContent: "flex-end" },
-  cardOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0)",
-  },
+  cardImage: { height: 175, width: "100%", justifyContent: "flex-end" },
+  cardOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.1)" },
 
   cardBottom: {
-    backgroundColor: theme.colors.grayDarken,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    backgroundColor: "rgba(30, 30, 30, 0.9)", // Fondo oscuro semitransparente
+    paddingVertical: 12,
+    paddingHorizontal: 15,
     overflow: "hidden",
   },
   cardTitle: {
     color: theme.colors.white,
-    fontSize: theme.typography.fontSize.h3,
-    fontWeight: "700",
+    fontSize: 20,
+    fontWeight: "800",
     textAlign: "center",
-    marginBottom: 8,
+    textTransform: "uppercase",
   },
-
-  cardPrice: {
-    color: theme.colors.white,
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  cardPriceValue: { color: theme.colors.secondary, fontWeight: "800" },
-
-  cardButtonsRow: {
-    flexDirection: "row",
-    gap: 8, // reduced gap slightly to fit better if needed, flexWrap takes care
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    marginTop: 12,
-  },
-
-  // Button Base
-  btnBase: {
-    minHeight: 48, // Taller buttons
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderRadius: 10,
-    borderWidth: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 2,
-    marginBottom: 8, // Added margin bottom for wrapped items
-  },
-
-  btnPrimary: {
-    backgroundColor: theme.colors.primary,
-  },
-
-  btnSecondary: {
-    backgroundColor: theme.colors.secondary,
-  },
-
-  btnWarning: {
-    backgroundColor: theme.colors.warning,
-  },
-
-  btnPressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.98 }],
-  },
-
-  btnText: {
+  cardDescription: {
     color: theme.colors.white,
     fontSize: 14,
+    textAlign: "center",
+    marginTop: 10,
+    opacity: 0.9,
+  },
+
+  cardButtonsRow: {
+    marginTop: 15,
+    flexDirection: "row",
+    gap: 10,
+  },
+
+  btnBase: {
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnPrimary: { backgroundColor: theme.colors.primary },
+  btnSecondary: { backgroundColor: theme.colors.secondary },
+  btnPressed: { opacity: 0.8, transform: [{ scale: 0.98 }] },
+  btnText: {
+    color: theme.colors.white,
     fontWeight: "800",
     textTransform: "uppercase",
-    letterSpacing: 0.5,
   },
 
   tapHint: {
-    color: theme.colors.grayDark,
+    color: "#ccc",
     textAlign: "center",
-    marginTop: 2,
-    fontSize: 12,
+    marginTop: 8,
+    fontSize: 11,
   },
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
+  emptyText: { textAlign: "center", marginTop: 40, color: theme.colors.grayDark },
 });

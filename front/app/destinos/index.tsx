@@ -11,8 +11,7 @@ import {
 import { Link, useRouter } from "expo-router";
 import { theme } from "../../src/theme/theme";
 import i18n from "../../src/i18n";
-import { Destino, fetchDestinos } from "../../src/api/tipos";
-import NavigationHeader from "../../src/components/NavigationHeader";
+import { Destino, fetchDestinos } from "../../src/api/destinos";
 
 export default function DestinosIndexScreen() {
     const [destinos, setDestinos] = useState<Destino[]>([]);
@@ -40,7 +39,6 @@ export default function DestinosIndexScreen() {
     if (loading) {
         return (
             <View style={styles.container}>
-                <NavigationHeader />
                 <View style={styles.center}>
                     <ActivityIndicator size="large" color={theme.colors.primary} />
                     <Text style={styles.loadingText}>{i18n.t("loading") || "Cargando..."}</Text>
@@ -52,7 +50,6 @@ export default function DestinosIndexScreen() {
     if (error) {
         return (
             <View style={styles.container}>
-                <NavigationHeader />
                 <View style={styles.center}>
                     <Text style={styles.errorText}>{error}</Text>
                 </View>
@@ -62,9 +59,8 @@ export default function DestinosIndexScreen() {
 
     return (
         <View style={styles.container}>
-            <NavigationHeader />
             <ScrollView contentContainerStyle={styles.content}>
-                <Text style={styles.headerTitle}>Continentes</Text>
+                <Text style={styles.headerTitle}>Destinos</Text>
                 <Text style={styles.headerSubtitle}>
                     Explora nuestros circuitos por el mundo
                 </Text>
@@ -74,13 +70,13 @@ export default function DestinosIndexScreen() {
                         <Link key={c.id} href={`/destinos/${c.slug}` as any} asChild>
                             <Pressable style={({ pressed }) => [styles.card, pressed && { opacity: 0.95 }]}>
                                 <ImageBackground
-                                    source={{ uri: c.imagenCover }}
+                                    source={{ uri: c.imagen }}
                                     style={styles.cardImage}
                                     imageStyle={{ borderRadius: 16 }}
                                 >
                                     <View style={styles.overlay} />
                                     <View style={styles.cardContent}>
-                                        <Text style={styles.cardTitle}>{c.nombre}</Text>
+                                        <Text style={styles.cardTitle}>{c.titulo}</Text>
                                         {c.descripcionCorta ? (
                                             <Text style={styles.cardSubtitle} numberOfLines={2}>
                                                 {c.descripcionCorta}

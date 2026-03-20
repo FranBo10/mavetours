@@ -7,43 +7,66 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['destino:list']]
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['destino:list', 'destino:item']]
+        )
+    ]
+)]
 #[ORM\Entity(repositoryClass: DestinoRepository::class)]
 class Destino
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['destino:list', 'destino:item', 'tour:mini'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['destino:list', 'destino:item', 'tour:mini'])]
     private ?string $titulo = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['destino:list', 'destino:item'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $fechaCreacion = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['destino:list', 'destino:item'])]
     private ?string $imagen = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['destino:list', 'destino:item'])]
     private ?string $descripcionCorta = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['destino:item'])]
     private ?string $descripcionLarga = null;
 
     #[ORM\Column]
+    #[Groups(['destino:list'])]
     private ?bool $isActive = true;
 
     #[ORM\OneToMany(mappedBy: 'destino', targetEntity: Circuito::class)]
+    #[Groups(['destino:item'])]
     private Collection $circuitos;
 
     #[ORM\OneToMany(mappedBy: 'destino', targetEntity: Tour::class)]
     private Collection $tours;
 
     #[ORM\OneToMany(mappedBy: 'destino', targetEntity: Ciudad::class)]
+    #[Groups(['destino:item'])]
     private Collection $ciudades;
 
     public function __construct()

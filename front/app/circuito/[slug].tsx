@@ -13,8 +13,8 @@ import {
 import { Link, useRouter, useLocalSearchParams } from "expo-router";
 import { theme } from "../../src/theme/theme";
 import i18n from "../../src/i18n";
-import { Circuito, fetchCircuitoBySlug, fetchToursByCity, Tour } from "../../src/api/tipos"; // Check imports
-import NavigationHeader from "../../src/components/NavigationHeader";
+import { Circuito, fetchCircuitoBySlug } from "../../src/api/circuitos";
+import { Tour, fetchToursByCity } from "../../src/api/tours";
 import TourCard from "../../src/components/TourCard";
 
 export default function CircuitoDetailScreen() {
@@ -73,7 +73,6 @@ export default function CircuitoDetailScreen() {
     if (loading) {
         return (
             <View style={styles.container}>
-                <NavigationHeader />
                 <View style={styles.center}>
                     <ActivityIndicator size="large" color={theme.colors.primary} />
                 </View>
@@ -84,7 +83,6 @@ export default function CircuitoDetailScreen() {
     if (error || !circuito) {
         return (
             <View style={styles.container}>
-                <NavigationHeader />
                 <View style={styles.center}>
                     <Text style={styles.errorText}>{error || "Circuito no encontrado"}</Text>
                     <Pressable style={styles.btnRetry} onPress={() => router.back()}>
@@ -97,7 +95,6 @@ export default function CircuitoDetailScreen() {
 
     return (
         <View style={styles.container}>
-            <NavigationHeader />
             <ScrollView contentContainerStyle={styles.content}>
                 <Pressable onPress={() => router.back()} style={styles.backBtn}>
                     <Text style={styles.backBtnText}>← Volver</Text>

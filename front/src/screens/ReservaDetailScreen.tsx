@@ -10,24 +10,14 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
-import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-import NavigationHeader from '../components/NavigationHeader';
-import type { RootStackParamList } from '../navigation/AppNavigator';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { fetchReserva, deleteReserva, Reserva } from '../api/reservas';
 
-type ReservaDetailRouteProp = RouteProp<RootStackParamList, 'ReservaDetail'>;
-type ReservaDetailNavProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'ReservaDetail'
->;
-
 const ReservaDetailScreen: React.FC = () => {
-  const route = useRoute<ReservaDetailRouteProp>();
-  const navigation = useNavigation<ReservaDetailNavProp>();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
 
-  const { id } = route.params;
+  // const { id } = route.params; // Replaced by useLocalSearchParams
 
   const [reserva, setReserva] = useState<Reserva | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,7 +27,7 @@ const ReservaDetailScreen: React.FC = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetchReserva(id);
+        const res = await fetchReserva(Number(id));
         if (res.success) {
           setReserva(res.data);
         } else {
@@ -71,7 +61,7 @@ const ReservaDetailScreen: React.FC = () => {
               const res = await deleteReserva(reserva.id);
               if (res.success) {
                 Alert.alert('OK', res.message || 'Reserva cancelada');
-                navigation.navigate('ReservasList');
+                router.push('/(tabs)/reservas');
               } else {
                 Alert.alert('Error', res.error || 'No se pudo cancelar');
               }

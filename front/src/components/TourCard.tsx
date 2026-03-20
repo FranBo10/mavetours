@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Link } from "expo-router";
 import { theme } from "../theme/theme";
-import { Tour } from "../api/tipos";
+import { Tour } from "../api/tours";
 
 export default function TourCard({ tour }: { tour: Tour }) {
     return (
