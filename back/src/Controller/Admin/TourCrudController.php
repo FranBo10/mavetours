@@ -97,15 +97,19 @@ class TourCrudController extends AbstractCrudController
         yield TextField::new('titulo_es', 'Título ES')
                 ->setColumns(4);
         yield TextField::new('titulo_fr', 'Título FR')
+                ->setColumns(4);        
+        yield TextField::new('titulo_pt', 'Título PT')
                 ->setColumns(4);
 
         yield TextEditorField::new('descripcion_corta', 'Descripción corta EN')->onlyOnForms();
         yield TextEditorField::new('descripcion_corta_fr', 'Descripción corta FR')->onlyOnForms();
-        yield TextEditorField::new('descripcion_corta_es', 'Descripción corta ES')->onlyOnForms();
+        yield TextEditorField::new('descripcion_corta_es', 'Descripción corta ES')->onlyOnForms();        
+        yield TextEditorField::new('descripcion_corta_pt', 'Descripción corta PT')->onlyOnForms();
 
         yield TextEditorField::new('descripcion_larga', 'Descripción larga EN')->onlyOnForms();
         yield TextEditorField::new('descripcion_larga_fr', 'Descripción larga FR')->onlyOnForms();
         yield TextEditorField::new('descripcion_larga_es', 'Descripción larga ES')->onlyOnForms();
+        yield TextEditorField::new('descripcion_larga_pt', 'Descripción larga PT')->onlyOnForms();
 
         yield ImageField::new('imagen', 'Imagen')
             ->setBasePath('uploads/images/')

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\BlogCategoriaRepository;
 use App\Repository\CiudadRepository;
 use App\Repository\DestinoRepository;
+use App\Repository\SliderRepository;
 use App\Repository\TourRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,7 @@ class CiudadController extends AbstractController
         CiudadRepository $ciudadRepository,
         BlogCategoriaRepository $blogCategoriaRepository,
         TourRepository $tourRepository,
+        SliderRepository $sliderRepository,
         Request $request
     ): Response {
         $destino = $destinoRepository->findOneBy(['slug' => $slug]);
@@ -36,6 +38,11 @@ class CiudadController extends AbstractController
             ['nombre' => 'ASC']
         );
 
+        $sliders = $sliderRepository->findBy(
+            ['destino' => $destino],
+            ['orden' => 'ASC']
+        );
+
         $tours = $tourRepository->findBy([], ['orden' => 'ASC']);
         $categorias = $blogCategoriaRepository->findAll();
         $locale = $request->getLocale();
@@ -45,6 +52,7 @@ class CiudadController extends AbstractController
             'tours' => $tours,
             'destino' => $destino,
             'ciudades' => $ciudades,
+            'sliders' => $sliders,
             'categoria' => $categoria,
             '_locale' => $locale,
         ]);

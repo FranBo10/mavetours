@@ -3,57 +3,39 @@
 {% endfor %} {% endblock %} {% block nav %} {% include
 '_partials/_menu_nav.html.twig' %} {% endblock %} {% block body %}
 
-<div class="carousel-container">
-  <div
-    id="carouselExampleIndicators"
-    class="carousel slide"
-    data-bs-ride="carousel"
-  >
-    <div class="carousel-inner">
-      {% for slider in sliders %}
-      <div class="carousel-item{% if loop.first %} active{% endif %}">
-        <div
-          class="card-image-slider"
-          style="background-image: linear-gradient(rgba(0, 0, 0, 0.416), transparent), url('{{ asset('uploads/images/' ~ slider.imagen) }}');"
-        >
-          <div class="content-slider">
-            <div class="content-slider-text">
-              <h3 class="animation content-slider-title text-start">
-                {{ slider.titulo | trans | raw }}
-              </h3>
-              <h2 class="animation content-slider-subtitle">
-                {{ tour.titulo | trans | raw }}
-              </h2>
-            </div>
-            <div class="content-slider-button">
-              <a href="{{ path('show', { id: tour.id }) }}" class="btn-primary">
-                {{ "Book now" | trans }}
-              </a>
-            </div>
+<div class="carousel-container position-relative">
+  <div id="nativeSliderTour" class="native-slider-container">
+    {% for slider in sliders %}
+      <div class="native-slider-item">
+        <img class="native-slider-image" src="{{ asset('uploads/images/' ~ slider.imagen) }}" alt="{{ slider.titulo }}">
+        <div class="content-slider">
+          <div class="content-slider-text">
+            <h3 class="animation content-slider-title text-start">
+              {{ slider.titulo | trans | raw }}
+            </h3>
+            <h2 class="animation content-slider-subtitle">
+              {{ tour.titulo | trans | raw }}
+            </h2>
+          </div>
+          <div class="content-slider-button">
+            <a href="{{ path('show', { id: tour.id }) }}" class="btn-primary">
+              {{ "Book now" | trans }}
+            </a>
           </div>
         </div>
       </div>
-      {% endfor %}
-    </div>
-    <button
-      class="carousel-control-prev"
-      type="button"
-      data-bs-target="#carouselExampleIndicators"
-      data-bs-slide="prev"
-    >
+    {% endfor %}
+  </div>
+  {% if sliders|length > 1 %}
+    <button class="carousel-control-prev" type="button" style="z-index: 10; pointer-events: all; border: none; background: transparent; width: 10%;" onclick="var c=document.getElementById('nativeSliderTour'); var w = c.firstElementChild.clientWidth; if(c.scrollLeft <= 10) c.scrollTo({left: c.scrollWidth, behavior:'smooth'}); else c.scrollBy({ left: -w, behavior: 'smooth' })">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button
-      class="carousel-control-next"
-      type="button"
-      data-bs-target="#carouselExampleIndicators"
-      data-bs-slide="next"
-    >
+    <button class="carousel-control-next" type="button" style="z-index: 10; pointer-events: all; border: none; background: transparent; width: 10%;" onclick="var c=document.getElementById('nativeSliderTour'); var w = c.firstElementChild.clientWidth; if(Math.ceil(c.scrollLeft + c.clientWidth) >= c.scrollWidth) c.scrollTo({left:0, behavior:'smooth'}); else c.scrollBy({ left: w, behavior: 'smooth' })">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
-  </div>
+  {% endif %}
 </div>
 
 <div class="container">
@@ -93,7 +75,17 @@
   <div id="descripcion" class="container-detalles">
     <h3>{{ tour.titulo | trans }}</h3>
     <div class="detalle-descripcion">
-      <p>{{ tour.descripcionCorta | trans | raw }}</p>
+      <div class="detalle-descripcion-texto">
+      {% if app.request.get('_locale') == 'es' %}
+            {{ tour.descripcionCortaEs | raw }}
+        {% elseif app.request.get('_locale') == 'fr' %}
+            {{ tour.descripcionCortaFr | raw }}
+        {% elseif app.request.get('_locale') == 'pt' %}
+            {{ tour.descripcionCortaPt | raw }}
+        {% else %}
+            {{ tour.descripcionCorta | raw }}
+        {% endif %}
+    </div>
      <div class="descripcion-hidden">
     <p>
         {% if app.request.get('_locale') == 'es' %}

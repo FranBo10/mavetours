@@ -11,7 +11,7 @@ const languageToggle = document.querySelectorAll('#navigation .language-toggle')
 languageToggle.forEach(toggle => {
   toggle.addEventListener('click', function(event) {
     event.preventDefault();
-    if (window.innerWidth < 1024) {
+    if (window.innerWidth <= 1040) {
       const subMenu = this.nextElementSibling;
       if (subMenu) {
         if (subMenu.classList.contains('show')) {
@@ -48,7 +48,7 @@ closeBtn.addEventListener("click", () => {
   menuBtn.style.display = "block";
   closeBtn.style.display = "none";
   menuMobile.classList.remove("active");
-  if (window.innerWidth < 970) {
+  if (window.innerWidth <= 1040) {
     navBar1.classList.add("navigation");
   } else {
     navBar1.classList.remove("navigation");
@@ -58,7 +58,7 @@ closeBtn.addEventListener("click", () => {
 });
 
 function handleResize() {
-  if (window.innerWidth >= 850) {
+  if (window.innerWidth > 1040) {
     menuBtn.style.display = "none";
     closeBtn.style.display = "none";
     navBar1?.classList.remove("navigation");

@@ -53,6 +53,7 @@ class SliderCrudController extends AbstractCrudController
                 '5' => 5
             ]),
             AssociationField::new('tour', 'Tour')->renderAsNativeWidget(),
+            AssociationField::new('destino', 'Destino')->renderAsNativeWidget(),
 
             DateTimeField::new('fecha_registro', 'Fecha de registro')->setFormat('d/M/Y - H:m')->hideOnForm(),
         ];

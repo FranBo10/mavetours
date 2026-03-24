@@ -11,7 +11,7 @@ const languageToggle = document.querySelectorAll('#navigation-2 .language-toggle
 languageToggle.forEach(toggle => {
   toggle.addEventListener('click', function (event) {
     event.preventDefault();
-    if (window.innerWidth < 1000) {
+    if (window.innerWidth <= 1040) {
       const subMenu = this.nextElementSibling;
       if (subMenu && subMenu.classList.contains('show')) {
         subMenu.classList.remove('show');
@@ -48,7 +48,7 @@ closeBtn?.addEventListener("click", () => {
   menuBtn.style.display = "block";
   closeBtn.style.display = "none";
   menuMobile?.classList.remove("active");
-  if (window.innerWidth < 1000) {
+  if (window.innerWidth <= 1040) {
     navBar2?.classList.add("navigation-2");
   } else {
     navBar2?.classList.remove("navigation-2");
@@ -57,7 +57,7 @@ closeBtn?.addEventListener("click", () => {
 });
 
 function handleResize() {
-  if (window.innerWidth >= 1000) {
+  if (window.innerWidth > 1040) {
     menuBtn.style.display = "none";
     closeBtn.style.display = "none";
     navBar2?.classList.remove("navigation-2");

@@ -69,11 +69,15 @@ class Destino
     #[Groups(['destino:item'])]
     private Collection $ciudades;
 
+    #[ORM\OneToMany(mappedBy: 'destino', targetEntity: Slider::class)]
+    private Collection $sliders;
+
     public function __construct()
     {
         $this->circuitos = new ArrayCollection();
         $this->tours = new ArrayCollection();
         $this->ciudades = new ArrayCollection();
+        $this->sliders = new ArrayCollection();
         $this->fechaCreacion = new \DateTime();
     }
 
@@ -254,6 +258,35 @@ class Destino
         if ($this->ciudades->removeElement($ciudad)) {
             if ($ciudad->getDestino() === $this) {
                 $ciudad->setDestino(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Slider>
+     */
+    public function getSliders(): Collection
+    {
+        return $this->sliders;
+    }
+
+    public function addSlider(Slider $slider): self
+    {
+        if (!$this->sliders->contains($slider)) {
+            $this->sliders->add($slider);
+            $slider->setDestino($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSlider(Slider $slider): self
+    {
+        if ($this->sliders->removeElement($slider)) {
+            if ($slider->getDestino() === $this) {
+                $slider->setDestino(null);
             }
         }
 

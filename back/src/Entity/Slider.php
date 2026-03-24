@@ -29,6 +29,9 @@ class Slider
     #[ORM\ManyToOne(inversedBy: 'sliders')]
     private ?Tour $tour = null;
 
+    #[ORM\ManyToOne(inversedBy: 'sliders')]
+    private ?Destino $destino = null;
+
 
     public function getId(): ?int
     {
@@ -79,6 +82,18 @@ class Slider
     public function setTour(?Tour $tour): static
     {
         $this->tour = $tour;
+
+        return $this;
+    }
+
+    public function getDestino(): ?Destino
+    {
+        return $this->destino;
+    }
+
+    public function setDestino(?Destino $destino): static
+    {
+        $this->destino = $destino;
 
         return $this;
     }

@@ -7,9 +7,41 @@
 {% endblock %}
 
 {% block body %}
+{% if sliders|length > 0 %}
+<div class="carousel-container position-relative">
+  <div id="nativeSliderCiudades" class="native-slider-container">
+    {% for slider in sliders %}
+      <div class="native-slider-item">
+        <img class="native-slider-image" src="{{ asset('uploads/images/' ~ slider.imagen) }}" alt="{{ slider.titulo }}">
+        <div class="content-slider">
+          <div class="content-slider-text">
+            <h3 class="animation content-slider-title text-start">
+              {{ slider.titulo | trans | raw }}
+            </h3>
+            <h2 class="animation content-slider-subtitle">
+              {{ destino.titulo | trans }}
+            </h2>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% if sliders|length > 1 %}
+    <button class="carousel-control-prev" type="button" style="z-index: 10; pointer-events: all; border: none; background: transparent; width: 10%;" onclick="var c=document.getElementById('nativeSliderCiudades'); var w = c.firstElementChild.clientWidth; if(c.scrollLeft <= 10) c.scrollTo({left: c.scrollWidth, behavior:'smooth'}); else c.scrollBy({ left: -w, behavior: 'smooth' })">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" style="z-index: 10; pointer-events: all; border: none; background: transparent; width: 10%;" onclick="var c=document.getElementById('nativeSliderCiudades'); var w = c.firstElementChild.clientWidth; if(Math.ceil(c.scrollLeft + c.clientWidth) >= c.scrollWidth) c.scrollTo({left:0, behavior:'smooth'}); else c.scrollBy({ left: w, behavior: 'smooth' })">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  {% endif %}
+</div>
+{% else %}
 <section class="hero" style="background-image: url('{{ asset('uploads/images/destinos/' ~ destino.imagen) }}');">
     
 </section>
+{% endif %}
 
     {# {% if destino.descripcionLarga %}
         <div class="row mb-5">

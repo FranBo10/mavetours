@@ -31,12 +31,13 @@ class AdminController extends AbstractController
         $this->em = $em;
     }
 
-    #[Route('/admin/guia', name: 'guia')]
+    #[Route('/admin/guia/{_locale}', name: 'guia', requirements: ['_locale' => 'en|es|fr|pt'], defaults: ['_locale' => 'es'])]
     public function guia(Request $request, EventoRepository $eventoRepository, TourRepository $tourRepository, BlogCategoriaRepository $blogCategoriaRepository, ObservacionGuiaService $observacionGuiaService, ObservacionGuiaRepository $observacionGuiaRepository, PictureService $pictureService): Response
 {
     $events = $eventoRepository->findAll();
     $tours = $tourRepository->findAll();
     $categoria = $blogCategoriaRepository->findOneBy(['id' => 1]);  
+    $locale = $request->getLocale();
     $visitas = [];
 
     foreach ($events as $event) {
@@ -69,7 +70,7 @@ class AdminController extends AbstractController
         $color = $event->getGuiaColor() ?: 'black';
         $guia = $event->getUser();
         $cerrado = $event->isCerrado();
-        $guia_id = $guia ? $guia->getId() : NULL;
+        $guia_id = $guia ? $guia->getId() : null;
         $nombreGuia = $guia ? $guia->getNombre() : 'Sin guía asignado';
         $apellidosGuia = $guia ? $guia->getApellidos() : '';
 

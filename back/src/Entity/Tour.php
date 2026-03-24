@@ -45,6 +45,10 @@ class Tour
     #[Groups(['parada:list','parada:item', 'tour:mini'])]
     private ?string $titulo_fr = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['parada:list','parada:item', 'tour:mini'])]
+    private ?string $titulo_pt = null;
+
     // País como ISO2 string (FR, BE, NL...)
     #[ORM\Column(length: 2)]
     #[Groups(['parada:list','parada:item', 'tour:mini'])]
@@ -76,6 +80,10 @@ class Tour
      #[Groups(['parada:item'])]
     private ?string $descripcion_larga_es = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['parada:item'])]
+    private ?string $descripcion_larga_pt = null;
+
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['parada:item'])]
     private ?string $descripcion_corta = null;
@@ -87,6 +95,10 @@ class Tour
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['parada:item'])]
     private ?string $descripcion_corta_fr = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['parada:item'])]
+    private ?string $descripcion_corta_pt = null;
 
     #[ORM\Column]
     private ?float $precio = null;
@@ -215,6 +227,17 @@ class Tour
         return $this;
     }
 
+    public function getTituloPt(): ?string
+    {
+        return $this->titulo_pt;
+    }
+
+    public function setTituloPt(?string $titulo_pt): static
+    {
+        $this->titulo_pt = $titulo_pt;
+        return $this;
+    }
+
     public function getPais(): ?string
     {
         return $this->pais;
@@ -295,6 +318,28 @@ class Tour
     {
         $this->descripcion_corta_fr = $descripcion_corta_fr;
 
+        return $this;
+    }
+
+    public function getDescripcionLargaPt(): ?string
+    {
+        return $this->descripcion_larga_pt;
+    }
+
+    public function setDescripcionLargaPt(?string $descripcion_larga_pt): static
+    {
+        $this->descripcion_larga_pt = $descripcion_larga_pt;
+        return $this;
+    }
+
+    public function getDescripcionCortaPt(): ?string
+    {
+        return $this->descripcion_corta_pt;
+    }
+
+    public function setDescripcionCortaPt(?string $descripcion_corta_pt): static
+    {
+        $this->descripcion_corta_pt = $descripcion_corta_pt;
         return $this;
     }
 
